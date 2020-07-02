@@ -1,0 +1,12 @@
+# clean raw data ----
+
+library(tidyverse)
+library(here)
+library(janitor)
+
+r_file_list <- list.files(
+  path = here("R", "01a_clean-raw-data"), 
+  pattern = "R$",
+  full.names = TRUE
+)
+purrr::walk(r_file_list, source)
