@@ -1,10 +1,11 @@
 # recode data ----
 
-## want to translate percent to hours pre and post lockdown
-# but keep percentage to figure out impossible statistics.
-
 wide_data_recoded <- wide_data %>% 
   mutate(
+    start_date = dmy_hm(start_date),
+    end_date = dmy_hm(end_date),
+    duration_in_seconds = seconds(duration_in_seconds),
+    recorded_date = dmy_hm(recorded_date),
     sex = factor(
       sex, 
       levels = c(1:4), 
@@ -21,13 +22,13 @@ wide_data_recoded <- wide_data %>%
         "other"
       )
     ),
-    before_regularly_play = factor(
-      before_regularly_play,
+    regularly_play_before = factor(
+      regularly_play_before,
       levels = c(9, 10),
       labels = c("yes", "no")
     ),
-    during_regularly_play = factor(
-      during_regularly_play,
+    regularly_play_after = factor(
+      regularly_play_after,
       levels = c(9, 10),
       labels = c("yes", "no")
     )

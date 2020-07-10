@@ -21,7 +21,10 @@ games_played <- wide_data_filtered_complete %>%
     hours_played_after
   ) %>% 
   pivot_longer(
-    cols = c(games_percent_before_1:games_percent_before_9, games_percent_after_1:games_percent_after_9),
+    cols = c(
+      games_percent_before_1:games_percent_before_9, 
+      games_percent_after_1:games_percent_after_9
+    ),
     names_to = c("time", "game"),
     names_sep = "_",
     names_prefix = "games_percent_",
@@ -56,6 +59,10 @@ games_played %>%
   mutate(game = factor(game, labels = games_names)) %>% 
   filter(hours < 50) %>% 
   ggplot(aes(x = game, y = hours)) +
-  stat_summary(geom = "pointrange", fun.data = "mean_se", position = position_nudge(x = 0.1, y = 0)) +
+  stat_summary(
+    geom = "pointrange", 
+    fun.data = "mean_se", 
+    position = position_nudge(x = 0.1, y = 0)
+  ) +
   geom_point(alpha = 0.1) +
   coord_flip()

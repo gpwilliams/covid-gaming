@@ -11,7 +11,6 @@ wide_data_filtered <- wide_data %>%
   )
 
 # check missing data 
-
 numeric_na <- wide_data_filtered %>% 
   rowwise(response_id) %>%
   summarise(
@@ -27,8 +26,3 @@ wide_data_filtered_complete <- wide_data_filtered %>%
     filter(numeric_na, total_na > 20), response_id
     )
   )
-
-# quick insepct (testing)
-# ggplot(wide_data_filtered_complete, aes(x = age)) +
- # geom_histogram() +
-  #facet_wrap(~sex)
