@@ -1,0 +1,34 @@
+# filter data ----
+
+# remove based on set criteria
+wide_data_filtered <- wide_data %>% 
+  filter(
+    progress >= 90, # 90% + progress
+    !is.na(consent), # consent given
+    age > 18, # only adults
+    !str_detect(current_education_employment, "78"), # remove unemployed + employed responses
+    !str_detect(current_education_employment, "87")
+  )
+
+# check missing data 
+
+numeric_na <- wide_data_filtered %>% 
+  rowwise(response_id) %>%
+  summarise(
+    total_na = sum(is.na(c_across(where(is.numeric)))),
+    total = length(c_across(where(is.numeric)))
+  ) %>% 
+  mutate(percent_na = (total_na/total)*100)
+
+# filter data, keeping only those with < 20% missing data
+
+wide_data_filtered_complete <- wide_data_filtered %>% 
+  filter(!response_id %in% pull(
+    filter(numeric_na, total_na > 20), response_id
+    )
+  )
+
+# quick insepct (testing)
+# ggplot(wide_data_filtered_complete, aes(x = age)) +
+ # geom_histogram() +
+  #facet_wrap(~sex)

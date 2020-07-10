@@ -1,8 +1,8 @@
 # clean raw data ----
 
-library(tidyverse)
-library(here)
-library(janitor)
+library(tidyverse) # for data processing/plotting
+library(here) # for file paths
+library(janitor) # for cleaning names
 
 r_file_list <- list.files(
   path = here("R", "01a_clean-raw-data"), 

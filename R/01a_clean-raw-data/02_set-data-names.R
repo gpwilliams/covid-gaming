@@ -1,9 +1,10 @@
 # remove redundant columns and clean names ----
 
-# note: ExternalReference, DistributionChannel, and UserLanguage are not needed
+# note: Status, ExternalReference, DistributionChannel, 
+# and UserLanguage are not needed
 # while Q24 = value for opting in for email
 raw_data_renamed <- raw_data %>% 
-  select(-c(ExternalReference:UserLanguage, Q24)) %>% 
+  select(-c(Status, ExternalReference:UserLanguage, Q24)) %>% 
   janitor::clean_names() %>% 
   rename(
     consent = q3,
@@ -17,10 +18,10 @@ raw_data_renamed <- raw_data %>%
     highest_education_level_other = q32,
     current_living_situation = q30,
     current_living_situation_other = q33,
-    before_regularly_play = q14,
-    before_hours_played = q15_1,
-    during_regularly_play = q20,
-    during_hours_played = q21_1
+    regularly_play_before = q14,
+    hours_played_before = q15_1,
+    regularly_play_after = q20,
+    hours_played_after = q21_1
   ) %>% 
   rename_at(
     vars(starts_with("q11_")),
@@ -72,3 +73,6 @@ raw_data_renamed <- raw_data %>%
     .vars = vars(contains("games_percent_after")),
     .funs = funs(sub("[_]1$", "", .))
   )
+
+# remove redundant rows from Qualtrics
+wide_data <- type_convert(raw_data_renamed[3:nrow(raw_data_renamed),])
