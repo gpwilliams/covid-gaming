@@ -1,56 +1,44 @@
 # quick plots exploring the data, not final code ----
 
-# all data
+## NOTE that final data still needs filtered to those with hours played > 0.
 
-#### long test
+# loneliness shows effect of time, but needs more complex model
+adventure_dat <- left_join(data$das, data$games_played)
 
-das_long <- das_data %>% 
-  pivot_longer(
-    -response_id,
-    names_to = c("das_category", "time"),
-    names_sep = "_"
-  )
+# fit model
 
-games_wide <- games_played %>% 
-  mutate(
-    regularly_play = case_when(
-      regularly_play == 9 ~ 1,
-      regularly_play == 10 ~ 0
-    )
-  ) %>% 
-  pivot_wider(
-    id_cols = c("response_id", "time"),
-    names_from = "game",
-    values_from = c("regularly_play", "percent", "hours")
-  )
+# lme4
+test_mod <- lme4::lmer(
+  depression ~ time * (hours_4 + single_multi_4) + 
+    (1 | response_id), 
+  contrasts = list(
+    time = contr.sum,
+    single_multi_4 = contr.sum
+  ),
+  data = adventure_dat %>% filter(total_hours > 0)
+)
+summary(test_mod)
 
-adat <- left_join(das_long, games_wide, by = c("response_id", "time"))
+# lm
+test_mod_lm <- lm(
+  depression ~ time * (hours_4 + single_multi_4), 
+  contrasts = list(
+    time = contr.sum,
+    single_multi_4 = contr.sum
+  ),
+  data = adventure_dat %>% filter(total_hours > 0)
+)
+summary(test_mod_lm)
 
-# fit model, get game names
-# 4 = adventure RPG, 6 = fps, 7 = action
-games_names
-
-# *(hours_4+ hours_6 + hours_7)
-
-maximal <- aov(lm(value ~ das_category*time*hours_4, adat))
-summary(maximal)
-
+# aov
+summary(aov(test_mod_lm))
 
 # plot
-adat <- adat %>% 
-  rowwise() %>% 
-  mutate(
-    total_hours = sum(c_across(hours_1:hours_9), na.rm = TRUE)
-  ) %>% 
-  filter(
-    total_hours > 0
-  )
-
-ggplot(adat, aes(x = log(total_hours), y = value)) +
+ggplot(adventure_dat %>% filter(total_hours > 0), aes(x = log(total_hours), y = depression)) +
   geom_point() +
   geom_smooth(method = "lm")
 
-
-ggplot(adat, aes(x = das_category, y = value)) +
-  geom_boxplot() +
+ggplot(adventure_dat %>% filter(total_hours > 0), aes(x = log(total_hours), y = depression)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
   facet_wrap(~time)

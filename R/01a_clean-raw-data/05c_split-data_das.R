@@ -9,7 +9,7 @@ das_keys <- list(
   prefix = c("das_before_", "das_after_")
 )
 
-das_data <- wide_data_filtered_complete %>% 
+data$das <- wide_data_recoded %>% 
   rowwise() %>% 
   mutate(
     depression_before = sum(
@@ -37,4 +37,10 @@ das_data <- wide_data_filtered_complete %>%
       na.rm = TRUE
     )*2
   ) %>% 
-  select(c(response_id, depression_before:stress_after))
+  select(c(response_id, depression_before:stress_after)) %>% 
+  pivot_longer(
+    -response_id,
+    names_sep = "_",
+    names_to = c("das", "time")
+  ) %>% 
+  pivot_wider(names_from = "das", values_from = "value")

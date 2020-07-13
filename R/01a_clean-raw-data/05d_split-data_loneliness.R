@@ -7,7 +7,8 @@ loneliness_keys <- list(
   prefix = c("loneliness_before_", "loneliness_after_")
 )
 
-loneliness_data <- wide_data_filtered_complete %>% 
+# wide format
+data$loneliness <- wide_data_recoded %>% 
   rowwise() %>% 
   mutate(
     loneliness_before = sum(
@@ -19,4 +20,10 @@ loneliness_data <- wide_data_filtered_complete %>%
       na.rm = TRUE
     )
   ) %>% 
-  select(c(response_id, loneliness_before, loneliness_after)) 
+  select(c(response_id, loneliness_before, loneliness_after)) %>% 
+  pivot_longer(
+    -response_id,
+    names_to = "time",
+    names_prefix = "loneliness_",
+    values_to = "loneliness"
+  )

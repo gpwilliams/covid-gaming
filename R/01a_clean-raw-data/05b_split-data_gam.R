@@ -2,7 +2,7 @@
 
 # gaming motivation index ----
 
-gam_data <- wide_data_filtered_complete %>% 
+data$gam <- wide_data_recoded %>% 
   select(
     response_id,
     why_play_before_1:why_play_before_18,
@@ -25,26 +25,10 @@ gam_data <- wide_data_filtered_complete %>%
       item %in% c(13:15) ~ "external_regulation",
       item %in% c(16:18) ~ "amotivation"
     )
-  )
-
-# check missingness per subject
-
-gam_missing_check <- gam_data %>% 
-  group_by(response_id, time) %>% 
-  summarise(
-    n_missing = sum(is.na(score)),
-    n_total = length(unique(item))
-  )
-
-high_missing <- gam_missing_check %>% filter(
-  n_missing > 6 # get only those with 6/18 trials or more missing
   ) %>% 
-  pull(response_id)
-
-gam_by_subj <- gam_data %>% 
   group_by(response_id, time, gam_group) %>% 
-  summarise(
-    mean_score = mean(score, na.rm = TRUE),
-    n = n(),
-    n_NA = sum(is.na(score))
+  summarise(score = mean(score)) %>% 
+  pivot_wider(
+    names_from = "gam_group",
+    values_from = "score"
   )

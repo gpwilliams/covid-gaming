@@ -10,7 +10,7 @@
 
 # gaming habits ----
 
-games_played <- wide_data_filtered_complete %>% 
+games_habits <- wide_data_recoded %>% 
   select(
     response_id,
     games_percent_before_1:games_percent_before_9,
@@ -52,17 +52,37 @@ games_played <- wide_data_filtered_complete %>%
     regularly_play,
     percent, 
     hours
+  ) %>% 
+  pivot_wider(
+    names_from = "game",
+    values_from = c("percent", "hours")
+  ) %>% 
+  rowwise() %>% 
+  mutate(
+    total_hours = sum(c_across(hours_1:hours_9), na.rm = TRUE),
+    total_percent = sum(c_across(percent_1:percent_9), na.rm = TRUE)
   )
 
-# plot check
-games_played %>% 
-  mutate(game = factor(game, labels = games_names)) %>% 
-  filter(hours < 50) %>% 
-  ggplot(aes(x = game, y = hours)) +
-  stat_summary(
-    geom = "pointrange", 
-    fun.data = "mean_se", 
-    position = position_nudge(x = 0.1, y = 0)
-  ) +
-  geom_point(alpha = 0.1) +
-  coord_flip()
+# single and multiplayer
+
+single_multi <- wide_data_recoded %>% 
+  select(
+    response_id, 
+    games_single_muliplayer_before_1:games_single_muliplayer_before_9,
+    games_single_muliplayer_after_1: games_single_muliplayer_after_9
+  ) %>% 
+  pivot_longer(
+    -response_id,
+    names_to = c("time", "behaviour"),
+    names_sep = "_",
+    names_prefix = "games_single_muliplayer_",
+    values_to = "value"
+  ) %>% 
+  pivot_wider(
+    names_from = "behaviour",
+    names_prefix = "single_multi_"
+  )
+
+# join both ----
+
+data$games_played <- left_join(games_habits, single_multi, by = c("response_id", "time"))

@@ -1,6 +1,8 @@
 # recode data ----
 
-wide_data_recoded <- wide_data %>% 
+# make data types correct and give informative levels to factors
+
+wide_data_recoded <- wide_data_complete %>% 
   mutate(
     start_date = dmy_hm(start_date),
     end_date = dmy_hm(end_date),
@@ -31,5 +33,17 @@ wide_data_recoded <- wide_data %>%
       regularly_play_after,
       levels = c(9, 10),
       labels = c("yes", "no")
+    ),
+    consent = case_when(
+      consent == "1234" ~ 1,
+      TRUE ~ 0
+      )
+  ) %>% 
+  mutate_at(
+    vars(starts_with("games_single_muliplayer")),
+    ~ factor(
+      .,
+      levels = c(1, 2), 
+      labels = c("alone", "multiplayer")
     )
   )
