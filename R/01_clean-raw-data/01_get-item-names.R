@@ -3,10 +3,14 @@
 message("Reading data.")
 
 raw_data <- read_csv(here::here(
-  "02_data", "01_raw-data", "anonymised_raw_data.csv"
+  "02_data", "01_raw", "anonymised_raw_data.csv"
 )) 
 
-data <- list()
+# make data holders
+
+# for data with scales aggregated
+agg_data <- list()
+item_data <- list()
 
 # get names for items from before lockdown (same as after) ----
 

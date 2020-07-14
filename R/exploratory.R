@@ -1,4 +1,9 @@
 
+
+
+xx_mod <- lme4::lmer(value ~ time * subscale + (1 + time | response_id) + (1 + time | subscale/item), data = xx)
+summary(xx_mod)
+
 # gam
 # check missingness per subject
 gam_missing_check <- gam_data %>% 

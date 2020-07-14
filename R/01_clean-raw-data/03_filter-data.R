@@ -7,7 +7,9 @@ wide_data_filtered <- wide_data %>%
     progress >= 90, # 90% + progress
     age > 18, # only adults
     !str_detect(current_education_employment, "78"), # remove unemployed + employed responses
-    !str_detect(current_education_employment, "87")
+    !str_detect(current_education_employment, "87"),
+    !is.na(hours_played_before) & hours_played_before > 0, # keep only people who played games 
+    !is.na(hours_played_after) & hours_played_after > 0
   )
 
 # check missing data in any numeric columns
@@ -21,7 +23,7 @@ numeric_na <- wide_data_filtered %>%
 
 # filter data, keeping only those with < 20% missing data
 wide_data_complete <- wide_data_filtered %>% 
-  filter(!response_id %in% pull(
-    filter(numeric_na, total_na > 20), response_id
+  filter(
+    !response_id %in% 
+      pull(filter(numeric_na, total_na > 20), response_id)
     )
-  )

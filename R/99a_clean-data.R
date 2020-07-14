@@ -6,7 +6,7 @@ library(here) # for file paths
 library(janitor) # for cleaning names
 
 r_file_list <- list.files(
-  path = here::here("R", "01a_clean-raw-data"), 
+  path = here::here("R", "01_clean-raw-data"), 
   pattern = "R$",
   full.names = TRUE
 )

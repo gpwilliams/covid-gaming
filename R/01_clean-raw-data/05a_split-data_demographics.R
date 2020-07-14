@@ -2,7 +2,7 @@
 
 # splits columns with multiple possible responses into discrete variables
 
-data$demographics <- wide_data_recoded %>% 
+item_data$demographics <- wide_data_recoded %>% 
   select(start_date:current_living_situation_other) %>% 
   mutate(
     across(c(
