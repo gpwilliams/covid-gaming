@@ -7,7 +7,7 @@ message("Writing data to file.")
 # as rds files
 for(i in seq_along(item_data)) {
   write_rds(
-    agg_data[[i]],
+    item_data[[i]],
     here(
       "02_data", 
       "02_cleaned", 
@@ -21,7 +21,7 @@ for(i in seq_along(item_data)) {
 # as csv
 for(i in seq_along(item_data)) {
   write_csv(
-    agg_data[[i]],
+    item_data[[i]],
     here(
       "02_data", 
       "02_cleaned", 
