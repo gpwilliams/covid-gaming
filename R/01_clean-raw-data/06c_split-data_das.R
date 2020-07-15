@@ -35,8 +35,11 @@ item_data$das_longer <- wide_data_recoded %>%
 # longer data: aggregated by subject
 
 agg_data$das_longer <- item_data$das_longer %>% 
+  group_by(time, subscale, item) %>% 
+  mutate(score = impute_mean(score)) %>% 
+  ungroup() %>% 
   group_by(response_id, time, subscale) %>% 
-  summarise(score = mean(score, na.rm = TRUE)) 
+  summarise(score = sum(score)) 
 
 # wider data: aggregated by subject
 

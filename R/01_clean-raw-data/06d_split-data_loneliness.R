@@ -26,5 +26,8 @@ item_data$loneliness_longer <- wide_data_recoded %>%
 # longer/wider data: aggregated by subject
 
 agg_data$loneliness <- item_data$loneliness_longer %>% 
+  group_by(time, item) %>% 
+  mutate(score = impute_mean(score)) %>% 
+  ungroup() %>% 
   group_by(response_id, time) %>% 
-  summarise(score = mean(score, na.rm = TRUE)) 
+  summarise(score = sum(score))

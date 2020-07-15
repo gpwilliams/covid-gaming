@@ -61,3 +61,17 @@ for(i in seq_along(agg_data)) {
     )
   )
 }
+
+# save item names ----
+
+# csv only; data types aren't important here
+for(i in seq_along(names_data)) {
+  write_csv(
+    names_data[[i]], 
+    here(
+      "02_data", 
+      "03_summary",
+      paste0("item_labels_", names(names_data[i]), ".csv")
+    )
+  )
+}

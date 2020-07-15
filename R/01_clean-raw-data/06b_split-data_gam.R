@@ -43,12 +43,16 @@ item_data$gam_longer <- wide_data_recoded %>%
 # longer data: aggregated by subject
 
 agg_data$gam_longer <- item_data$gam_longer %>% 
+  group_by(time, subscale, item) %>% 
+  mutate(score = impute_mean(score)) %>% 
+  ungroup() %>% 
   group_by(response_id, time, subscale) %>% 
-  summarise(score = mean(score, na.rm = TRUE)) 
+  summarise(score = sum(score)) %>% 
+  mutate(score = score*2)
 
 # wider data: aggregated by subject
 
-agg_data$gam_wider <- agg_data$gam_longer %>% # no imputation
+agg_data$gam_wider <- agg_data$gam_longer %>% 
   pivot_wider(
     names_from = "subscale",
     values_from = "score"
