@@ -18,4 +18,5 @@ r_file_list <- list.files(
   pattern = "R$",
   full.names = TRUE
 )
+# purrr::walk(r_file_list[1:10], source) # for testing
 purrr::walk(r_file_list, source)
