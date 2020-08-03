@@ -9,7 +9,7 @@ loneliness_keys <- list(
 
 # longer data: by item
 
-item_data$loneliness_longer <- wide_data_recoded %>% 
+item_data$loneliness_longer <- wide_data_complete %>% 
   select(c(
     response_id, 
     loneliness_before_1:loneliness_before_3, 

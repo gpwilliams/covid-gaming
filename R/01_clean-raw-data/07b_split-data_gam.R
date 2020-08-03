@@ -15,7 +15,7 @@ gam_keys <- list(
 
 # longer data: by item
 
-item_data$gam_longer <- wide_data_recoded %>% 
+item_data$gam_longer <- wide_data_complete %>% 
   select(
     response_id,
     why_play_before_1:why_play_before_18,

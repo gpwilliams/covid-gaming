@@ -1,8 +1,6 @@
 response_id,time,regularly_play,percent_1,percent_2,percent_3,percent_4,percent_5,percent_6,percent_7,percent_8,percent_9,hours_1,hours_2,hours_3,hours_4,hours_5,hours_6,hours_7,hours_8,hours_9,total_hours,total_percent,single_multi_1,single_multi_2,single_multi_3,single_multi_4,single_multi_5,single_multi_6,single_multi_7,single_multi_8,single_multi_9
 R_28NVjdZPvV2fLBs,before,yes,0,10,60,20,0,0,10,0,0,0,1.5,9,3,0,0,1.5,0,0,15,100,NA,alone,multiplayer,multiplayer,NA,NA,alone,NA,NA
 R_28NVjdZPvV2fLBs,after,yes,0,0,60,20,0,0,20,0,0,0,0,27,9,0,0,9,0,0,45,100,NA,NA,multiplayer,multiplayer,NA,NA,alone,NA,NA
-R_28MWgRnn8laQex4,before,yes,0,50,10,10,20,0,0,10,0,0,45,9,9,18,0,0,9,0,90,100,multiplayer,alone,alone,alone,alone,alone,NA,alone,NA
-R_28MWgRnn8laQex4,after,yes,10,20,10,10,10,10,10,10,10,15,30,15,15,15,15,15,15,15,150,100,alone,alone,alone,alone,alone,alone,alone,alone,alone
 R_2rPjSQLcIC8CDty,before,yes,0,5,80,0,0,15,0,0,0,0,0.75,12,0,0,2.25,0,0,0,15,100,NA,alone,alone,NA,NA,multiplayer,NA,NA,NA
 R_2rPjSQLcIC8CDty,after,yes,0,0,90,0,0,10,0,0,0,0,0,27,0,0,3,0,0,0,30,100,NA,NA,alone,NA,NA,multiplayer,NA,NA,NA
 R_upLgg7PndxOE2Vr,before,yes,6,0,25,65,0,0,0,4,0,0.72,0,3,7.8,0,0,0,0.48,0,12,100,alone,NA,multiplayer,multiplayer,NA,NA,NA,alone,NA
@@ -15,8 +13,6 @@ R_000jgq6zfKH3jcB,before,yes,0,0,40,0,0,60,0,0,0,0,0,4,0,0,6,0,0,0,10,100,NA,NA,
 R_000jgq6zfKH3jcB,after,yes,0,0,30,30,0,30,10,0,0,0,0,10.5,10.5,0,10.5,3.5,0,0,35,100,NA,NA,alone,alone,NA,alone,alone,NA,NA
 R_2cd59QR5hZHKBZT,before,yes,0,40,0,0,0,40,0,20,0,0,6.4,0,0,0,6.4,0,3.2,0,16,100,NA,alone,NA,NA,NA,multiplayer,NA,multiplayer,NA
 R_2cd59QR5hZHKBZT,after,yes,0,30,70,0,0,0,0,0,0,0,16.5,38.5,0,0,0,0,0,0,55,100,NA,multiplayer,multiplayer,NA,NA,NA,NA,NA,NA
-R_3Kwm6MO1bfGie9a,before,yes,0,0,50,0,20,30,0,0,0,0,0,45,0,18,27,0,0,0,90,100,multiplayer,NA,alone,multiplayer,NA,multiplayer,NA,NA,NA
-R_3Kwm6MO1bfGie9a,after,yes,0,0,80,0,0,20,0,0,0,0,0,83.2,0,0,20.8,0,0,0,104,100,NA,NA,multiplayer,NA,NA,multiplayer,NA,NA,NA
 R_2dQRwob8W5KZXgY,before,yes,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,multiplayer,alone,alone,multiplayer,NA,NA,alone,multiplayer,multiplayer
 R_2dQRwob8W5KZXgY,after,yes,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,multiplayer,alone,multiplayer,multiplayer,multiplayer,multiplayer,multiplayer,multiplayer,multiplayer
 R_2tqUYhzsg6ITwD1,before,yes,0,0,25,0,0,50,0,25,0,0,0,8.75,0,0,17.5,0,8.75,0,35,100,NA,NA,multiplayer,NA,NA,alone,NA,alone,NA
@@ -95,8 +91,6 @@ R_3nkCL8JrVmutsy2,before,yes,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA,alone,NA
 R_3nkCL8JrVmutsy2,after,yes,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,multiplayer,NA
 R_10IYWwAbUvh1Uhh,before,yes,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA,NA,alone,NA,NA,alone,NA,NA,NA
 R_10IYWwAbUvh1Uhh,after,yes,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA,NA,alone,NA,NA,alone,NA,NA,NA
-R_4UciCNgShnGGPRv,before,yes,0,0,0,65,0,5,0,30,0,0,0,0,65,0,5,0,30,0,100,100,NA,NA,NA,multiplayer,NA,alone,NA,multiplayer,NA
-R_4UciCNgShnGGPRv,after,yes,0,2,6,50,0,0,0,42,0,0,2.6,7.800000000000001,65,0,0,0,54.6,0,130,100,NA,alone,alone,multiplayer,NA,NA,NA,multiplayer,NA
 R_Zgzav0hvyZ96c6d,before,yes,0,5,0,70,25,0,0,0,0,0,2,0,28,10,0,0,0,0,40,100,NA,alone,NA,multiplayer,multiplayer,NA,NA,NA,NA
 R_Zgzav0hvyZ96c6d,after,yes,0,10,0,30,10,0,50,0,0,0,6.5,0,19.5,6.5,0,32.5,0,0,65,100,NA,alone,NA,multiplayer,alone,NA,alone,NA,NA
 R_1K1Fc63G8b1FSAP,before,yes,0,0,35,35,0,30,0,0,0,0,0,3.5,3.5,0,3,0,0,0,10,100,NA,NA,alone,alone,NA,alone,NA,NA,NA
@@ -111,8 +105,6 @@ R_2fIesR987yHKjDw,before,yes,0,10,90,0,0,0,0,0,0,0,0.8,7.2,0,0,0,0,0,0,8,100,alo
 R_2fIesR987yHKjDw,after,yes,0,0,100,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,12,100,NA,NA,multiplayer,NA,NA,NA,NA,NA,NA
 R_3G0VtsBQfB5T8jI,before,yes,0,0,0,50,0,50,0,0,0,0,0,0,6.5,0,6.5,0,0,0,13,100,NA,NA,NA,multiplayer,NA,alone,NA,NA,NA
 R_3G0VtsBQfB5T8jI,after,yes,0,0,50,50,0,0,0,0,0,0,0,7.000000000000001,7.000000000000001,0,0,0,0,0,14.000000000000002,100,NA,NA,NA,multiplayer,NA,alone,NA,NA,NA
-R_2QAK9Z7h7xDhFpT,before,yes,0,0,0,80,0,5,15,0,0,0,0,0,64,0,4,12,0,0,80,100,NA,NA,NA,multiplayer,NA,multiplayer,alone,NA,NA
-R_2QAK9Z7h7xDhFpT,after,yes,0,0,10,70,0,10,10,0,0,0,0,15,105,0,15,15,0,0,150,100,NA,NA,multiplayer,multiplayer,NA,multiplayer,multiplayer,NA,NA
 R_1NfE7qpbaFYk306,before,yes,0,5,0,45,2,0,15,33,0,0,2,0,18,0.8,0,6,13.200000000000001,0,40,100,NA,alone,NA,multiplayer,alone,NA,alone,multiplayer,NA
 R_1NfE7qpbaFYk306,after,yes,0,0,0,35,0,0,10,55,0,0,0,0,12.25,0,0,3.5,19.25,0,35,100,NA,NA,NA,multiplayer,NA,NA,multiplayer,multiplayer,NA
 R_1pYYllRKHfnN46F,before,yes,0,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,6,0,6,100,NA,NA,NA,NA,NA,NA,NA,multiplayer,NA
@@ -141,8 +133,6 @@ R_1MXmVmetdFpHiB4,before,yes,0,75,0,0,0,0,10,15,0,0,4.5,0,0,0,0,0.6,0.8999999999
 R_1MXmVmetdFpHiB4,after,yes,0,80,0,0,0,0,20,0,0,0,20,0,0,0,0,5,0,0,25,100,NA,alone,NA,NA,NA,NA,multiplayer,NA,NA
 R_1FxCH5IloFh2zpE,before,yes,0,0,0,10,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,10,NA,NA,NA,multiplayer,NA,NA,NA,NA,NA
 R_1FxCH5IloFh2zpE,after,yes,0,0,0,20,0,0,0,0,0,0,0,0,3.8,0,0,0,0,0,3.8,20,NA,NA,NA,multiplayer,NA,NA,NA,NA,NA
-R_1Cy9Qzx0gi4C0n2,before,yes,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,multiplayer,NA,multiplayer,multiplayer,NA,NA,NA,NA,NA
-R_1Cy9Qzx0gi4C0n2,after,yes,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,multiplayer,alone,multiplayer,multiplayer,NA,NA,NA,NA,NA
 R_4IVTY228ghNiU4V,before,yes,0,0,3,0,0,0,2,5,0,0,0,0.30000000000000004,0,0,0,0.2,0.5,0,1,10,alone,alone,alone,NA,NA,alone,alone,alone,alone
 R_4IVTY228ghNiU4V,after,yes,0,3,5,2,0,0,10,10,0,0,0.8699999999999999,1.45,0.58,0,0,2.9,2.9,0,8.7,30,alone,alone,alone,alone,alone,alone,alone,NA,NA
 R_2aPMplerpF4rJU8,before,yes,0,20,0,0,0,0,0,40,0,0,12,0,0,0,0,0,24,0,36,60,alone,alone,alone,alone,alone,alone,alone,alone,alone
@@ -197,8 +187,6 @@ R_273DuWgjgujvJYE,before,yes,0,6,8,0,0,0,0,0,0,0,0.8400000000000001,1.12,0,0,0,0
 R_273DuWgjgujvJYE,after,yes,0,7,7,0,0,14,0,0,0,0,1.68,1.68,0,0,3.36,0,0,0,6.72,28,NA,multiplayer,alone,NA,NA,multiplayer,NA,NA,NA
 R_2VkJBjNuuyAttyZ,before,yes,0,10,0,50,0,40,0,0,0,0,2.2,0,11,0,8.8,0,0,0,22,100,NA,alone,alone,alone,NA,alone,NA,NA,NA
 R_2VkJBjNuuyAttyZ,after,yes,0,10,0,80,0,10,0,0,0,0,2.5,0,20,0,2.5,0,0,0,25,100,NA,alone,NA,alone,NA,alone,NA,NA,NA
-R_3pcoKZhAb81bmCu,before,yes,0,5,0,60,0,0,0,35,0,0,7.5,0,90,0,0,0,52.5,0,150,100,NA,alone,NA,multiplayer,NA,NA,NA,alone,NA
-R_3pcoKZhAb81bmCu,after,yes,0,5,0,60,0,0,0,35,0,0,7.5,0,90,0,0,0,52.5,0,150,100,NA,alone,NA,multiplayer,NA,NA,multiplayer,alone,NA
 R_RLcbhnqjnjLiaVX,before,yes,0,80,0,5,0,5,0,5,5,0,2.4,0,0.15,0,0.15,0,0.15,0.15,3,100,NA,alone,NA,alone,NA,alone,NA,alone,alone
 R_RLcbhnqjnjLiaVX,after,yes,0,10,0,0,0,0,0,75,5,0,1.5,0,0,0,0,0,11.25,0.75,13.5,90,NA,alone,NA,NA,NA,NA,NA,multiplayer,alone
 R_2B4II5QqOBTuBsc,before,yes,0,90,0,0,0,0,0,0,10,0,13.5,0,0,0,0,0,0,1.5,15,100,NA,alone,NA,NA,NA,NA,NA,NA,multiplayer

@@ -2,7 +2,7 @@
 
 # make data types correct and give informative levels to factors
 
-wide_data_recoded <- wide_data_complete %>% 
+wide_data_recoded <- wide_data %>% 
   mutate(
     start_date = dmy_hm(start_date),
     end_date = dmy_hm(end_date),
@@ -46,4 +46,4 @@ wide_data_recoded <- wide_data_complete %>%
       levels = c(1, 2), 
       labels = c("alone", "multiplayer")
     )
-  )
+  ) 

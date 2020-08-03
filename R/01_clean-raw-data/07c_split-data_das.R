@@ -11,7 +11,7 @@ das_keys <- list(
 
 # longer data: by item
 
-item_data$das_longer <- wide_data_recoded %>% 
+item_data$das_longer <- wide_data_complete %>% 
   select(c(
     response_id, 
     das_before_1:das_before_21, 
