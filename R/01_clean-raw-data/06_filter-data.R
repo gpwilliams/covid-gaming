@@ -21,23 +21,9 @@ numeric_na <- wide_data_filtered %>%
   ) %>% 
   mutate(percent_na = (sum_na/total)*100)
 
-# check for outliers in hours played before and after lockdown
-hours_descriptives <- wide_data_filtered %>% 
-  summarise(
-    median_before = median(total_hours_before, na.rm = TRUE),
-    mad_before = mad(total_hours_before, na.rm = TRUE),
-    median_after = median(total_hours_after, na.rm = TRUE),
-    mad_after = mad(total_hours_after, na.rm = TRUE)
-  )
-
-# get those with median hours played > median + 3*MAD of total hours
+# get those with hours played before or after > 12 hours a day
 hours_outliers <- wide_data_filtered %>% 
-  filter(
-    total_hours_before >
-      hours_descriptives$median_before + (3.5 * hours_descriptives$mad_before) |
-    total_hours_after >
-      hours_descriptives$median_after + (3 * hours_descriptives$mad_after),
-  ) %>% 
+  filter(total_hours_before > 7*12 | total_hours_after > 7*12) %>% 
   select(response_id, total_hours_before, total_hours_after)
 
 # filter data, keeping only those with < 20% missing data or 
