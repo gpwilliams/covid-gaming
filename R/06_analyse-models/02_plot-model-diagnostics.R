@@ -1,0 +1,4 @@
+
+plots <- list()
+
+plots$pp_check_das <- pp_check(models$das_model, nsamples = 100)

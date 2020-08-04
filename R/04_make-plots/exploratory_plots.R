@@ -168,8 +168,8 @@ mental_health_gaming_plot <- single_mhg + multi_mhg
 
 # tracing hours played with each outcome
 mh_summary <- mh_dat_gaming %>% 
-  filter(hours > 0) %>% 
-  mutate(log_hours = log(hours)) %>% # needs log(1 + hours) if not filtering by hours
+  # filter(hours > 0) %>% 
+  mutate(log_hours = log(1 + hours)) %>% # needs log(1 + hours) if not filtering by hours
   group_by(response_id, subscale, time, single_multi) %>% 
   summarise(
     hours = mean(hours),
@@ -210,3 +210,48 @@ ggsave("mental_health_gaming_plot.png", mental_health_gaming_plot, width = 18, h
 ggsave("anxiety_hours_plot.png", anxiety_hours_plot, width = 18, height = 12)
 ggsave("stress_hours_plot.png", stress_hours_plot, width = 18, height = 12)
 ggsave("depression_hours_plot.png", depression_hours_plot, width = 18, height = 12)
+
+
+# working code ----
+
+# demographics ----
+full_dat$demographics
+
+# gaming habits
+subj_dat$gam_longer
+
+# outcomes ----
+
+# DAS
+subj_dat$das_longer
+
+# loneliness
+subj_dat$loneliness
+
+
+
+
+
+
+
+
+
+mh_dat_gaming
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

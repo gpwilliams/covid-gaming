@@ -37,3 +37,4 @@ vignettes/*.pdf
 
 # misc
 .DS_Store
+R/99_exploratory/
