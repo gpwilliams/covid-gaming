@@ -1,4 +1,8 @@
 
 plots <- list()
 
-plots$pp_check_das <- pp_check(models$das_full, nsamples = 100)
+# make posterior predictive checks for each model
+for(i in seq_along(models)){
+  plots[[i]] <- pp_check(models[[i]], nsamples = 100)
+}
+names(plots) <- paste0("pp_check_", names(models))

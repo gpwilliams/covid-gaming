@@ -5,6 +5,7 @@ library(here) # for file paths
 library(brms) # for fitting models
 library(modelr) # for defining data for draws from posterior
 library(tidybayes) # for getting/analysing draws
+library(patchwork) # for binding plots
 
 # load functions
 r_function_list <- list.files(

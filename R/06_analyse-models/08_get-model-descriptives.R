@@ -21,19 +21,19 @@ draws$das %>%
 
 # main effect of time
 hyp_time <- hypothesis(
-  models$das_full,
-  hypothesis = "time1 +  0"
+  models$das_d,
+  hypothesis = c("time1 = 0", "total_hours = 0", "time1:total_hours = 0")
 )
 
 1/hyp_time$hypothesis$Evid.Ratio
 
 # interaction between time and 
 hypothesis(
-  models$das_full,
-  hypothesis = c("time1:total_hours:subscale1 = 0", "time1:total_hours:subscale2 = 0")
+  models$das_d,
+  hypothesis = c("time1 = 0", "total_hours = 0", "time1:total_hours = 0")
 )
 
-
+bayestestR::bayesfactor(models$das_d)
 
 
 # bayes factor comparing models
@@ -43,3 +43,5 @@ bayestestR::bayesfactor_models(models$das_full, models$das_two_way)
 
 loos <- map(models, loo)
 loo_comparisons <- loo_compare(loos)
+
+# chunk data into 3 groups (low, med, high depression) and look at diff scores (coloured by low, med, high or panels)
