@@ -1,16 +1,38 @@
 # create summary of results ----
 
 model_summaries <- list()
+model_summaries_contrasts <- list()
+model_summaries_diff <- list()
 
 summary_options <- list(
   summary_intervals = c(0.9),
   rounding = 2
 )
 
-# exposure: variety, word type by variety; testing: word type by task & variety
+# main models ----
+
+# defines predicted scores split by time and hours played
 for(i in seq_along(draws)) {
   model_summaries[[i]] <- draws[[i]] %>% 
-    median_qi(.value, .width = summary_options$summary_intervals) %>% 
+    median_qi(score_ord, .width = summary_options$summary_intervals) %>% 
     mutate_if(is.numeric, round, summary_options$rounding)
 }
 names(model_summaries) <- names(draws)
+
+# defines predicted scores compared across time
+for(i in seq_along(draws_contrasts)) {
+  model_summaries_contrasts[[i]] <- draws_contrasts[[i]] %>% 
+    median_qi(score_ord, .width = summary_options$summary_intervals) %>% 
+    mutate_if(is.numeric, round, summary_options$rounding)
+}
+names(model_summaries_contrasts) <- names(draws_contrasts)
+
+# diff models ----
+
+# defines predicted scores split by time and hours played
+for(i in seq_along(diff_draws)) {
+  model_summaries_diff[[i]] <- diff_draws[[i]] %>% 
+    median_qi(.value, .width = summary_options$summary_intervals) %>% 
+    mutate_if(is.numeric, round, summary_options$rounding)
+}
+names(model_summaries_diff) <- names(diff_draws)

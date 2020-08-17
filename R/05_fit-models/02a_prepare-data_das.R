@@ -30,10 +30,31 @@ contrasts(prepared_data$das$subscale) <- contr.sum(3)
 # make id numeric
 prepared_data$das$id <- as.numeric(factor(prepared_data$das$response_id))
 
-# log transform predictor, accounting for 0
-prepared_data$das$total_hours_log <- log(1 + prepared_data$das$total_hours)
+# split into subscales
+prepared_data$das_d <- prepared_data$das %>% 
+  filter(subscale == "depression") %>% 
+  select(-subscale)
 
-# standarise predictor
-prepared_data$das$total_hours_s <- 
-  (prepared_data$das$total_hours - mean(prepared_data$das$total_hours, na.rm = TRUE))/
-  sd(prepared_data$das$total_hours, na.rm = TRUE)
+prepared_data$das_a <- prepared_data$das %>% 
+  filter(subscale == "anxiety") %>% 
+  select(-subscale)
+
+prepared_data$das_s <- prepared_data$das %>% 
+  filter(subscale == "stress") %>% 
+  select(-subscale)
+
+# make difference score data
+subsets <- c("das_d", "das_a", "das_s")
+
+prepared_data_diff <- list()
+
+for(i in seq_along(subsets)) {
+  prepared_data_diff[[i]] <- prepared_data[[subsets[i]]] %>% 
+    select(-score_ord) %>% 
+    pivot_wider(names_from = time, values_from = c(score, total_hours)) %>% 
+    mutate(
+      hours_diff = total_hours_before - total_hours_after,
+      score_diff = score_before - score_after
+    )
+}
+names(prepared_data_diff) <- subsets

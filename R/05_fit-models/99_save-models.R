@@ -24,3 +24,17 @@ for(i in seq_along(models)) {
     )
   )
 }
+
+# save backtransformed models (from cumulative models only) ----
+
+for(i in seq_along(natural_scale_models)) {
+  write_rds(
+    x = summary(natural_scale_models[[i]]),
+    path = here(
+      "04_analysis", 
+      "01b_model_summaries",
+      paste0("natural_scale_", names(natural_scale_models)[[i]], ".rds")
+    )
+  )
+}
+
