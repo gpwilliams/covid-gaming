@@ -28,7 +28,7 @@ data$games_played <- read_rds(
 
 # get file names 
 model_file_list <- list.files(
-  path = here::here("04_analysis", "01_models"), 
+  path = here::here("04_analysis", "01a_models"), 
   pattern = "rds$",
   full.names = TRUE
 )

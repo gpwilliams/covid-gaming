@@ -17,40 +17,29 @@ draws$das %>%
 
 # test hypotheses:
 
-# MUST have sample_prior = TRUE in model and save_all_pars = TRUE. Need 40,000 posterior samples too.
+# Need 40,000 posterior samples too.
 
 # main effect of time
 hyp_time <- hypothesis(
-  models$das_model,
-  hypothesis = "time1 = 0"
+  models$das_full,
+  hypothesis = "time1 +  0"
 )
 
 1/hyp_time$hypothesis$Evid.Ratio
 
 # interaction between time and 
 hypothesis(
-  models$das_model,
-  hypothesis = c("time1:subscale1 - time1:subscale2 = 0")
+  models$das_full,
+  hypothesis = c("time1:total_hours:subscale1 = 0", "time1:total_hours:subscale2 = 0")
 )
 
 
-fit2 <- update(models$das_model, formula. = ~ . - total_hours, cores = 4, chains = 4)
-summary(fit2)
+
 
 # bayes factor comparing models
-bayestestR::bayesfactor_models(models$das_model, fit2)
+bayestestR::bayesfactor_models(models$das_full, models$das_two_way)
 
 # compare models...
 
-loo1 <- loo(models$das_model)
-loo1
-
-loo2 <- loo(fit2)
-loo2
-
-loo_compare(loo1, loo2)
-
-# direct from brms
-conditional_effects(models$das_model, effects = "total_hours:subscale")
-
-# fit DAS as 3 separate models...
+loos <- map(models, loo)
+loo_comparisons <- loo_compare(loos)

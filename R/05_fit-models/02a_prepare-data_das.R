@@ -16,7 +16,8 @@ prepared_data$das$time <- factor(
 prepared_data$das <- prepared_data$das %>% 
   mutate(
     score_ord = factor(
-      score, ordered = TRUE, 
+      score, 
+      ordered = TRUE, 
       levels = sort(unique(prepared_data$das$score)))
   )
 

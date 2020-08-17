@@ -9,7 +9,7 @@ draws$das %>%
   summarise(score_ord = sum(score_ord * .value)) %>% 
   ggplot(aes(x = total_hours, y = score_ord)) +
   facet_wrap(time ~ subscale) +
-  geom_line(aes(group = .draw), alpha = 5/100) +
+  geom_line(aes(group = .draw), alpha = 5/1000) +
   geom_point(
     aes(y = as.numeric(as.character(score_ord))), 
     data = prepared_data$das, shape = 21, size = 2
@@ -28,3 +28,5 @@ draws$das %>%
   facet_wrap(~ subscale) +
   scale_fill_brewer(palette = "Greys") +
   scale_color_brewer(palette = "Set2")
+
+# can also make plots holding values of anxiety at a certain score etc.
