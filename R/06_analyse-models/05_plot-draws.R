@@ -7,7 +7,7 @@ das_plots <- draws %>%
     ~.x %>% 
       ggplot(aes(x = total_hours, y = score_ord)) +
       facet_wrap(~time) +
-      geom_line(aes(group = .draw), alpha = .75/100) +
+      geom_line(aes(group = .draw), alpha = .5/100) +
       geom_point(
         aes(y = as.numeric(as.character(score_ord))), 
         data = prepared_data$das_d, shape = 21, size = 2
