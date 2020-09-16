@@ -41,11 +41,10 @@ draws_contrasts <- draws %>%
 # DAS diff data ----
 
 diff_draws <- list()
-models_subsets <- c("das_d_diff", "das_a_diff", "das_s_diff")
-prepared_data_diff_subsets <- subsets
+das_diff_models <- c("das_d_diff", "das_a_diff", "das_s_diff")
 
 for(i in seq_along(prepared_data_diff)) {
-  diff_draws[[i]] <- prepared_data_diff[[prepared_data_diff_subsets[i]]] %>% 
+  diff_draws[[i]] <- prepared_data_diff[[subsets[i]]] %>% 
     as.data.frame() %>% 
     modelr::data_grid(
       hours_diff = modelr::seq_range(
@@ -54,10 +53,33 @@ for(i in seq_along(prepared_data_diff)) {
       )
     ) %>% 
     add_fitted_draws(
-      models[[models_subsets[i]]], 
+      models[[das_diff_models[i]]], 
       re_formula = NA,
       seed = analysis_options$rand_seed,
       n = NULL
     )
 }
 names(diff_draws) <- subsets
+
+# DAS diff data for lockdown hours played ----
+
+diff_l_draws <- list()
+das_diff_l_models <- c("das_l_d_diff", "das_l_a_diff", "das_l_s_diff")
+
+for(i in seq_along(prepared_data_diff)) {
+  diff_l_draws[[i]] <- prepared_data_diff[[subsets[i]]] %>% 
+    as.data.frame() %>% 
+    modelr::data_grid(
+      total_hours_after = modelr::seq_range(
+        total_hours_after, 
+        n = 41
+      )
+    ) %>% 
+    add_fitted_draws(
+      models[[das_diff_l_models[i]]], 
+      re_formula = NA,
+      seed = analysis_options$rand_seed,
+      n = NULL
+    )
+}
+names(diff_l_draws) <- subsets
