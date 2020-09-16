@@ -1,15 +1,24 @@
 ---
 title: "Results"
-output: html_notebook
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+    highlight: tango
 author: "Glenn Williams"
 date: "2020-09-16 (updated: `r Sys.Date()`)"
 ---
 
-```{r setup, message=FALSE}
+```{r setup, message=FALSE, echo=FALSE}
+# global options ---
+options(digits = 2)
+
 # load libraries ----
 library(tidyverse)
 library(here)
 library(brms)
+library(kableExtra)
 
 # load functions ----
 r_function_list <- list.files(
@@ -67,6 +76,18 @@ names(hypotheses) <- hypothesis_lists %>%
   sub(".*/", "", .) %>% 
   substr(., 1, nchar(.)-4)
 
+# load demographic summaries ----
+demo_lists <- list.files(
+  path = here::here("04_analysis", "03_demographic-summary"), 
+  pattern = "csv$",
+  full.names = TRUE
+)
+demo <- demo_lists %>% 
+  map(read_csv)
+names(demo) <- demo_lists %>% 
+  sub(".*/", "", .) %>% 
+  substr(., 1, nchar(.)-4)
+
 # read in all plots ----
 plots_dir <- list.files(
   path = here::here("03_plots"), 
@@ -76,6 +97,36 @@ plots_dir <- list.files(
 ```
 
 We used `r version$version.string` and the R-packages tidyverse (version `r packageVersion("tidyverse")`), here (version `r packageVersion("here")`), brms (version `r packageVersion("brms")`), modelr (version`r packageVersion("modelr")`), tidybayes (version `r packageVersion("tidybayes")`), and patchwork (version `r packageVersion("patchwork")`) for data preparation and analysis.
+
+# Demographics
+
+We collected data from a total of XX participants. After exclusions based on non-completion or missing data (**details to be expanded**) we analysed data from `r demo$demographics$n` participants (age *M* = `r demo$demographics$age_mean`, *SD* = `r demo$demographics$age_sd`, Range = `r demo$demographics$age_min`, ``r demo$demographics$age_max`). On average participants took `r demo$demographics$duration_mean` seconds to complete the task (*SD* = `r demo$demographics$duration_sd`).
+
+Exclusions: **details to be expanded**.
+
+## Employment
+
+The below graph shows the number of participats in a given employment situation during lockdown.
+
+```{r employment, fig.cap=""}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "employment.png")])
+```
+
+## Lockdown
+
+The below graph shows the number of participants affected by differing lockdown situations.
+
+```{r lockdown, fig.cap=""}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "lockdown.png")])
+```
+
+## Living Situation
+
+The below graph shows the number of participants affected by in a given living situation.
+
+```{r living, fig.cap=""}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "living.png")])
+```
 
 # Model Fitting
 
@@ -102,7 +153,8 @@ knitr::include_graphics(plots_dir[str_detect(plots_dir, "das_predictions.png")])
 On the logit scale, model fixed effects parameter estimates are as follows:
 
 ```{r d-model-summary-1}
-as.data.frame(models$das_d$fixed)
+as.data.frame(models$das_d$fixed) %>% 
+  kable()
 ```
 
 On the natural scale, model fixed effects parameter estimates are as follows:
@@ -122,13 +174,15 @@ We found overwhelming evidence in support of the null model in comparison to the
 ### Anxiety
 
 ```{r a-model-summary-1}
-as.data.frame(models$das_a$fixed)
+as.data.frame(models$das_a$fixed) %>% 
+  kable()
 ```
 
 On the natural scale, model fixed effects parameter estimates are as follows:
 
 ```{r a-model-summary-natural-1}
-as.data.frame(models$natural_scale_das_a)
+as.data.frame(models$natural_scale_das_a) %>% 
+  kable()
 ```
 
 We calculated Bayes factors to evaluate the strength of evidence in support of a null effect the fixed effects of total hours played and time (pre- and post-lockdown) and their interaction.
@@ -142,13 +196,15 @@ We found overwhelming evidence in support of the null model in comparison to the
 ### Stress
 
 ```{r s-model-summary-1}
-as.data.frame(models$das_s$fixed)
+as.data.frame(models$das_s$fixed) %>% 
+  kable()
 ```
 
 On the natural scale, model fixed effects parameter estimates are as follows:
 
 ```{r s-model-summary-natural-1}
-as.data.frame(models$natural_scale_das_s)
+as.data.frame(models$natural_scale_das_s) %>% 
+  kable()
 ```
 
 We calculated Bayes factors to evaluate the strength of evidence in support of a null effect the fixed effects of total hours played and time (pre- and post-lockdown) and their interaction.
@@ -176,40 +232,82 @@ knitr::include_graphics(plots_dir[str_detect(plots_dir, "das_diff.png")])
 ### Depression
 
 ```{r d-model-summary-2}
-as.data.frame(models$das_d_diff$fixed)
+as.data.frame(models$das_d_diff$fixed) %>% 
+  kable()
 ```
+
+```{r d-bayes-factor-2}
+hypotheses$das_d_diff
+```
+
+We found overwhelming evidence in support of the null model in comparison to the alternative for the main effect of difference in hours played pre- and post-lockdown and the difference in depression scores.
 
 ### Anxiety
 
 ```{r a-model-summary-2}
-as.data.frame(models$das_a_diff$fixed)
+as.data.frame(models$das_a_diff$fixed) %>% 
+  kable()
 ```
+
+```{r a-bayes-factor-2}
+hypotheses$das_a_diff
+```
+
+We found overwhelming evidence in support of the null model in comparison to the alternative for the main effect of difference in hours played pre- and post-lockdown and the difference in anxiety scores.
 
 ### Stress
 
 ```{r s-model-summary-2}
-as.data.frame(models$das_s_diff$fixed)
+as.data.frame(models$das_s_diff$fixed) %>% 
+  kable()
 ```
+
+```{r s-bayes-factor-2}
+hypotheses$das_s_diff
+```
+
+We found overwhelming evidence in support of the null model in comparison to the alternative for the main effect of difference in hours played pre- and post-lockdown and the difference in stress scores.
 
 ## Effect of Hours Played During Lockdown on Mental Health Outcomes during Lockdown
 
 ### Depression
 
 ```{r d-model-summary-3}
-as.data.frame(models$das_l_d_diff$fixed)
+as.data.frame(models$das_l_d_diff$fixed) %>% 
+  kable()
 ```
+
+```{r d-bayes-factor-3}
+hypotheses$das_l_d_diff
+```
+
+We found overwhelming evidence in support of the null model in comparison to the alternative for the main effect of total hours played during lockdown and the difference in depression scores.
 
 ### Anxiety
 
 ```{r a-model-summary-3}
-as.data.frame(models$das_l_a_diff$fixed)
+as.data.frame(models$das_l_a_diff$fixed) %>% 
+  kable()
 ```
+
+```{r a-bayes-factor-3}
+hypotheses$das_l_a_diff
+```
+
+We found overwhelming evidence in support of the null model in comparison to the alternative for the main effect of total hours played during lockdown and the difference in anxiety scores.
 
 ### Stress
 
 ```{r s-model-summary-3}
-as.data.frame(models$das_l_s_diff$fixed)
+as.data.frame(models$das_l_s_diff$fixed) %>% 
+  kable()
 ```
+
+```{r s-bayes-factor-3}
+hypotheses$das_l_s_diff
+```
+
+We found overwhelming evidence in support of the null model in comparison to the alternative for the main effect of total hours played during lockdown and the difference in stress scores.
 
 # Model Fitting Diagnostics
 
@@ -251,3 +349,10 @@ knitr::include_graphics(plots_dir[str_detect(plots_dir, "pp_check_das_s.png")])
 knitr::include_graphics(plots_dir[str_detect(plots_dir, "pp_check_das_s_diff.png")])
 ```
 
+# Loneliness
+
+conent to come.
+
+# Gaming Motivations on Loneliness
+
+conent to come.
