@@ -9,3 +9,8 @@ formulae$das_full_diff <- bf(
   score_diff ~ hours_diff,
   family = gaussian(link = "identity")
 )
+
+formulae$das_full_l_diff <- bf(
+  score_diff ~ total_hours_after,
+  family = gaussian(link = "identity")
+)

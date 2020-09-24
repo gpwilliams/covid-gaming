@@ -41,3 +41,17 @@ das_diff_plots <- diff_draws %>%
       labs(title = .y)
   )
 plots$das_diff <- das_diff_plots[[1]] / das_diff_plots[[2]] / das_diff_plots[[3]]
+
+# diff scores (DAS) for lockdown hours played ----
+
+das_diff_l_plots <- diff_l_draws %>% 
+  imap(
+    ~.x %>% 
+      ggplot(aes(x = total_hours_after, y = .value)) +
+      stat_lineribbon(aes(y = .value)) +
+      scale_fill_brewer(palette = "Greys") +
+      scale_color_brewer(palette = "Set2") +
+      coord_cartesian(ylim = c(-4, 2)) +
+      labs(title = .y)
+  )
+plots$das_diff_l <- das_diff_l_plots[[1]] / das_diff_l_plots[[2]] / das_diff_l_plots[[3]]
