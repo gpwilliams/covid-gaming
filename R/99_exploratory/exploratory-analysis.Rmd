@@ -1,0 +1,312 @@
+---
+title: "Results"
+subtitle: "Working version"
+author: "Williams, G. P.,"
+date: "22<sup>nd</sup> July, 2020 (Last updated: `r format(Sys.time(), '%d<sup>th</sup> %B, %Y')`)"
+output: 
+  html_notebook:
+    toc: true
+    toc_float: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries}
+library(tidyverse)
+library(here)
+library(afex)
+library(brms)
+library(emmeans)
+```
+
+```{r load-data}
+data <- list()
+r_file_list <- list.files(
+  path = here::here("02_data", "02_cleaned", "02_aggregated", "01_rds"), 
+  pattern = "rds$",
+  full.names = TRUE
+)
+data <- r_file_list %>% 
+  map(read_rds)
+names(data) <- r_file_list %>% 
+  sub(".*/", "", .) %>% 
+  substr(., 1, nchar(.)-4)
+
+data$demo <- read_rds(
+  here("02_data", "02_cleaned", "01_multilevel", "01_rds", "demographics.rds")
+)
+data$games_played <- read_rds(
+  here("02_data", "02_cleaned", "01_multilevel", "01_rds", "games_played_wider.rds")
+)
+```
+
+# DAS data
+
+```{r prepare-data-das}
+# das: subscale, hours played, time (before/after)
+das_data <- left_join(
+  data$das_longer,
+  data$games_played %>% select(response_id, time, total_hours),
+  by = c("response_id", "time")
+)
+
+# order time so before comes first
+das_data$time <- factor(
+  das_data$time, 
+  levels = c("before", "after")
+  )
+
+# set contrasts
+das_data$time <- as.factor(das_data$time)
+contrasts(das_data$time) <- contr.sum(2)
+das_data$subscale <- as.factor(das_data$subscale)
+contrasts(das_data$subscale) <- contr.sum(3)
+
+# make id numeric
+das_data$id <- as.numeric(factor(das_data$response_id))
+
+# log transform predictor, accounting for 0
+das_data$total_hours_log <- log(1 + das_data$total_hours)
+
+# standarise predictor
+das_data$total_hours_s <- (das_data$total_hours - mean(das_data$total_hours))/
+  sd(das_data$total_hours)
+```
+
+## plots
+
+### Untranformed hours, including all observations
+
+```{r das-total-hours}
+ggplot(das_data, aes(x = total_hours, y = score)) +
+  facet_wrap(time ~ subscale) +
+  geom_smooth(method = "lm", formula = "y ~ x") +
+  geom_point(alpha = 0.1)
+```
+
+### Untranformed hours excluding observations of > 100 hours
+
+```{r das-total-hours-less100}
+ggplot(
+  das_data %>% filter(total_hours < 100), 
+  aes(x = total_hours, y = score)
+  ) +
+  facet_wrap(time ~ subscale) +
+  geom_smooth(method = "lm", formula = "y ~ x") +
+  geom_point(alpha = 0.1)
+```
+
+## Analyse data
+
+### Fit Model
+
+Adapt model, with subscale and total hours nested within time.
+
+Maybe model with spaghetti plots showing how people vary from averages.
+
+```{r das_mod}
+das_mod <- afex::mixed(
+  score ~ time * subscale * total_hours_s + (1 | id), 
+  das_data,
+  method = "S"
+)
+das_mod
+```
+
+We have a main effect of time and subscale, an interaction between time and subscale, and an interaction between subscale and total hours played.
+
+### Post-hoc tests
+
+#### Time and Subscale Interaction
+
+```{r time-and-subscale-plot-das}
+emmip(das_mod, subscale ~ time)
+```
+
+```{r time-and-subscale-das}
+emmeans(das_mod, pairwise ~ time * subscale)
+```
+
+We see that anxiety is low in comparison to depression and stress before and after lockdown. For all subscales, scores increase after lockdown. Scores for depression and stress do not differ significantly before or after lockdown. All other differences are significant.
+
+#### Subscale and Total Hours Played Interaction
+
+```{r subscale-and-hours-das-plot}
+emmip(das_mod, subscale ~ total_hours_s, cov.reduce = range)
+```
+
+```{r subscale-and-hours-das}
+emtrends(das_mod, pairwise ~ subscale, var = "total_hours_s")
+```
+
+We see that neither stress nor anxiety change as the number of hours played increases. However, depression increases linearly as the number of hours played increases. The slopes differ significantly between depression and stress, but not between the other contrasts.
+
+# DAS during quarantine only: using pre-quarantine DAS score as a predictor
+
+```{r}
+# das_data_quar <- pivot_wider(das_data, )
+```
+
+# Loneliness
+
+We predict loneliness scores by total hours played in games and living situation (alone or other).
+
+```{r loneliness}
+# loneliness: hours played, time (before/after)
+loneliness_data <- left_join(
+  data$loneliness,
+  data$games_played %>% select(response_id, total_hours),
+  by = "response_id"
+)
+loneliness_data <- left_join(
+  loneliness_data,
+  data$demo %>% select(response_id, living_alone)
+)
+
+# order time so before comes first
+loneliness_data$time <- factor(
+  loneliness_data$time, 
+  levels = c("before", "after")
+  )
+
+# living alone: factor
+loneliness_data$living_alone <- factor(
+  loneliness_data$living_alone, 
+  levels = c(1, 0),
+  labels = c("alone", "not_alone")
+  )
+
+# set contrasts
+contrasts(loneliness_data$time) <- contr.sum(2)
+contrasts(loneliness_data$living_alone) <- contr.sum(2)
+
+# make id numeric
+loneliness_data$id <- as.numeric(factor(loneliness_data$response_id))
+
+# log transform predictor, accounting for 0
+loneliness_data$total_hours_log <- log(1 + loneliness_data$total_hours)
+
+# standarise predictor
+loneliness_data$total_hours_s <- (loneliness_data$total_hours - mean(loneliness_data$total_hours))/
+  sd(loneliness_data$total_hours)
+
+# fix the fact some aren't integers
+loneliness_data$score <- round(loneliness_data$score, 0)
+
+# NOTE: must explore why loneliness scores are sometimes floats.
+```
+
+## plots
+
+```{r loneliness-plot}
+ggplot(loneliness_data, aes(x = total_hours, y = score)) +
+  facet_wrap(~time) +
+  geom_smooth(method = "lm", formula = "y ~ x") +
+  geom_point(alpha = 0.1)
+```
+
+
+
+```{r}
+das_data %>% 
+  pivot_wider(names_from = "time", values_from = c("score", "total_hours")) %>% 
+  mutate(
+    score_diff = score_before - score_after,
+    hours_diff = total_hours_before - total_hours_after
+  )
+```
+
+
+```{r}
+xx <- loneliness_data %>% 
+  pivot_wider(names_from = "time", values_from = c("score", "total_hours")) %>% 
+  mutate(
+    score_diff = score_before - score_after,
+    hours_diff = total_hours_before - total_hours_after
+  )
+
+ggplot(xx, aes(x = hours_diff, y = score_diff)) +
+  geom_smooth(method = "lm")
+```
+
+diff in loneliness from hours played after lockdown.
+
+look at difference in hours played and how that predicts after lockdown loneliness.
+
+
+
+Clearly scores are ordinal here (Likert scale) and shouldn't be treated as continuous.
+
+```{r}
+cores <- parallel::detectCores()
+
+loneliness_mod <- brms::brm(
+  score ~ time * total_hours * living_alone + 
+    (1 | id), 
+  data = loneliness_data, 
+  family = cumulative(),
+  iter = 2000, 
+  chains = 4,
+  cores = cores
+  )
+```
+
+We can interrogate the parameter estimates directly here as the model is relatively simple in terms of the fixed effects.
+
+```{r loneliness-mod-summary}
+summary(loneliness_mod)
+```
+
+# GAM: How do gaming habits mediate effects on the DAS/loneliness scales?
+
+```{r gaming-habits-summary}
+# loneliness: hours played, time (before/after)
+loneliness_data <- left_join(
+  data$loneliness,
+  data$games_played %>% select(response_id, time, total_hours),
+  by = c("response_id", "time")
+)
+loneliness_data <- left_join(
+  loneliness_data,
+  data$demo %>% select(response_id, living_alone)
+)
+
+# order time so before comes first
+loneliness_data$time <- factor(
+  loneliness_data$time, 
+  levels = c("before", "after")
+  )
+
+# living alone: factor
+loneliness_data$living_alone <- factor(
+  loneliness_data$living_alone, 
+  levels = c(1, 0),
+  labels = c("alone", "not_alone")
+  )
+
+# set contrasts
+contrasts(loneliness_data$time) <- contr.sum(2)
+contrasts(loneliness_data$living_alone) <- contr.sum(2)
+
+# make id numeric
+loneliness_data$id <- as.numeric(factor(loneliness_data$response_id))
+
+# log transform predictor, accounting for 0
+loneliness_data$total_hours_log <- log(1 + loneliness_data$total_hours)
+
+# standarise predictor
+loneliness_data$total_hours_s <- (loneliness_data$total_hours - mean(loneliness_data$total_hours))/
+  sd(loneliness_data$total_hours)
+
+# fix the fact some aren't integers
+loneliness_data$score <- round(loneliness_data$score, 0)
+
+
+
+# NOTE: must explore why loneliness scores are sometimes floats.
+```
+
+

@@ -1,0 +1,105 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries}
+library(tidyverse)
+library(here)
+library(afex)
+library(brms)
+library(emmeans)
+```
+
+```{r load-data}
+data <- list()
+r_file_list <- list.files(
+  path = here::here("02_data", "02_cleaned", "02_aggregated", "01_rds"), 
+  pattern = "rds$",
+  full.names = TRUE
+)
+data <- r_file_list %>% 
+  map(read_rds)
+names(data) <- r_file_list %>% 
+  sub(".*/", "", .) %>% 
+  substr(., 1, nchar(.)-4)
+
+data$demo <- read_rds(
+  here("02_data", "02_cleaned", "01_multilevel", "01_rds", "demographics.rds")
+)
+data$games_played <- read_rds(
+  here("02_data", "02_cleaned", "01_multilevel", "01_rds", "games_played_wider.rds")
+)
+```
+
+# DAS data
+
+```{r prepare-data-das}
+# das: subscale, hours played, time (before/after)
+das_data <- left_join(
+  data$das_longer,
+  data$games_played %>% select(response_id, time, total_hours),
+  by = c("response_id", "time")
+)
+
+# order time so before comes first
+das_data$time <- factor(
+  das_data$time, 
+  levels = c("before", "after")
+  )
+
+# set contrasts
+das_data$time <- as.factor(das_data$time)
+contrasts(das_data$time) <- contr.sum(2)
+das_data$subscale <- as.factor(das_data$subscale)
+contrasts(das_data$subscale) <- contr.sum(3)
+
+# make id numeric
+das_data$id <- as.numeric(factor(das_data$response_id))
+
+# log transform predictor, accounting for 0
+das_data$total_hours_log <- log(1 + das_data$total_hours)
+
+# standarise predictor
+das_data$total_hours_s <- (das_data$total_hours - mean(das_data$total_hours, na.rm = TRUE))/
+  sd(das_data$total_hours, na.rm = TRUE)
+```
+
+
+Can be improved by predicted variance too via bf()...
+
+```{r fit-model, eval = FALSE}
+das_mod <- brm(score ~ time/subscale * total_hours + (1 | id), 
+  data = das_data,
+  family = cumulative(),
+  iter = 2000,
+  chains = 4,
+  cores = 4
+)
+das_mod
+write_rds(das_mod, here("R", "05_fit-models", "das_mod_cumulative.rds"))
+```
+
+```{r get-model-parameters}
+posterior_samples(das_mod) %>% 
+  select(starts_with("b_")) %>% 
+  mutate_all(inv_logit_scaled) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarise(mean = mean(value),
+            sd   = sd(value),
+            ll   = quantile(value, probs = .025),
+            ul   = quantile(value, probs = .975))
+```
+
+
+DAS Data:
+
+- Difference in DAS predicted by current hours, and predictors as in previous model. (Same as before, but just with change DAS scores). Visualise this too.
+
+- Maybe don't need to change model, but just change visualisation.
+
