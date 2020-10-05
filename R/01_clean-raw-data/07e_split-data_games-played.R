@@ -106,3 +106,11 @@ games_played_agg <- wide_data_complete %>%
   )
 
 agg_data$games_played <- full_join(regularly_play_agg, games_played_agg)
+
+# widest data: 
+agg_data$games_played_widest <- agg_data$games_played %>% 
+  arrange(desc(time)) %>% 
+  pivot_wider(
+    names_from = "time",
+    values_from = regularly_play:total_hours_played
+  )

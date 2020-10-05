@@ -48,3 +48,11 @@ agg_data$das_wider <- agg_data$das_longer %>%
     names_from = "subscale",
     values_from = "score"
   )
+
+# widest data: aggregated by subject
+agg_data$das_widest <- agg_data$das_wider %>% 
+  arrange(desc(time)) %>% 
+  pivot_wider(
+    names_from = "time",
+    values_from = anxiety:stress
+  )

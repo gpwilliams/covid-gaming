@@ -4,7 +4,7 @@
 
 gam_keys <- list(
   instrinsic_motivation = c(1:3),
-  itegrated_regulation = c(4:6),
+  integrated_regulation = c(4:6),
   identified_regulation = c(7:9),
   introjected_regulation = c(10:12),
   external_regulation = c(13:15),
@@ -31,7 +31,7 @@ item_data$gam_longer <- wide_data_complete %>%
   mutate(
     subscale = case_when(
       item %in% gam_keys$instrinsic_motivation ~ "instrinsic_motivation",
-      item %in% gam_keys$itegrated_regulation ~ "itegrated_regulation",
+      item %in% gam_keys$integrated_regulation ~ "integrated_regulation",
       item %in% gam_keys$identified_regulation ~ "identified_regulation",
       item %in% gam_keys$introjected_regulation ~ "introjected_regulation",
       item %in% gam_keys$external_regulation ~ "external_regulation",
@@ -56,4 +56,12 @@ agg_data$gam_wider <- agg_data$gam_longer %>%
   pivot_wider(
     names_from = "subscale",
     values_from = "score"
+  )
+
+# widest data: aggregated by subject
+agg_data$gam_widest <- agg_data$gam_wider %>% 
+  arrange(desc(time)) %>% 
+  pivot_wider(
+    names_from = "time",
+    values_from = amotivation:introjected_regulation
   )

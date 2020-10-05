@@ -31,3 +31,11 @@ agg_data$loneliness <- item_data$loneliness_longer %>%
   ungroup() %>% 
   group_by(response_id, time) %>% 
   summarise(score = sum(score))
+
+# widest data: aggregated by subject
+agg_data$loneliness_widest <- agg_data$loneliness %>% 
+  arrange(desc(time)) %>% 
+  pivot_wider(
+    names_from = "time",
+    values_from = score
+  )
