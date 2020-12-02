@@ -75,3 +75,42 @@ for(i in seq_along(names_data)) {
     )
   )
 }
+
+# save demographics data names ----
+
+# all demographics
+# as rds files
+write_rds(
+  demo_data_details,
+  here(
+    "02_data", 
+    "02_cleaned", 
+    "02_aggregated",
+    "01_rds",
+    "demographics.rds"
+  )
+)
+
+# as csv
+write_csv(
+  demo_data_details,
+  here(
+    "02_data", 
+    "02_cleaned", 
+    "02_aggregated",
+    "02_csv",
+    "demographics.csv"
+  )
+)
+
+# summary data: csv only; data types aren't important here
+for(i in seq_along(demo_data)) {
+  write_csv(
+    demo_data[[i]], 
+    here(
+      "02_data", 
+      "03_summary",
+      paste0("demographics_", names(demo_data[i]), ".csv")
+    )
+  )
+}

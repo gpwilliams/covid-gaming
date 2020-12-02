@@ -16,8 +16,8 @@ names(data) <- r_file_list %>%
 
 # load in demographic data and games played data
 data$demo <- read_rds(
-  here::here("02_data", "02_cleaned", "01_multilevel", "01_rds", "demographics.rds")
+  here::here("02_data", "02_cleaned", "02_aggregated", "01_rds", "demographics.rds")
 )
 data$games_played <- read_rds(
-  here::here("02_data", "02_cleaned", "01_multilevel", "01_rds", "games_played_wider.rds")
+  here::here("02_data", "02_cleaned", "02_aggregated", "01_rds", "games_played.rds")
 )

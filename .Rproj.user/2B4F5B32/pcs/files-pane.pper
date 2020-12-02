@@ -1,9 +1,9 @@
 {
-    "path" : "~/Dropbox/GitHub/covid-gaming",
-    "sortOrder" : [
+    "path": "~/Dropbox/GitHub/covid-gaming/R/03_make-data-summaries",
+    "sortOrder": [
         {
-            "ascending" : true,
-            "columnIndex" : 2
+            "columnIndex": 2,
+            "ascending": true
         }
     ]
 }

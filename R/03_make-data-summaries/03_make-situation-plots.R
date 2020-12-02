@@ -4,7 +4,7 @@ plots <- list()
 
 # make data ----
 
-employment <- filtered_demo %>% 
+employment <- data$demo %>% 
   pivot_longer(
     cols = c(
       secondary_school_current:other_education_employ_current
@@ -13,14 +13,14 @@ employment <- filtered_demo %>%
     values_to = "current_situation_yes"
   ) 
 
-lockdown <- filtered_demo %>% 
+lockdown <- data$demo %>% 
   pivot_longer(
     cols = lockdown_worked_as_normal:lockdown_other,
     names_to = "lockdown_situation",
     values_to = "lockdown_situation_yes"
   )
 
-living <- filtered_demo %>% 
+living <- data$demo %>% 
   pivot_longer(
     cols = living_with_partner:living_other,
     names_to = "living_situation",

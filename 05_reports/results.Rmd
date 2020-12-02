@@ -12,13 +12,14 @@ date: "2020-09-16 (updated: `r Sys.Date()`)"
 
 ```{r setup, message=FALSE, echo=FALSE}
 # global options ---
-options(digits = 2)
+options(digits = 3)
 
 # load libraries ----
 library(tidyverse)
 library(here)
 library(brms)
 library(kableExtra)
+library(english)
 
 # load functions ----
 r_function_list <- list.files(
@@ -87,6 +88,11 @@ demo <- demo_lists %>%
 names(demo) <- demo_lists %>% 
   sub(".*/", "", .) %>% 
   substr(., 1, nchar(.)-4)
+demo$exclusions <- read_csv(here(
+  "02_data", 
+  "03_summary", 
+  "demographics_exclusions.csv"
+))
 
 # read in all plots ----
 plots_dir <- list.files(
@@ -100,9 +106,8 @@ We used `r version$version.string` and the R-packages tidyverse (version `r pack
 
 # Demographics
 
-We collected data from a total of XX participants. After exclusions based on non-completion or missing data (**details to be expanded**) we analysed data from `r demo$demographics$n` participants (age *M* = `r demo$demographics$age_mean`, *SD* = `r demo$demographics$age_sd`, Range = `r demo$demographics$age_min`, ``r demo$demographics$age_max`). On average participants took `r demo$demographics$duration_mean` seconds to complete the task (*SD* = `r demo$demographics$duration_sd`).
-
-Exclusions: **details to be expanded**.
+`r stringr::str_to_sentence(english(demo$exclusions$original_n))` participants were recruited to take part in this study online via Qualtrics. Of which `r demo$exclusions$age_consent_n` provided full informed consent. `r stringr::str_to_sentence(english(demo$exclusions$age_consent_n-demo$exclusions$valid_n))`
+participants were excluded from this sample due to having completed less than 90% of the questionnaire, providing invalid employment details (i.e. stating they were both employed and unemployed) or for reporting having played no games before or during lockdown. A further `r demo$exclusions$valid_n-demo$exclusions$after_exclusions_n` participants were removed from the analysis due to having more than 20% of trials with missing data and/or having reported hours played more than 3 MAD above the median hours played in games in an average week (i.e. around 150 hours). Finally, a further `r demo$exclusions$after_exclusions_n-demo$demographics$n` participants were removed from the analysis due to having missing data for hours played in games either before or after lockdown. After all exclusions we analysed data from `r demo$demographics$n` participants (age *M* = `r demo$demographics$age_mean`, *SD* = `r demo$demographics$age_sd`, Range = `r demo$demographics$age_min`, `r demo$demographics$age_max`). On average participants took `r demo$demographics$duration_mean/60` minutes to complete the task (*SD* = `r demo$demographics$duration_sd/60`).
 
 ## Employment
 
@@ -141,6 +146,11 @@ We fitted these models separately for each subscale of the DAS using the `brm` f
 We present the fixed effect parameter estimates below on the log scale followed by the same parameter estimates backtransformed to the natural (i.e. rating) scale. For each model, we present posterior predictions from the model. We evaluate the evidence in support for an effect for each fixed factor using Bayes factors calculated using the Savage Savage-Dickey density ratio with the `hypothesis` function in brms.
 
 ### Model Predictions
+
+
+NOTE 2 participants were excluded due to having missing hours played.
+
+
 
 Below we show spaghetti plots showing the predictions for each model for the effect of hours played within each subscale and time period on DAS outcomes.
 

@@ -11,3 +11,4 @@ raw_data <- read_csv(here::here(
 agg_data <- list()
 item_data <- list()
 names_data <- list()
+demo_data <- list()
