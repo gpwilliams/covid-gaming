@@ -15,9 +15,9 @@ r_function_list <- list.files(
 )
 purrr::walk(r_function_list, source)
 
-r_file_list <- list.files(
+analysis_file_list <- list.files(
   path = here::here("R", "06_analyse-models"), 
   pattern = "R$",
   full.names = TRUE
 )
-purrr::walk(r_file_list, source)
+purrr::walk(analysis_file_list, source)

@@ -147,9 +147,10 @@ fit_bf_corrs <- function(.data, iterations = 1e3, digits = 2, tidied = TRUE, mat
   corrs <- correlate_all_bf(.data, iterations = iterations)
   
   if(tidied == TRUE) {
-    tidied <- tidy_bf_results(corrs, digits = digits)
+    corrs <- tidy_bf_results(corrs, digits = digits)
   }
   if(matrix == TRUE) {
-    make_matrix_table_bf(.data, tidied) 
+    corrs <- make_matrix_table_bf(.data, corrs) 
   }
+  corrs
 }

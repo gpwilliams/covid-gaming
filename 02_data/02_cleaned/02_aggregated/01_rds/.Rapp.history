@@ -1,1 +1,2 @@
 load("/Users/glennwilliams/Dropbox/GitHub/covid-gaming/02_data/02_cleaned/02_aggregated/01_rds/das_longer.rds")
+load("/Users/glennwilliams/Dropbox/GitHub/covid-gaming/02_data/02_cleaned/02_aggregated/01_rds/change_clusters_widest.rds")

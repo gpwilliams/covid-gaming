@@ -21,7 +21,8 @@ wide_data_recoded_adjusted <- wide_data_recoded %>%
       select(., starts_with("games_percent_after")), 
       na.rm = TRUE
     )
-  )
+  ) %>% # fix DAS scores to range from 0-3
+  mutate(across(contains('das_'), ~ .-1))
 
 # make hours per game ----
 

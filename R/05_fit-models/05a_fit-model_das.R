@@ -1,5 +1,3 @@
-# note: 62 and 137 have NA for total hours so are dropped
-
 # fit model ----
 
 message("Fitting DAS models.")
@@ -20,7 +18,8 @@ models$das_d <- brm(
     max_treedepth = analysis_options$max_treedepth
   ),
   sample_prior = TRUE,
-  save_all_pars = TRUE
+  save_pars = save_pars(all = TRUE),
+  backend = "cmdstanr"
 )
 
 # anxiety (update to avoid recompiling C++ code)
@@ -36,7 +35,8 @@ models$das_a <- update(
     max_treedepth = analysis_options$max_treedepth
   ),
   sample_prior = TRUE,
-  save_all_pars = TRUE
+  save_pars = save_pars(all = TRUE),
+  backend = "cmdstanr"
   )
 
 # stress (update to avoid recompiling C++ code)
@@ -52,7 +52,8 @@ models$das_s <- update(
     max_treedepth = analysis_options$max_treedepth
   ),
   sample_prior = TRUE,
-  save_all_pars = TRUE
+  save_pars = save_pars(all = TRUE),
+  backend = "cmdstanr"
 )
 
 # fit diff models ----
@@ -73,7 +74,8 @@ models$das_d_diff <- brm(
     max_treedepth = analysis_options$max_treedepth
   ),
   sample_prior = TRUE,
-  save_all_pars = TRUE
+  save_pars = save_pars(all = TRUE),
+  backend = "cmdstanr"
 )
 
 # anxiety (update to avoid recompiling C++ code)
@@ -89,7 +91,8 @@ models$das_a_diff <- update(
     max_treedepth = analysis_options$max_treedepth
   ),
   sample_prior = TRUE,
-  save_all_pars = TRUE
+  save_pars = save_pars(all = TRUE),
+  backend = "cmdstanr"
 )
 
 # stress (update to avoid recompiling C++ code)
@@ -105,7 +108,8 @@ models$das_s_diff <- update(
     max_treedepth = analysis_options$max_treedepth
   ),
   sample_prior = TRUE,
-  save_all_pars = TRUE
+  save_pars = save_pars(all = TRUE),
+  backend = "cmdstanr"
 )
 
 # change in DAS scores for lockdown hours played ----
@@ -123,7 +127,8 @@ models$das_l_d_diff <- brm(
     max_treedepth = analysis_options$max_treedepth
   ),
   sample_prior = TRUE,
-  save_all_pars = TRUE
+  save_pars = save_pars(all = TRUE),
+  backend = "cmdstanr"
 )
 
 # anxiety (update to avoid recompiling C++ code)
@@ -139,7 +144,8 @@ models$das_l_a_diff <- update(
     max_treedepth = analysis_options$max_treedepth
   ),
   sample_prior = TRUE,
-  save_all_pars = TRUE
+  save_pars = save_pars(all = TRUE),
+  backend = "cmdstanr"
 )
 
 # stress (update to avoid recompiling C++ code)
@@ -155,5 +161,6 @@ models$das_l_s_diff <- update(
     max_treedepth = analysis_options$max_treedepth
   ),
   sample_prior = TRUE,
-  save_all_pars = TRUE
+  save_pars = save_pars(all = TRUE),
+  backend = "cmdstanr"
 )

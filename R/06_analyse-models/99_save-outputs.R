@@ -1,6 +1,6 @@
-# save models ----
+# save outputs ----
 
-# save full model objects
+# save plots
 for(i in seq_along(plots)) {
   ggsave(
     filename = here("03_plots", paste0(names(plots)[[i]], ".png")),
@@ -12,13 +12,13 @@ for(i in seq_along(plots)) {
 
 # save model summaries
 
-for(i in seq_along(das_hyps)) {
+for(i in seq_along(mh_hyps)) {
   write_csv(
-    x = das_hyps[[i]],
+    x = mh_hyps[[i]],
     path = here(
       "04_analysis", 
       "02_hypotheses",
-      paste0(names(das_hyps)[[i]], ".csv")
+      paste0(names(mh_hyps)[[i]], ".csv")
     )
   )
 }

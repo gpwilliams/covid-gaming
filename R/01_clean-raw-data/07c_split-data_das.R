@@ -39,7 +39,7 @@ agg_data$das_longer <- item_data$das_longer %>%
   mutate(score = impute_mean(score)) %>% 
   ungroup() %>% 
   group_by(response_id, time, subscale) %>% 
-  summarise(score = sum(score)) 
+  summarise(score = sum(score)*2) # DASS21 scores are multiplied by 2
 
 # wider data: aggregated by subject
 

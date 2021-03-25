@@ -16,14 +16,6 @@ names(data) <- r_file_list %>%
   sub(".*/", "", .) %>% 
   substr(., 1, nchar(.)-4)
 
-# load in demographic data and games played data
-data$demo <- read_rds(
-  here::here("02_data", "02_cleaned", "01_multilevel", "01_rds", "demographics.rds")
-)
-data$games_played <- read_rds(
-  here::here("02_data", "02_cleaned", "01_multilevel", "01_rds", "games_played_wider.rds")
-)
-
 # read in models ----
 
 # get file names 
@@ -44,3 +36,4 @@ names(models) <- model_file_list %>%
 
 prepared_data <- list()
 source(here("R", "05_fit-models", "02a_prepare-data_das.R"))
+source(here("R", "05_fit-models", "02b_prepare-data_l.R"))

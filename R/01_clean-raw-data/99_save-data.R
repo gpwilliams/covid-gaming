@@ -114,3 +114,13 @@ for(i in seq_along(demo_data)) {
     )
   )
 }
+
+# save plots ----
+for(i in seq_along(cluster_plots)) {
+  ggsave(
+    here("03_plots", paste0(names(cluster_plots[i]), ".png")),
+    cluster_plots[[i]], 
+    height = 8,
+    width = 12
+  )
+}

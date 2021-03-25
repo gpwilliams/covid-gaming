@@ -18,20 +18,20 @@ names_data$loneliness <- raw_data[1,] %>%
 names_data$games <- raw_data[1,] %>% 
   select(contains("Q16_")) %>% 
   as.character() %>% 
-  map(str_split, pattern = " - | \\(") %>% 
-  map_chr(c(1,3)) 
+  purrr::map(str_split, pattern = " - | \\(") %>% 
+  purrr::map_chr(c(1,3)) 
 
 # get why games were played
 names_data$why_play_names <- raw_data[1,] %>% 
   select(contains("Q20_")) %>% 
   as.character() %>% 
-  map(str_split, pattern = " - | \\(") %>% 
-  map_chr(c(1,2)) 
+  purrr::map(str_split, pattern = " - | \\(") %>% 
+  purrr::map_chr(c(1,2)) 
 
 # store iten numbers with names in tables
 
 names_data <- names_data %>% 
-  map(. %>% 
+  purrr::map(. %>% 
         as_tibble() %>% 
         mutate(item = 1:nrow(.)) %>% 
         rename(label = value) %>% 

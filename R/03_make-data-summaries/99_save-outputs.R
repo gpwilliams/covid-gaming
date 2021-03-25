@@ -10,8 +10,7 @@ for(i in seq_along(plots)) {
   )
 }
 
-# save model summaries
-
+# save summaries
 for(i in seq_along(new_demographics)) {
   write_csv(
     x = new_demographics[[i]],

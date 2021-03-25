@@ -1,0 +1,294 @@
+---
+title: "Latest Results"
+output: html_document
+author: "Glenn Williams"
+date: "2020-02-05 (updated: `r Sys.Date()`)"
+---
+
+```{r setup, message=FALSE, echo=FALSE}
+# global options ---
+options(digits = 3)
+
+# load libraries ----
+library(tidyverse)
+library(here)
+library(brms)
+library(papaja)
+library(english)
+library(kableExtra)
+
+# load functions ----
+r_function_list <- list.files(
+  path = here("R", "00_functions"), 
+  pattern = "R$",
+  full.names = TRUE
+)
+purrr::walk(r_function_list, source)
+
+# load and prepare data ----
+
+data <- map_files_to_list(here::here(
+  "02_data", 
+  "02_cleaned", 
+  "02_aggregated", 
+  "01_rds"
+))
+
+# load models and tests ----
+
+models <- map_files_to_list(here::here(
+  "04_analysis", 
+  "01b_model_summaries"
+))
+
+hypotheses <- map_files_to_list(
+  here::here("04_analysis", "02_hypotheses"), 
+  readr::read_csv
+)
+
+tests <- map_files_to_list(
+  here::here("04_analysis", "04_tests"), 
+  readr::read_csv
+)
+
+
+demo <-  map_files_to_list(
+  here::here("04_analysis", "03_demographic-summary"), 
+  readr::read_csv
+)
+
+demo$exclusions <- read_csv(here(
+  "02_data", 
+  "03_summary", 
+  "demographics_exclusions.csv"
+))
+
+# read in all plots ----
+plots_dir <- list.files(
+  path = here::here("03_plots"), 
+  pattern = "png$",
+  full.names = TRUE
+)
+
+# knitr options
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+We used `r version$version.string` and the R-packages tidyverse (version `r packageVersion("tidyverse")`), here (version `r packageVersion("here")`), brms (version `r packageVersion("brms")`), modelr (version`r packageVersion("modelr")`), tidybayes (version `r packageVersion("tidybayes")`), and patchwork (version `r packageVersion("patchwork")`) for data preparation and analysis.
+
+# Demographics
+
+`r stringr::str_to_sentence(english(demo$exclusions$original_n))` participants were recruited to take part in this study online via Qualtrics. Of which `r demo$exclusions$age_consent_n` provided full informed consent. `r stringr::str_to_sentence(english(demo$exclusions$age_consent_n-demo$exclusions$valid_n))` participants were excluded from this sample due to having completed less than 90% of the questionnaire, providing invalid employment details (i.e. stating they were both employed and unemployed) or for reporting having played no games before or during lockdown. A further `r demo$exclusions$valid_n-demo$exclusions$after_exclusions_n` participants were removed from the analysis due to having more than 20% of trials with missing data and/or having reported hours played more than 3 MAD above the median hours played in games in an average week (i.e. around 150 hours). After all exclusions we analysed data from `r demo$demographics$n` participants (age *M* = `r demo$demographics$age_mean`, *SD* = `r demo$demographics$age_sd`, Range = `r demo$demographics$age_min` - `r demo$demographics$age_max`). On average participants took `r demo$demographics$duration_mean/60` minutes to complete the task (*SD* = `r demo$demographics$duration_sd/60`).
+
+The below graph shows the number of participants in a given employment situation during lockdown.
+
+```{r employment, fig.cap="Count of participants for reported employment situation."}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "employment.png")])
+```
+
+The below graph shows the number of participants affected by differing lockdown situations.
+
+```{r lockdown, fig.cap="Count of participants for reported lockdown situation."}
+knitr::include_graphics(
+  plots_dir[str_detect(plots_dir, "lockdown.png")]
+)
+```
+
+The below graph shows the number of participants affected by in a given living situation.
+
+```{r living, fig.cap="Count of participants for each reported living situation."}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "living.png")])
+```
+
+T-test. Note these BFs differ to the brms ones. Why? Brms uses medians. So now I report medians and only the brms bayes factors and it all makes sense. No anxiety difference...
+
+```{r}
+tests$ttest_descriptives %>% 
+  mutate(rowname = str_to_title(str_replace_all(rowname, "_", " "))) %>% 
+  separate(rowname, into = c("subscale", "time"), sep = "\\s+(?=\\S*$)", extra = "merge") %>%
+  filter(time != "Change") %>% 
+  mutate(time = factor(time, levels = c("Before", "After"))) %>% 
+  arrange(subscale, time) %>% 
+  select(subscale, time, median, min, max, IQR) %>% 
+  apa_table()
+```
+
+```{r}
+tests$ttest_summary %>% 
+  merge_ci_limits(lower = "lower_ci", upper = "upper_ci") %>% 
+  mutate(
+    bf = case_when(
+      bf > 1000000 ~ "> 1,000,000",
+      TRUE ~ as.character(formatC(bf, digits = 2, format = "f", big.mark = ","))
+    ),
+    test = str_to_title(str_replace_all(test, "_", " ")),
+    bf = paste0(bf, " ±", error, "\\%")
+  ) %>% 
+  rename(
+    Test = test,
+    "$BF_{10}$" = bf,
+    "$M$" = mean,
+    "95\\% CI" = `95% CI`
+  ) %>% 
+  select(-c(error, sd:draws)) %>% 
+  apa_table(
+    caption = "Bayes factors for evaluating evidence in support of the alternative hypothesis (i.e. of a non-null effect) for changes to depression, anxiety, stress, and loneliness scores between before and during lockdown.",
+    note = "Higher values indicate support for the alternative hypothesis while lower numbers indicate support for the null hypothesis. Parameter estimates were taken using 1000 draws from the posterior.",
+    escape = FALSE
+  )
+```
+
+
+
+# Model Fitting
+
+## Effect of Hours Played Before and After Lockdown on Mental Health Outcomes
+
+We took the data from the DASS questionnaire and loneliness questionnaire ratings before and after lockdown and combined these with hours played before and after lockdown. Given the data are generated from three Likert-style questionnaire responses per subscale, added together and multiplied by two, responses are thus strictly positive integers. This required fitting the data to cumulative models using a logit link function. 
+
+We fitted these models separately for each sub-scale of the DASS and for loneliness using the `brm` function in brms, estimating the effect of hours played in video games, time (pre- and post-lockdown), and the interaction between them. The categorical fixed effect of time was sum-coded (before = -1, after = 1) while the continuous fixed effect of total hours played was z-transformed. As a result, the intercept represents the grand mean and regression coefficients represent the impact of lockdown on mental health outcomes across the average hours played (i.e. a main effect of time), the impact of hours played across the average of both time points (i.e. a main effect of hours played), and their interaction. Similar
+
+All models contained random intercepts per participant. Models used a $Normal(0, 50)$ prior on the intercept, a $Normal(0, 5)$ prior on the slope terms, and an $Exponential(1)$ prior on the standard deviation term. We evaluate the evidence in support for an effect for each fixed factor and their interaction using Bayes factors calculated using the Savage Savage-Dickey density ratio with the `hypothesis` function in brms. The fixed effect parameter estimates are reported in the Appendix on the log scale and backtransformed to the natural (i.e. rating) scale.
+
+```{r dass-bayes-pre-post}
+bind_rows(
+  hypotheses$das_d,
+  hypotheses$das_a,
+  hypotheses$das_s,
+  hypotheses$loneliness
+) %>% 
+  mutate(
+    Model = c(
+      rep("Depression", 3),
+      rep("Anxiety", 3),
+      rep("Stress", 3),
+      rep("Loneliness", 3)
+    ),
+    Hypothesis = 
+      rep(c("Time", "Total Hours", "Time by Hours"), 4)
+  ) %>% 
+  select(Model, everything()) %>% 
+ apa_table()
+```
+
+We found evidence against the null for the effect of time in the Depression, Stress, and Loneliness models where parameter estimates and credible intervals show an increase in negative outcomes on these scales during lockdown. 
+
+## Change in Hours Played Pre- and Post-Lockdown on Mental Health Outcomes
+
+We next explored the effect of the change in total hours playing games before and after lockdown on the difference in mental health outcomes pre- and post-lockdown. Here, hours played after were subtracted from hours played before, and DAS outcomes after were (separately) subtracted from DAS outcomes before.
+
+Models were again fitted separately for each subscale in brms using the `brm` function. Here, the data were fitted using a Gaussian model (identity link function), with the fixed effect of difference in hours played. Models used a $Normal(0, 5)$ prior on the intercept, a $Normal(0, 1)$ prior on the slope term, and an $Exponential(1)$ prior on the sigma term.
+
+Again, the presence of an effect of difference in hours played was evaluated using Bayes factors calculated using the Savage-Dickey density ratio. We also present the fixed effects for these models on the natural scale.
+
+We present posterior predictions for the effect of difference in hours played pre- and post-lockdown on differences in outcomes for each subscale. Here, lines represent the posterior median along with 50%, 80%, and 95% credible intervals (shaded).
+
+
+CHECK THIS SUMMARY
+
+
+
+
+```{r s-bayes-factor-2}
+bind_rows(
+  hypotheses$das_d_diff,
+  hypotheses$das_a_diff,
+  hypotheses$das_s_diff
+) %>% 
+  mutate(
+    Model = c("Depression", "Anxiety", "Stress"),
+    Hypothesis = rep(c("Hours Before - Hours After"), 3)) %>% 
+  select(Model, everything()) %>% 
+  apa_table()
+```
+
+We found overwhelming evidence in support of the null model in comparison to the alternative for the main effect of difference in hours played pre- and post-lockdown and the difference in stress scores.
+
+## Effect of Hours Played During Lockdown on Mental Health Outcomes during Lockdown
+
+### Depression
+
+```{r d-model-summary-3}
+as.data.frame(models$das_l_d_diff$fixed) %>% 
+  kable()
+```
+
+```{r d-bayes-factor-3}
+hypotheses$das_l_d_diff
+```
+
+We found overwhelming evidence in support of the null model in comparison to the alternative for the main effect of total hours played during lockdown and the difference in depression scores.
+
+### Anxiety
+
+```{r a-model-summary-3}
+as.data.frame(models$das_l_a_diff$fixed) %>% 
+  kable()
+```
+
+```{r a-bayes-factor-3}
+hypotheses$das_l_a_diff
+```
+
+We found overwhelming evidence in support of the null model in comparison to the alternative for the main effect of total hours played during lockdown and the difference in anxiety scores.
+
+### Stress
+
+```{r s-model-summary-3}
+as.data.frame(models$das_l_s_diff$fixed) %>% 
+  kable()
+```
+
+```{r s-bayes-factor-3}
+hypotheses$das_l_s_diff
+```
+
+We found overwhelming evidence in support of the null model in comparison to the alternative for the main effect of total hours played during lockdown and the difference in stress scores.
+
+# Model Fitting Diagnostics
+
+Posterior predictive checks were carried out for all fitted models. These show a relatively good fit for each model whereby draws from the posterior are close to the fitted data. This indicates good model fit.
+
+## Depression Model 1
+
+```{r das-d-pp-check, fig.cap="Posterior Predictive Check for the Effect of Hours Played Before and After Lockdown on Mental Health Outcomes for Depression"}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "pp_check_das_d.png")])
+```
+
+## Depression Model 2
+
+```{r das-d-diff-pp-check, fig.cap="Posterior Predictive Check for the Effect of Difference in Hours Played Before and After Lockdown on Differences in Mental Health Outcomes for Depression"}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "pp_check_das_d_diff.png")])
+```
+
+## Anxiety Model 1
+
+```{r das-a-pp-check, fig.cap="Posterior Predictive Check for the Effect of Hours Played Before and After Lockdown on Mental Health Outcomes for Anxiety"}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "pp_check_das_a.png")])
+```
+
+## Anxiety Model 2
+
+```{r das-a-diff-pp-check, fig.cap="Posterior Predictive Check for the Effect of Difference in Hours Played Before and After Lockdown on Differences in Mental Health Outcomes for Depression"}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "pp_check_das_a_diff.png")])
+```
+
+## Stress Model 1
+
+```{r das-s-pp-check, fig.cap="Posterior Predictive Check for the Effect of Hours Played Before and After Lockdown on Mental Health Outcomes for Stress"}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "pp_check_das_s.png")])
+```
+
+## Stress Model 2
+
+```{r das-s-diff-pp-check, fig.cap="Posterior Predictive Check for the Effect of Difference in Hours Played Before and After Lockdown on Differences in Mental Health Outcomes for Depression"}
+knitr::include_graphics(plots_dir[str_detect(plots_dir, "pp_check_das_s_diff.png")])
+```
+
+# Loneliness
+
+conent to come.
+
+# Gaming Motivations on Loneliness
+
+conent to come.
