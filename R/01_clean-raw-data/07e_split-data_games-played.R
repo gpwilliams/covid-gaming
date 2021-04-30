@@ -71,7 +71,7 @@ single_multi_long <- single_multi %>%
 
 # longer data: by item ----
 
-item_data$games_played_longer <- left_join(
+item_data$games_played_long <- left_join(
   games_habits_long,
   single_multi_long,
   by = c("response_id", "time", "game")
@@ -105,10 +105,10 @@ games_played_agg <- wide_data_complete %>%
     names_prefix = "total_hours_"
   )
 
-agg_data$games_played <- full_join(regularly_play_agg, games_played_agg)
+agg_data$games_played_long <- full_join(regularly_play_agg, games_played_agg)
 
 # widest data: 
-agg_data$games_played_widest <- agg_data$games_played %>% 
+agg_data$games_played_wide <- agg_data$games_played_long %>% 
   arrange(desc(time)) %>% 
   pivot_wider(
     names_from = "time",

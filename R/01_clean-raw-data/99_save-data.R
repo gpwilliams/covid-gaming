@@ -12,7 +12,6 @@ for(i in seq_along(item_data)) {
       "02_data", 
       "02_cleaned", 
       "01_multilevel", 
-      "01_rds",
       paste0(names(item_data[i]), ".rds")
     )
   )
@@ -26,7 +25,6 @@ for(i in seq_along(item_data)) {
       "02_data", 
       "02_cleaned", 
       "01_multilevel", 
-      "02_csv",
       paste0(names(item_data[i]), ".csv")
     )
   )
@@ -42,7 +40,6 @@ for(i in seq_along(agg_data)) {
       "02_data", 
       "02_cleaned", 
       "02_aggregated",
-      "01_rds",
       paste0(names(agg_data[i]), ".rds")
     )
   )
@@ -56,7 +53,6 @@ for(i in seq_along(agg_data)) {
       "02_data", 
       "02_cleaned", 
       "02_aggregated",
-      "02_csv",
       paste0(names(agg_data[i]), ".csv")
     )
   )
@@ -86,7 +82,6 @@ write_rds(
     "02_data", 
     "02_cleaned", 
     "02_aggregated",
-    "01_rds",
     "demographics.rds"
   )
 )
@@ -98,7 +93,6 @@ write_csv(
     "02_data", 
     "02_cleaned", 
     "02_aggregated",
-    "02_csv",
     "demographics.csv"
   )
 )
@@ -112,15 +106,5 @@ for(i in seq_along(demo_data)) {
       "03_summary",
       paste0("demographics_", names(demo_data[i]), ".csv")
     )
-  )
-}
-
-# save plots ----
-for(i in seq_along(cluster_plots)) {
-  ggsave(
-    here("03_plots", paste0(names(cluster_plots[i]), ".png")),
-    cluster_plots[[i]], 
-    height = 8,
-    width = 12
   )
 }

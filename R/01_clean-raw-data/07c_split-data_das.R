@@ -9,9 +9,9 @@ das_keys <- list(
   prefix = c("das_before_", "das_after_")
 )
 
-# longer data: by item
+# long data: by item
 
-item_data$das_longer <- wide_data_complete %>% 
+item_data$das_long <- wide_data_complete %>% 
   select(c(
     response_id, 
     das_before_1:das_before_21, 
@@ -32,25 +32,21 @@ item_data$das_longer <- wide_data_complete %>%
   ) %>% 
   select(response_id, time, subscale, item, score)
 
-# longer data: aggregated by subject
+# long data: aggregated by subject
 
-agg_data$das_longer <- item_data$das_longer %>% 
+agg_data$das_long <- item_data$das_long %>% 
   group_by(time, subscale, item) %>% 
   mutate(score = impute_mean(score)) %>% 
   ungroup() %>% 
   group_by(response_id, time, subscale) %>% 
   summarise(score = sum(score)*2) # DASS21 scores are multiplied by 2
 
-# wider data: aggregated by subject
-
-agg_data$das_wider <- agg_data$das_longer %>% 
+# wide data: aggregated by subject
+agg_data$das_wide <- agg_data$das_long %>% 
   pivot_wider(
     names_from = "subscale",
     values_from = "score"
-  )
-
-# widest data: aggregated by subject
-agg_data$das_widest <- agg_data$das_wider %>% 
+  ) %>% 
   arrange(desc(time)) %>% 
   pivot_wider(
     names_from = "time",

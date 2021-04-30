@@ -13,9 +13,9 @@ gam_keys <- list(
 
 # gaming motivation index ----
 
-# longer data: by item
+# long data: by item
 
-item_data$gam_longer <- wide_data_complete %>% 
+item_data$gam_long <- wide_data_complete %>% 
   select(
     response_id,
     why_play_before_1:why_play_before_18,
@@ -40,9 +40,9 @@ item_data$gam_longer <- wide_data_complete %>%
   ) %>% 
   select(response_id, time, subscale, item, score)
 
-# longer data: aggregated by subject
+# long data: aggregated by subject
 
-agg_data$gam_longer <- item_data$gam_longer %>% 
+agg_data$gam_long <- item_data$gam_long %>% 
   group_by(time, subscale, item) %>% 
   mutate(score = impute_mean(score)) %>% 
   ungroup() %>% 
@@ -50,16 +50,13 @@ agg_data$gam_longer <- item_data$gam_longer %>%
   summarise(score = sum(score)) %>% 
   mutate(score = score*2)
 
-# wider data: aggregated by subject
+# wide data: aggregated by subject
 
-agg_data$gam_wider <- agg_data$gam_longer %>% 
+agg_data$gam_wide <- agg_data$gam_long %>% 
   pivot_wider(
     names_from = "subscale",
     values_from = "score"
-  )
-
-# widest data: aggregated by subject
-agg_data$gam_widest <- agg_data$gam_wider %>% 
+  ) %>% 
   arrange(desc(time)) %>% 
   pivot_wider(
     names_from = "time",
