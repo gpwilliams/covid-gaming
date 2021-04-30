@@ -1,4 +1,0 @@
-load("/Users/glennwilliams/Dropbox/GitHub/covid-gaming/04_analysis/01b_model_summaries/natural_scale_das_a.rds")
-dog <- read_rds("/Users/glennwilliams/Dropbox/GitHub/covid-gaming/04_analysis/01b_model_summaries/natural_scale_das_a.rds")
-dog <- readr::read_rds("/Users/glennwilliams/Dropbox/GitHub/covid-gaming/04_analysis/01b_model_summaries/natural_scale_das_a.rds")
-dog

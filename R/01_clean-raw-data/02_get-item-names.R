@@ -28,8 +28,7 @@ names_data$why_play_names <- raw_data[1,] %>%
   purrr::map(str_split, pattern = " - | \\(") %>% 
   purrr::map_chr(c(1,2)) 
 
-# store iten numbers with names in tables
-
+# store item numbers with names in tables
 names_data <- names_data %>% 
   purrr::map(. %>% 
         as_tibble() %>% 
