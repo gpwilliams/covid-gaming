@@ -3,7 +3,11 @@
 # save full model objects
 for(i in seq_along(plots)) {
   ggsave(
-    filename = here::here("03_plots", paste0(names(plots)[[i]], ".png")),
+    filename = here::here(
+      "03_plots", 
+      "02_study-02", 
+      paste0(names(plots)[[i]], ".png")
+    ),
     plot = plots[[i]],
     width = 12,
     height = 8
@@ -16,6 +20,7 @@ for(i in seq_along(new_demographics)) {
     x = new_demographics[[i]],
     path = here::here(
       "04_analysis", 
+      "02_study-02", 
       "03_demographic-summary",
       paste0(names(new_demographics)[[i]], ".csv")
     )
