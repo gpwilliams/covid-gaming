@@ -17,24 +17,27 @@ outcomes <- c(
 r_files_list <- list.files(
   here(
     "02_data", 
+    "03_study-03",
     "02_cleaned", 
-    "02_aggregated", 
-    "01_rds"
+    "02_aggregated"
   ),
-  full.names = TRUE
+  full.names = TRUE,
+  pattern = "*.rds"
 )
 
 das <- r_files_list %>% 
-  str_subset(., "das_longer.rds") %>% 
+  str_subset(., "das_long.rds") %>% 
   read_rds()
 
 loneliness <- r_files_list %>% 
-  str_subset(., "loneliness.rds") %>% 
+  str_subset(., "loneliness_extended_long.rds") %>% 
   read_rds() %>% 
+  select(response_id, time, total_score) %>% 
+  rename(score = total_score) %>% 
   mutate(subscale = "loneliness")
   
 hours <- r_files_list %>% 
-  str_subset(., "games_played.rds") %>% 
+  str_subset(., "games_played_long.rds") %>% 
   read_rds() %>% 
   mutate(subscale = "hours") %>% 
   rename(score = total_hours_played) %>%
@@ -50,8 +53,20 @@ all_data <- full_join(das, loneliness) %>%
     time = factor(time, levels = c("Before", "After")),
     subscale = factor(
       subscale,
-      levels = c("Depression", "Anxiety", "Stress", "Loneliness", "Hours"),
-      labels = c("Depression", "Anxiety", "Stress", "Loneliness", "Hours Played")
+      levels = c(
+        "Depression", 
+        "Anxiety", 
+        "Stress", 
+        "Loneliness", 
+        "Hours"
+      ),
+      labels = c(
+        "Depression", 
+        "Anxiety", 
+        "Stress", 
+        "Loneliness", 
+        "Hours Played"
+      )
     ),
     panel = case_when(
       subscale %in% c("Depression", "Anxiety", "Stress") ~ 1,
@@ -105,11 +120,23 @@ mh_raincloud <- ggplot(
     legend.box="horizontal",
     legend.box.just = c("top"), 
     legend.background = element_rect(fill=alpha("white", 0.4)),
-    legend.box.background = element_rect(colour = "black", fill = "transparent"),
+    legend.box.background = element_rect(
+      colour = "black", 
+      fill = "transparent"
+    ),
     strip.background = element_blank(),
     strip.text.x = element_blank()
   ) + 
   ggforce::facet_row(~panel, scales = "free", space = "free") +
-  labs(x = "Subscale", y = "Score", caption = "Dots are jittered for ease of viewing.")
+  labs(
+    x = "Subscale",
+    y = "Score", 
+    caption = "Dots are jittered for ease of viewing."
+  )
 
-ggsave(here("03_plots", "mh_raincloud.png"), mh_raincloud, height = 8, width = 12)
+ggsave(
+  here("03_plots", "03_study-03", "mh_raincloud.png"), 
+  mh_raincloud, 
+  height = 8, 
+  width = 12
+)
