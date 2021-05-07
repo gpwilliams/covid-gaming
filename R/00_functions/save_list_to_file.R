@@ -28,7 +28,7 @@ save_list_to_file <- function(list = NULL, path = NULL, csv = TRUE, rds = TRUE){
           list[[i]], 
           here::here(
             strsplit(path, ","), 
-            paste0(names(list[i]), ".csv")
+            paste0(names(list[i]), ".rds")
           )
         )
       }

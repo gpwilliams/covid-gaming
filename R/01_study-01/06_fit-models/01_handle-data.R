@@ -1,18 +1,16 @@
 # load data
 
 # get data
-data <- map_files_to_list(
+prepared_data <- map_files_to_list(
   here::here(
   "02_data", 
   "01_study-01", 
-  "02_cleaned", 
-  "02_aggregated"
+  "04_model-data"
   ),
-  pattern = "_long*"
+  pattern = "*"
 )
 
 # set data holders
-prepared_data <- list()
 priors <- list()
 formulae <- list()
 models <- list()

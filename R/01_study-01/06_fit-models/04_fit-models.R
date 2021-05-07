@@ -1,14 +1,14 @@
 # fit model ----
 
-message("Fitting DAS models.")
+message("Fitting main models.")
 
 # fit full models ----
 
 # depression
-models$das_d <- brm(
-  formula = formulae$das_full, 
-  data = prepared_data$das_d,
-  prior = priors$das_full,
+models$depression <- brm(
+  formula = formulae$main, 
+  data = prepared_data$depression,
+  prior = priors$das_main,
   cores = analysis_options$cores,
   chains = analysis_options$chains,
   iter = analysis_options$iterations,
@@ -23,9 +23,9 @@ models$das_d <- brm(
 )
 
 # anxiety (update to avoid recompiling C++ code)
-models$das_a <- update(
-  models$das_d, 
-  newdata = prepared_data$das_a,
+models$anxiety <- update(
+  models$depression, 
+  newdata = prepared_data$anxiety,
   cores = analysis_options$cores,
   chains = analysis_options$chains,
   iter = analysis_options$iterations,
@@ -40,9 +40,27 @@ models$das_a <- update(
   )
 
 # stress (update to avoid recompiling C++ code)
-models$das_s <- update(
-  models$das_d, 
-  newdata = prepared_data$das_s,
+models$stress <- update(
+  models$depression, 
+  newdata = prepared_data$stress,
+  cores = analysis_options$cores,
+  chains = analysis_options$chains,
+  iter = analysis_options$iterations,
+  seed = analysis_options$rand_seed,
+  control = list(
+    adapt_delta = analysis_options$adapt_delta, 
+    max_treedepth = analysis_options$max_treedepth
+  ),
+  sample_prior = TRUE,
+  save_pars = save_pars(all = TRUE),
+  backend = "cmdstanr"
+)
+
+# loneliness 
+models$loneliness <- brm(
+  formula = formulae$main, 
+  data = prepared_data$loneliness,
+  prior = priors$loneliness_main,
   cores = analysis_options$cores,
   chains = analysis_options$chains,
   iter = analysis_options$iterations,
@@ -58,7 +76,7 @@ models$das_s <- update(
 
 # fit diff models ----
 
-message("Fitting DAS diff models")
+message("Fitting diff models")
 
 # depression
 models$das_d_diff <- brm(
@@ -113,6 +131,8 @@ models$das_s_diff <- update(
 )
 
 # change in DAS scores for lockdown hours played ----
+
+message("Fitting lockdown diff models")
 
 models$das_l_d_diff <- brm(
   formula = formulae$das_full_l_diff, 
