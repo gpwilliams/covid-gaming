@@ -65,28 +65,52 @@ item_data$loneliness_extended_long <- wide_data_complete %>%
     values_to = "score"
   ) %>% 
   mutate(subscale = "loneliness_extended") %>% 
-  select(response_id, time, subscale, item, score)
+  select(response_id, time, subscale, item, score) %>% 
+  mutate(
+    loneliness_subscale = case_when(
+      item %in% c(2, 3, 5, 6, 9, 10) ~ "emotional_loneliness",
+      item %in% c(1, 4, 7, 8, 11) ~ "social_loneliness",
+      TRUE ~ NA_character_
+    ),
+    score = case_when(
+      loneliness_subscale == "emotional_loneliness" & 
+        score %in% c("yes", "more_or_less") ~ 1,
+      loneliness_subscale == "emotional_loneliness" & 
+        score == "no" ~ 0,
+      loneliness_subscale == "social_loneliness" & 
+        score %in% c("no", "more_or_less") ~ 1,
+      loneliness_subscale == "social_loneliness" & 
+        score == "yes" ~ 0,
+      is.na(score) ~ NA_real_
+    )
+  )
 
 # long data: aggregated by subject
 
-agg_data$loneliness_extended_long <- mice(
-  item_data$loneliness_extended_long, 
-  m = 1, # make (and then pull) only the first imputation
-  method = "pmm", # predictive mean matching
-  seed = this_seed
-) %>% 
-  complete() %>% 
-  as_tibble() %>%
-  group_by(response_id, time, subscale) %>% 
-  summarise(score = sum(score))
+agg_data$loneliness_extended_long <- item_data$loneliness_extended_long %>% 
+  group_by(response_id, time, loneliness_subscale) %>%
+  summarise(
+    score = sum(score, na.rm = TRUE),
+    missing = sum(is.na(score))
+  ) %>% 
+  pivot_wider(
+    names_from = "loneliness_subscale",
+    values_from = c("score", "missing")
+  ) %>% 
+  mutate(
+    total_score = score_emotional_loneliness + score_social_loneliness,
+    total_missing = missing_emotional_loneliness + missing_social_loneliness
+  ) %>% # keep only valid subscales defined as non-missing in scoring criteria
+  filter(
+    missing_emotional_loneliness == 0,
+    missing_social_loneliness == 0
+  ) %>% 
+  arrange(response_id, desc(time))
 
 # wide data: aggregated by subject
 
 agg_data$loneliness_extended_wide <- agg_data$loneliness_extended_long %>% 
-  arrange(desc(time)) %>% 
   pivot_wider(
     names_from = "time",
-    values_from = score,
-    names_glue = "loneliness_extended_{time}"
-  ) %>% 
-  select(-subscale)
+    values_from = -response_id
+  )

@@ -1,7 +1,7 @@
 # model formula ----
 
 formulae$das_full <- bf(
-  score_ord ~ time * total_hours_played_s + (1 | id),
+  score_ord ~ time * total_hours_played_s + (1 + time | id),
   family = cumulative(link = "logit")
 )
 

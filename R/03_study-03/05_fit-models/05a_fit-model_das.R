@@ -4,6 +4,9 @@ message("Fitting DAS models.")
 
 # fit full models ----
 
+# gaussian doesn't work as it predicts < 0 and pp_check is bad.
+# negative binomial doens't work (pp_check is bad)
+
 # depression
 models$das_d <- brm(
   formula = formulae$das_full, 

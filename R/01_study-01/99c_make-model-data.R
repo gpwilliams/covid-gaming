@@ -1,4 +1,4 @@
-# clean raw data ----
+# make model data ----
 
 library(tidyverse) # for data processing/plotting
 library(here) # for file paths
@@ -13,7 +13,7 @@ r_function_list <- list.files(
 purrr::walk(r_function_list, source)
 
 r_file_list <- list.files(
-  path = here::here("R", "01_study-01", "05_fit-models"), 
+  path = here::here("R", "01_study-01", "05_make-model-data"), 
   pattern = "R$",
   full.names = TRUE
 )

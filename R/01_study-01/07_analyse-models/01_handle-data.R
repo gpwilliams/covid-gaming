@@ -4,7 +4,7 @@
 
 # get file names 
 r_file_list <- list.files(
-  path = here::here("02_data", "02_cleaned", "02_aggregated", "01_rds"), 
+  path = here::here("02_data", "01_study-01", "02_cleaned", "02_aggregated", "01_rds"), 
   pattern = "rds$",
   full.names = TRUE
 )

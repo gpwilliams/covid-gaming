@@ -6,6 +6,9 @@ library(lubridate) # for dates
 library(here) # for file paths
 library(janitor) # for cleaning names
 
+# set seed for multiple imputation
+this_seed <- 1892
+
 # load functions
 r_function_list <- list.files(
   path = here("R", "00_functions"), 
