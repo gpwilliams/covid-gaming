@@ -1,4 +1,4 @@
-response_id,time,score,id,total_hours_played,total_hours_played_s,score_ord
+response_id,lockdown_period,score,id,total_hours_played,total_hours_played_s,score_ord
 R_0Iq1QihJbkIZGG5,before,6,1,35,0.21602731858522517,6
 R_0Iq1QihJbkIZGG5,after,4,1,31,0.044453274943530054,4
 R_0xNlcN3NDWsWFsl,before,5,2,0,-1.2852455632796072,5

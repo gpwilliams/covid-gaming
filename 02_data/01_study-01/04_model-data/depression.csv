@@ -1,4 +1,4 @@
-response_id,time,subscale,score,id,total_hours_played,total_hours_played_s,score_ord
+response_id,lockdown_period,subscale,score,id,total_hours_played,total_hours_played_s,score_ord
 R_000jgq6zfKH3jcB,after,depression,26,1,35,0.549109387748592,26
 R_000jgq6zfKH3jcB,before,depression,14,1,10,-0.5956968695291313,14
 R_06y6RQMIag7OLT3,after,depression,2,2,35,0.549109387748592,2

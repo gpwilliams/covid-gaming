@@ -1,4 +1,4 @@
-response_id,time,subscale,score,id,total_hours_played,total_hours_played_s,score_ord
+response_id,lockdown_period,subscale,score,id,total_hours_played,total_hours_played_s,score_ord
 R_0Iq1QihJbkIZGG5,after,stress,10,1,31,0.044453274943530054,10
 R_0Iq1QihJbkIZGG5,before,stress,10,1,35,0.21602731858522517,10
 R_0xNlcN3NDWsWFsl,after,stress,6,2,20,-0.4273753450711315,6

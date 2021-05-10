@@ -24,6 +24,7 @@ prepared_data <- left_join(
     dplyr::select(all_of(keep_cols)),
   by = c("response_id", "time")
 ) %>% 
+  rename(lockdown_period = time) %>% 
   split(.$subscale)
 
 prepared_data$loneliness <- left_join(
@@ -33,4 +34,4 @@ prepared_data$loneliness <- left_join(
   data$games_played_long %>% 
     dplyr::select(all_of(keep_cols)),
   by = c("response_id", "time")
-)
+) %>% rename(lockdown_period = time)

@@ -4,7 +4,10 @@
 
 prepared_data <- prepared_data %>% 
   map(~ mutate(., 
-    time = factor(time, levels = c("before", "after")), # order time
+    lockdown_period = factor(
+      lockdown_period, 
+      levels = c("before", "after")
+    ), # order time
     score_ord = factor( # make response an ordered factor
       score, 
       ordered = TRUE, 
@@ -16,5 +19,5 @@ prepared_data <- prepared_data %>%
 # set contrasts
 
 for(dataset in seq_along(prepared_data)) {
-  contrasts(prepared_data[[dataset]]$time) <- contr.sum(2)
+  contrasts(prepared_data[[dataset]]$lockdown_period) <- c(-1, 1)
 }

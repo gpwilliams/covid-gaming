@@ -1,4 +1,4 @@
-response_id,time,subscale,score,id,total_hours_played,total_hours_played_s,score_ord
+response_id,lockdown_period,subscale,score,id,total_hours_played,total_hours_played_s,score_ord
 R_000jgq6zfKH3jcB,after,loneliness,7,1,35,0.549109387748592,7
 R_000jgq6zfKH3jcB,before,loneliness,5,1,10,-0.5956968695291313,5
 R_06y6RQMIag7OLT3,after,loneliness,3,2,35,0.549109387748592,3
