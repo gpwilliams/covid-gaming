@@ -3,7 +3,14 @@
 # fix DAS scores to range from 0-3
 
 wide_data_recoded_adjusted <- wide_data_recoded %>% 
-  mutate(across(contains('das_'), ~ .-1))
+  mutate(
+    across(contains('das_'), ~ .-1),
+    across(contains('loneliness_extended_'), ~ case_when(
+      . == 1 ~ "yes",
+      . == 2 ~ "more_or_less",
+      . == 3 ~ "no",
+      is.na(.) ~ NA_character_
+    )))
 
 # make total hours from individual game hours ----
 

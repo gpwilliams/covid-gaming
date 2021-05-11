@@ -1,4 +1,4 @@
-response_id,time,subscale,score
+response_id,lockdown_period,subscale,score
 R_000jgq6zfKH3jcB,after,loneliness,7
 R_000jgq6zfKH3jcB,before,loneliness,5
 R_06y6RQMIag7OLT3,after,loneliness,3
@@ -247,7 +247,7 @@ R_2xY2K6LH7A68nB1,after,loneliness,7
 R_2xY2K6LH7A68nB1,before,loneliness,5
 R_2YJKbEV4DDO8Lc0,after,loneliness,8
 R_2YJKbEV4DDO8Lc0,before,loneliness,6
-R_2yk1CSC8mwjjLGP,after,loneliness,6
+R_2yk1CSC8mwjjLGP,after,loneliness,5
 R_2yk1CSC8mwjjLGP,before,loneliness,7
 R_2yrXHzzzgNeI0Ry,after,loneliness,3
 R_2yrXHzzzgNeI0Ry,before,loneliness,3

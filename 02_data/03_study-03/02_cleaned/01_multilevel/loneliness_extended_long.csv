@@ -1,4 +1,4 @@
-response_id,time,subscale,item,score,loneliness_subscale
+response_id,lockdown_period,subscale,item,score,loneliness_subscale
 R_w7AV8G1eEuySSVr,before,loneliness_extended,1,1,social_loneliness
 R_w7AV8G1eEuySSVr,before,loneliness_extended,2,1,emotional_loneliness
 R_w7AV8G1eEuySSVr,before,loneliness_extended,3,1,emotional_loneliness

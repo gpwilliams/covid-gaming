@@ -1,4 +1,4 @@
-response_id,time,score_emotional_loneliness,score_social_loneliness,missing_emotional_loneliness,missing_social_loneliness,total_score,total_missing
+response_id,lockdown_period,score_emotional_loneliness,score_social_loneliness,missing_emotional_loneliness,missing_social_loneliness,total_score,total_missing
 R_0Iq1QihJbkIZGG5,before,5,1,0,0,6,0
 R_0Iq1QihJbkIZGG5,after,4,0,0,0,4,0
 R_0xNlcN3NDWsWFsl,before,4,1,0,0,5,0

@@ -1,4 +1,4 @@
-response_id,time,type,hours
+response_id,lockdown_period,type,hours
 R_3L0dsQEmJBoz6CB,hours_together_with_chat,before,60
 R_3L0dsQEmJBoz6CB,hours_together_without_chat,before,NA
 R_3L0dsQEmJBoz6CB,hours_alone,before,NA

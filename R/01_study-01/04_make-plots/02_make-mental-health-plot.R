@@ -1,56 +1,14 @@
-source(here("R", "00_functions", "geom_flat_violin.R"))
+# make plot ----
 
-library(tidyverse)
-library(here)
-library(ggforce)
+# merge data
 
-# factors to analyse
-outcomes <- c(
-  "depression", 
-  "anxiety", 
-  "stress", 
-  "loneliness", 
-  "total_hours_played"
-)
-
-# load in relevant data ----
-r_files_list <- list.files(
-  here(
-    "02_data", 
-    "02_study-02",
-    "02_cleaned", 
-    "02_aggregated"
-  ),
-  full.names = TRUE,
-  pattern = "*.rds"
-)
-
-das <- r_files_list %>% 
-  str_subset(., "das_long.rds") %>% 
-  read_rds()
-
-loneliness <- r_files_list %>% 
-  str_subset(., "loneliness_extended_long.rds") %>% 
-  read_rds() %>% 
-  select(response_id, time, total_score) %>% 
-  rename(score = total_score) %>% 
-  mutate(subscale = "loneliness")
-  
-hours <- r_files_list %>% 
-  str_subset(., "games_played_long.rds") %>% 
-  read_rds() %>% 
-  mutate(subscale = "hours") %>% 
-  rename(score = total_hours_played) %>%
-  select(-regularly_play)
-  
-# make all data
 all_data <- full_join(das, loneliness) %>% 
   full_join(., hours) %>% 
-  arrange(response_id, time, subscale) %>% 
+  arrange(response_id, lockdown_period, subscale) %>% 
   mutate(
-    time = str_to_title(time),
+    lockdown_period = str_to_title(lockdown_period),
     subscale = str_to_title(subscale),
-    time = factor(time, levels = c("Before", "After")),
+    lockdown_period = factor(lockdown_period, levels = c("Before", "After")),
     subscale = factor(
       subscale,
       levels = c(
@@ -85,10 +43,10 @@ all_data <- full_join(das, loneliness) %>%
 
 mh_raincloud <- ggplot(
   all_data, 
-  aes(x = subscale, y = score, fill = time)
+  aes(x = subscale, y = score, fill = lockdown_period)
 ) +
   geom_flat_violin(
-    aes(fill = time), 
+    aes(fill = lockdown_period), 
     position = position_nudge(x = .1, y = 0), 
     adjust = 1.5, 
     trim = TRUE, 
@@ -96,14 +54,14 @@ mh_raincloud <- ggplot(
     colour = NA
   ) +
   geom_point(
-    aes(x = dot_position-.15, y = score, colour = time),
+    aes(x = dot_position-.15, y = score, colour = lockdown_period),
     position = position_jitter(width = .05, height = .08), 
     size = 2, 
     shape = 21,
     alpha = .5
   ) +
   geom_boxplot(
-    aes(x = subscale, y = score, fill = time),
+    aes(x = subscale, y = score, fill = lockdown_period),
     outlier.shape = NA, 
     alpha = .5, 
     width = .1, 
@@ -134,9 +92,3 @@ mh_raincloud <- ggplot(
     caption = "Dots are jittered for ease of viewing."
   )
 
-ggsave(
-  here("03_plots", "02_study-02", "mh_raincloud.png"), 
-  mh_raincloud, 
-  height = 8, 
-  width = 12
-)
