@@ -13,7 +13,7 @@ r_function_list <- list.files(
 purrr::walk(r_function_list, source)
 
 r_file_list <- list.files(
-  path = here::here("R", "02_study-02", "05_fit-models"), 
+  path = here::here("R", "02_study-02", "06_fit-models"), 
   pattern = "R$",
   full.names = TRUE
 )

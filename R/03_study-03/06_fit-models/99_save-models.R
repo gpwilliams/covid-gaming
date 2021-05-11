@@ -4,18 +4,18 @@
 
 save_list_to_file(
   models, 
-  c("04_analysis", "02_study-02", "01a_models"),
+  c("04_analysis", "03_study-03", "01a_models"),
   csv = FALSE
 )
 
 # save model summaries
 save_list_to_file(
   model_summaries, 
-  c("04_analysis", "02_study-02", "01b_model-summaries")
+  c("04_analysis", "03_study-03", "01b_model-summaries")
 )
 
 # save backtransformed models (from cumulative models only)
 save_list_to_file(
   natural_scale_models, 
-  c("04_analysis", "02_study-02", "01b_model-summaries")
+  c("04_analysis", "03_study-03", "01b_model-summaries")
 )
