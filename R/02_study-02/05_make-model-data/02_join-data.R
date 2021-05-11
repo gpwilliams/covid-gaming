@@ -13,7 +13,7 @@ data$games_played_long <- data$games_played_long %>%
 keep_cols <- c(
   "response_id",
   "id",
-  "time", 
+  "lockdown_period", 
   "total_hours_played", 
   "total_hours_played_s"
 )
@@ -22,17 +22,15 @@ prepared_data <- left_join(
   data$das_long,
   data$games_played_long %>% 
     dplyr::select(all_of(keep_cols)),
-  by = c("response_id", "time")
+  by = c("response_id", "lockdown_period")
 ) %>% 
-  rename(lockdown_period = time) %>% 
   split(.$subscale) 
 
 prepared_data$loneliness <- left_join(
   data$loneliness_extended_long %>% 
-    select(response_id, time, total_score) %>% 
+    select(response_id, lockdown_period, total_score) %>% 
     rename(score = total_score),
   data$games_played_long %>% 
     dplyr::select(all_of(keep_cols)),
-  by = c("response_id", "time")
-) %>% 
-  rename(lockdown_period = time)
+  by = c("response_id", "lockdown_period")
+)
