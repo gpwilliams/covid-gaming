@@ -1,5 +1,20 @@
 # test hypotheses ----
 
+
+# hours affects MH
+library(bayestestR)
+library(emmeans)
+library(logspline)
+
+# test hypotheses
+hypothesis(models$depression, "time1 = 0") # does hours played matter?
+hypothesis(models$depression, "time1:total_hours_played_s = 0") # does lockdown influence hours played?
+hypothesis(models$depression_full_diff, "hours_diff = 0") # do changes to hours played affect changes in mh?
+hypothesis(models$depression_lockdown_diff, "total_hours_played_after = 0") # do changes to hours played affect changes in mh?
+
+
+
+
 # das main models ----
 mh_hyp <- models[c("das_d", "das_a", "das_s", "loneliness")] %>% 
   map(

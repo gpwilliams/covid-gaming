@@ -23,7 +23,7 @@ item_data$gam_long <- wide_data_complete %>%
   ) %>% 
   pivot_longer(
     cols = - response_id,
-    names_to = c("time", "item"),
+    names_to = c("lockdown_period", "item"),
     names_sep = "_",
     names_prefix = "why_play_",
     values_to = "score"
@@ -38,15 +38,15 @@ item_data$gam_long <- wide_data_complete %>%
       item %in% gam_keys$amotivation ~ "amotivation"
     )
   ) %>% 
-  select(response_id, time, subscale, item, score)
+  select(response_id, lockdown_period, subscale, item, score)
 
 # long data: aggregated by subject
 
 agg_data$gam_long <- item_data$gam_long %>% 
-  group_by(time, subscale, item) %>% 
+  group_by(lockdown_period, subscale, item) %>% 
   mutate(score = impute_mean(score)) %>% 
   ungroup() %>% 
-  group_by(response_id, time, subscale) %>% 
+  group_by(response_id, lockdown_period, subscale) %>% 
   summarise(score = sum(score)) %>% 
   mutate(score = score*2)
 
@@ -57,8 +57,8 @@ agg_data$gam_wide <- agg_data$gam_long %>%
     names_from = "subscale",
     values_from = "score"
   ) %>% 
-  arrange(desc(time)) %>% 
+  arrange(desc(lockdown_period)) %>% 
   pivot_wider(
-    names_from = "time",
+    names_from = "lockdown_period",
     values_from = amotivation:introjected_regulation
   )

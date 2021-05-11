@@ -1,40 +1,21 @@
 # save models ----
 
 # save full model objects
-for(i in seq_along(models)) {
-  write_rds(
-    x = models[[i]],
-    path = here(
-      "04_analysis", 
-      "01a_models",
-      paste0(names(models)[[i]], ".rds")
-    )
-  )
-}
+
+save_list_to_file(
+  models, 
+  c("04_analysis", "01_study-01", "01a_models"),
+  csv = FALSE
+)
 
 # save model summaries
+save_list_to_file(
+  model_summaries, 
+  c("04_analysis", "01_study-01", "01b_model-summaries")
+)
 
-for(i in seq_along(models)) {
-  write_rds(
-    x = summary(models[[i]]),
-    path = here(
-      "04_analysis", 
-      "01b_model_summaries",
-      paste0(names(models)[[i]], ".rds")
-    )
-  )
-}
-
-# save backtransformed models (from cumulative models only) ----
-
-for(i in seq_along(natural_scale_models)) {
-  write_rds(
-    x = natural_scale_models[[i]],
-    path = here(
-      "04_analysis", 
-      "01b_model_summaries",
-      paste0("natural_scale_", names(natural_scale_models)[[i]], ".rds")
-    )
-  )
-}
-
+# save backtransformed models (from cumulative models only)
+save_list_to_file(
+  natural_scale_models, 
+  c("04_analysis", "01_study-01", "01b_model-summaries")
+)

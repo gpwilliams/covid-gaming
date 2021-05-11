@@ -8,7 +8,9 @@ lines(density(distribution_cauchy(1000, location = 0, scale = .77)), col = "oran
 
 
 plot(density(rexp(1000, rate = 1)), col = "red")
+lines(density(rexp(1000, rate = 2)), col = "blue")
 lines(density(rexp(1000, rate = 0.5)))
+
 
 # get priors from a fitted model
 
