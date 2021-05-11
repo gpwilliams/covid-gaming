@@ -18,11 +18,11 @@ item_data$loneliness_long <- wide_data_complete %>%
   pivot_longer(
     -response_id,
     names_sep = "_",
-    names_to = c("loneliness", "time", "item"),
+    names_to = c("loneliness", "lockdown_period", "item"),
     values_to = "score"
   ) %>% 
   mutate(subscale = "loneliness") %>% 
-  select(response_id, time, subscale, item, score)
+  select(response_id, lockdown_period, subscale, item, score)
 
 # long data: aggregated by subject
 
@@ -34,17 +34,17 @@ agg_data$loneliness_long <- mice(
 ) %>% 
   complete() %>% 
   as_tibble() %>%
-  group_by(response_id, time, subscale) %>% 
+  group_by(response_id, lockdown_period, subscale) %>% 
   summarise(score = sum(score))
 
 # wide data: aggregated by subject
 
 agg_data$loneliness_wide <- agg_data$loneliness_long %>% 
-  arrange(desc(time)) %>% 
+  arrange(desc(lockdown_period)) %>% 
   pivot_wider(
-    names_from = "time",
+    names_from = "lockdown_period",
     values_from = score,
-    names_glue = "loneliness_{time}"
+    names_glue = "loneliness_{lockdown_period}"
   ) %>% 
   select(-subscale)
 
@@ -61,11 +61,11 @@ item_data$loneliness_extended_long <- wide_data_complete %>%
   pivot_longer(
     -response_id,
     names_pattern = "loneliness_extended_(.*)_(.*)",
-    names_to = c("time", "item"),
+    names_to = c("lockdown_period", "item"),
     values_to = "score"
   ) %>% 
   mutate(subscale = "loneliness_extended") %>% 
-  select(response_id, time, subscale, item, score) %>% 
+  select(response_id, lockdown_period, subscale, item, score) %>% 
   mutate(
     loneliness_subscale = case_when(
       item %in% c(2, 3, 5, 6, 9, 10) ~ "emotional_loneliness",
@@ -88,7 +88,7 @@ item_data$loneliness_extended_long <- wide_data_complete %>%
 # long data: aggregated by subject
 
 agg_data$loneliness_extended_long <- item_data$loneliness_extended_long %>% 
-  group_by(response_id, time, loneliness_subscale) %>%
+  group_by(response_id, lockdown_period, loneliness_subscale) %>%
   summarise(
     score = sum(score, na.rm = TRUE),
     missing = sum(is.na(score))
@@ -105,12 +105,12 @@ agg_data$loneliness_extended_long <- item_data$loneliness_extended_long %>%
     missing_emotional_loneliness == 0,
     missing_social_loneliness == 0
   ) %>% 
-  arrange(response_id, desc(time))
+  arrange(response_id, desc(lockdown_period))
 
 # wide data: aggregated by subject
 
 agg_data$loneliness_extended_wide <- agg_data$loneliness_extended_long %>% 
   pivot_wider(
-    names_from = "time",
+    names_from = "lockdown_period",
     values_from = -response_id
   )

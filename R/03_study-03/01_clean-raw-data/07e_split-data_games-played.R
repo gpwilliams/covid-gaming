@@ -18,7 +18,7 @@ item_data$games_played_long <- wide_data_complete %>%
       hours_before_1:hours_before_9, 
       hours_after_1:hours_after_9
     ),
-    names_to = c("time", "game"),
+    names_to = c("lockdown_period", "game"),
     names_sep = "_",
     names_prefix = "hours_",
     values_to = "hours"
@@ -26,15 +26,15 @@ item_data$games_played_long <- wide_data_complete %>%
   select(
     response_id, 
     game, 
-    time,
+    lockdown_period,
     regularly_play_before,
     regularly_play_after,
     hours
   ) %>% 
   mutate(
     regularly_play = case_when(
-      time == "before" & regularly_play_before == "yes" ~ "yes",
-      time == "after" & regularly_play_after == "yes" ~ "yes",
+      lockdown_period == "before" & regularly_play_before == "yes" ~ "yes",
+      lockdown_period == "after" & regularly_play_after == "yes" ~ "yes",
       TRUE ~ "no"
     )
   ) %>% 
@@ -50,7 +50,7 @@ regularly_play_agg <- wide_data_complete %>%
   ) %>% 
   pivot_longer(
     -response_id,
-    names_to = "time",
+    names_to = "lockdown_period",
     values_to = "regularly_play",
     names_prefix = "regularly_play_"
   )
@@ -63,7 +63,7 @@ games_played_agg <- wide_data_complete %>%
   ) %>% 
   pivot_longer(
     -response_id,
-    names_to = "time",
+    names_to = "lockdown_period",
     values_to = "total_hours_played",
     names_prefix = "total_hours_"
   )
@@ -72,9 +72,9 @@ agg_data$games_played_long <- full_join(regularly_play_agg, games_played_agg)
 
 # widest data: 
 agg_data$games_played_wide <- agg_data$games_played_long %>% 
-  arrange(desc(time)) %>% 
+  arrange(desc(lockdown_period)) %>% 
   pivot_wider(
-    names_from = "time",
+    names_from = "lockdown_period",
     values_from = regularly_play:total_hours_played
   )
 
@@ -99,7 +99,7 @@ agg_data$hours_interaction_long <- agg_data$hours_interaction_wide %>%
     cols = c(
       hours_together_with_chat_before:hours_alone_before_duplicate
     ),
-    names_to = c("time", "type"),
+    names_to = c("lockdown_period", "type"),
     names_pattern = "(.+)_(.+$)",
     values_to = "hours"
   )
@@ -124,7 +124,7 @@ agg_data$social_media_long <- agg_data$social_media_wide %>%
     cols = c(
       hours_watching_before:hours_interacting_watching_after_duplicate
     ),
-    names_to = c("type", "time"),
+    names_to = c("type", "lockdown_period"),
     names_pattern = "(.+)_(.+$)",
     values_to = "hours"
   )

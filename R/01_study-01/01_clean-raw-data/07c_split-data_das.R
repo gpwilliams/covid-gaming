@@ -20,7 +20,7 @@ item_data$das_long <- wide_data_complete %>%
   pivot_longer(
     -response_id,
     names_sep = "_",
-    names_to = c("das", "time", "item"),
+    names_to = c("das", "lockdown_period", "item"),
     values_to = "score"
   ) %>% 
   mutate(
@@ -30,7 +30,7 @@ item_data$das_long <- wide_data_complete %>%
       item %in% das_keys$anxiety ~ "anxiety"
     )
   ) %>% 
-  select(response_id, time, subscale, item, score)
+  select(response_id, lockdown_period, subscale, item, score)
 
 # long data: aggregated by subject
 
@@ -43,7 +43,7 @@ agg_data$das_long <- mice(
   ) %>% 
   complete() %>% 
   as_tibble() %>% 
-  group_by(response_id, time, subscale) %>% 
+  group_by(response_id, lockdown_period, subscale) %>% 
   summarise(score = sum(score)*2) # DASS21 scores are multiplied by 2
 
 # wide data: aggregated by subject
@@ -52,8 +52,8 @@ agg_data$das_wide <- agg_data$das_long %>%
     names_from = "subscale",
     values_from = "score"
   ) %>% 
-  arrange(desc(time)) %>% 
+  arrange(desc(lockdown_period)) %>% 
   pivot_wider(
-    names_from = "time",
+    names_from = "lockdown_period",
     values_from = anxiety:stress
   )

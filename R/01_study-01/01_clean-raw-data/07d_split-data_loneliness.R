@@ -18,11 +18,11 @@ item_data$loneliness_long <- wide_data_complete %>%
   pivot_longer(
     -response_id,
     names_sep = "_",
-    names_to = c("loneliness", "time", "item"),
+    names_to = c("loneliness", "lockdown_period", "item"),
     values_to = "score"
   ) %>% 
   mutate(subscale = "loneliness") %>% 
-  select(response_id, time, subscale, item, score)
+  select(response_id, lockdown_period, subscale, item, score)
 
 # long data: aggregated by subject
 
@@ -34,16 +34,16 @@ agg_data$loneliness_long <- mice(
 ) %>% 
   complete() %>% 
   as_tibble() %>%
-  group_by(response_id, time, subscale) %>% 
+  group_by(response_id, lockdown_period, subscale) %>% 
   summarise(score = sum(score))
 
 # wide data: aggregated by subject
 
 agg_data$loneliness_wide <- agg_data$loneliness_long %>% 
-  arrange(desc(time)) %>% 
+  arrange(desc(lockdown_period)) %>% 
   pivot_wider(
-    names_from = "time",
+    names_from = "lockdown_period",
     values_from = score,
-    names_glue = "loneliness_{time}"
+    names_glue = "loneliness_{lockdown_period}"
   ) %>% 
   select(-subscale)
