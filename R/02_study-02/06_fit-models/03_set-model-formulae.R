@@ -4,5 +4,5 @@ source(here(
   "R",
   "01_study-01",
   "06_fit-models",
-  "02_set-model-formulae.R"
+  "03_set-model-formulae.R"
 ))
