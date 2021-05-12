@@ -1,6 +1,4 @@
 response_id,lockdown_period,regularly_play,total_hours_played
-R_1F3bzU7bH2MFG8B,before,no,0
-R_1F3bzU7bH2MFG8B,after,yes,112.00000000000001
 R_28NVjdZPvV2fLBs,before,yes,15
 R_28NVjdZPvV2fLBs,after,yes,45
 R_2rPjSQLcIC8CDty,before,yes,15
@@ -17,8 +15,6 @@ R_000jgq6zfKH3jcB,before,yes,10
 R_000jgq6zfKH3jcB,after,yes,35
 R_2cd59QR5hZHKBZT,before,yes,16
 R_2cd59QR5hZHKBZT,after,yes,55
-R_3Kwm6MO1bfGie9a,before,yes,90
-R_3Kwm6MO1bfGie9a,after,yes,104
 R_2dQRwob8W5KZXgY,before,yes,0
 R_2dQRwob8W5KZXgY,after,yes,0
 R_2tqUYhzsg6ITwD1,before,yes,35
@@ -109,8 +105,6 @@ R_Zgzav0hvyZ96c6d,before,yes,40
 R_Zgzav0hvyZ96c6d,after,yes,65
 R_1K1Fc63G8b1FSAP,before,yes,10
 R_1K1Fc63G8b1FSAP,after,yes,10
-R_3oLsLBM6ZWrfpVQ,before,yes,60
-R_3oLsLBM6ZWrfpVQ,after,yes,105
 R_3qyQeKqDkX0mMPk,before,yes,0
 R_3qyQeKqDkX0mMPk,after,yes,0
 R_1ImlmXBKKlXZVm0,before,yes,12
@@ -245,8 +239,6 @@ R_8jHHv1qsC7vCAz7,before,yes,14
 R_8jHHv1qsC7vCAz7,after,yes,20
 R_BDGcUeEGjSpIacN,before,yes,10
 R_BDGcUeEGjSpIacN,after,yes,40
-R_1IinNUQ1rqrHi12,before,yes,60
-R_1IinNUQ1rqrHi12,after,yes,121
 R_3lxovCWhEaeqaCs,before,yes,30
 R_3lxovCWhEaeqaCs,after,yes,16
 R_1N9O72YdQ4GZFDi,before,yes,48

@@ -1,23 +1,25 @@
-draws <- list()
+# get draws ----
 
-# das data ----
+# main models ----
 
 # define models/prepared data names from lists on which to get draws
 # (depends on sharing names, e.g. das_d for depression etc.)
-subsets <- c("das_d", "das_a", "das_s", "loneliness")
 
-for(i in seq_along(subsets)) {
-  draws[[i]] <- prepared_data[[subsets[i]]] %>% 
+draws <- list()
+main_data_subsets <- c("depression", "anxiety", "stress", "loneliness")
+
+for(i in seq_along(main_data_subsets)) {
+  draws[[i]] <- prepared_data[[main_data_subsets[i]]] %>% 
     as.data.frame() %>% 
     modelr::data_grid(
       total_hours_played_s = modelr::seq_range(
         total_hours_played_s, 
         n = 41
       ),
-      time
-    ) %>% 
+      lockdown_period
+    ) %>%  
     add_fitted_draws(
-      models[[subsets[i]]], 
+      models[[main_data_subsets[i]]], 
       re_formula = NA,
       seed = analysis_options$rand_seed,
       n = NULL
@@ -25,26 +27,34 @@ for(i in seq_along(subsets)) {
     # recover original factor labels
     mutate(
       score_ord = as.numeric(
-        levels(prepared_data[[subsets[i]]]$score_ord)[.category]
+        levels(prepared_data[[main_data_subsets[i]]]$score_ord)[.category]
       )
-    ) %>% 
-    group_by(time, total_hours_played_s, .draw) %>% 
+    ) %>% # multiply probability of selection by category
+    group_by(lockdown_period, total_hours_played_s, .draw) %>% 
     summarise(score_ord = sum(score_ord * .value)) # convert to original scale
 }
-names(draws) <- subsets
+names(draws) <- main_data_subsets
 
-# make contrasts from draws comparing performance pre and post lockdown
-# note: does NOT compare difference in hours played, but collapses across it
-draws_contrasts <- draws %>% 
-  map(~compare_levels(.x, score_ord, by = time))
-
-# DAS diff data ----
+# diff data ----
 
 diff_draws <- list()
-das_diff_models <- c("das_d_diff", "das_a_diff", "das_s_diff", "loneliness_diff")
 
-for(i in seq_along(prepared_data_diff)) {
-  diff_draws[[i]] <- prepared_data_diff[[subsets[i]]] %>% 
+diff_data_subsets <- c(
+  "depression_diff", 
+  "anxiety_diff", 
+  "stress_diff", 
+  "loneliness_diff"
+)
+
+full_diff_model_subsets <- c(
+  "depression_full_diff", 
+  "anxiety_full_diff", 
+  "stress_full_diff", 
+  "loneliness_full_diff"
+)
+
+for(i in seq_along(full_diff_model_subsets)) {
+  diff_draws[[i]] <- prepared_data[[diff_data_subsets[i]]] %>% 
     as.data.frame() %>% 
     modelr::data_grid(
       hours_diff = modelr::seq_range(
@@ -53,21 +63,27 @@ for(i in seq_along(prepared_data_diff)) {
       )
     ) %>% 
     add_fitted_draws(
-      models[[das_diff_models[i]]], 
+      models[[full_diff_model_subsets[i]]], 
       re_formula = NA,
       seed = analysis_options$rand_seed,
       n = NULL
     )
 }
-names(diff_draws) <- subsets
+names(diff_draws) <- main_data_subsets
 
 # DAS diff data for lockdown hours played ----
 
-diff_l_draws <- list()
-das_diff_l_models <- c("das_l_d_diff", "das_l_a_diff", "das_l_s_diff", "loneliness_l_diff")
+lockdown_diff_draws <- list()
 
-for(i in seq_along(prepared_data_diff)) {
-  diff_l_draws[[i]] <- prepared_data_diff[[subsets[i]]] %>% 
+lockdown_diff_model_subsets <- c(
+  "depression_lockdown_diff", 
+  "anxiety_lockdown_diff", 
+  "stress_lockdown_diff", 
+  "loneliness_lockdown_diff"
+)
+
+for(i in seq_along(lockdown_diff_model_subsets)) {
+  lockdown_diff_draws[[i]] <- prepared_data[[diff_data_subsets[i]]] %>% 
     as.data.frame() %>% 
     modelr::data_grid(
       total_hours_played_after = modelr::seq_range(
@@ -76,10 +92,10 @@ for(i in seq_along(prepared_data_diff)) {
       )
     ) %>% 
     add_fitted_draws(
-      models[[das_diff_l_models[i]]], 
+      models[[lockdown_diff_model_subsets[i]]], 
       re_formula = NA,
       seed = analysis_options$rand_seed,
       n = NULL
     )
 }
-names(diff_l_draws) <- subsets
+names(lockdown_diff_draws) <- main_data_subsets

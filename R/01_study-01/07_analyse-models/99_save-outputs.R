@@ -12,13 +12,13 @@ for(i in seq_along(plots)) {
 
 # save model summaries
 
-for(i in seq_along(mh_hyps)) {
+for(i in seq_along(bayes_factors)) {
   write_csv(
-    x = mh_hyps[[i]],
+    x = bayes_factors[[i]],
     path = here(
       "04_analysis", 
       "02_hypotheses",
-      paste0(names(mh_hyps)[[i]], ".csv")
+      paste0(names(bayes_factors)[[i]], ".csv")
     )
   )
 }

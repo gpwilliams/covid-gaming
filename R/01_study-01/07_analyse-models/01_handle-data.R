@@ -4,7 +4,7 @@
 
 # get file names 
 r_file_list <- list.files(
-  path = here::here("02_data", "01_study-01", "02_cleaned", "02_aggregated",), 
+  path = here::here("02_data", "01_study-01", "02_cleaned", "02_aggregated"), 
   pattern = "rds$",
   full.names = TRUE
 )
@@ -20,7 +20,7 @@ names(data) <- r_file_list %>%
 
 # get file names 
 model_file_list <- list.files(
-  path = here::here("04_analysis", "01a_models"), 
+  path = here::here("04_analysis", "01_study-01", "01a_models"), 
   pattern = "rds$",
   full.names = TRUE
 )
@@ -32,8 +32,18 @@ names(models) <- model_file_list %>%
   sub(".*/", "", .) %>% 
   substr(., 1, nchar(.)-4)
 
-# prepare data again from models ----
+# read in model data ----
 
-prepared_data <- list()
-source(here("R", "05_fit-models", "02a_prepare-data_das.R"))
-source(here("R", "05_fit-models", "02b_prepare-data_l.R"))
+data_file_list <- list.files(
+  path = here::here("02_data", "01_study-01", "04_model-data"), 
+  pattern = "rds$",
+  full.names = TRUE
+)
+
+# read files and rename items in list with file names
+prepared_data <- data_file_list %>% 
+  map(read_rds)
+names(prepared_data) <- data_file_list %>% 
+  sub(".*/", "", .) %>% 
+  substr(., 1, nchar(.)-4)
+

@@ -26,13 +26,13 @@ numeric_na <- wide_data_filtered %>%
   ) %>% 
   mutate(percent_na = (sum_na/total)*100)
 
-# get those with hours played before or after > 18 hours a day
+# get those with hours played before or after > 14 hours a day
 hours_outliers <- wide_data_filtered %>% 
-  filter(total_hours_before > 7*18 | total_hours_after > 7*18) %>% 
+  filter(total_hours_before > 7*14 | total_hours_after > 7*14) %>% 
   select(response_id, total_hours_before, total_hours_after)
 
 # filter data, keeping only those with < 20% missing data or 
-# or with hours played > 18 hours a day in before or after periods
+# or with hours played > 12 hours a day in before or after periods
 wide_data_complete <- wide_data_filtered %>% 
   filter(
     !response_id %in% pull(filter(numeric_na, percent_na > 20), response_id),

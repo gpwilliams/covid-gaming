@@ -20,7 +20,7 @@ models$depression_moderation <- brm(
   backend = "cmdstanr"
 )
 
-anxiety_moderation <- update(
+models$anxiety_moderation <- update(
   models$depression_moderation, 
   newdata = prepared_data$anxiety_diff,
   cores = analysis_options$cores,
@@ -36,7 +36,7 @@ anxiety_moderation <- update(
   backend = "cmdstanr"
 )
 
-stress_moderation <- update(
+models$stress_moderation <- update(
   models$depression_moderation, 
   newdata = prepared_data$stress_diff,
   cores = analysis_options$cores,
