@@ -11,8 +11,7 @@ main_bf <- models[c("depression", "anxiety", "stress", "loneliness")] %>%
         "total_hours_played_s", 
         "lockdown_period1:total_hours_played_s"
       )
-    )
-  )
+    ))
 
 # full difference models ----
 
@@ -34,6 +33,22 @@ lockdown_diff_bf <- models[c(
 )] %>% 
   map(~bayesfactor_parameters(.x, parameters = "total_hours_played_after"))
 
+# moderation models ----
+
+moderation_bf <- models[c(
+  "depression_moderation", 
+  "anxiety_moderation", 
+  "stress_moderation"
+)] %>% 
+  map(~bayesfactor_parameters(
+    .x, 
+    parameters = c(
+      "hours_diff",
+      "loneliness_after",
+      "hours_diff:loneliness_after"
+    )
+  ))
+
 # combine ----
 
-bayes_factors <- c(main_bf, diff_bf, lockdown_diff_bf)
+bayes_factors <- c(main_bf, diff_bf, lockdown_diff_bf, moderation_bf)

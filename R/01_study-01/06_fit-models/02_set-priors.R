@@ -45,7 +45,7 @@ priors$loneliness_lockdown_diff <- c(
 # moderation models ----
 
 priors$moderation <- c(
-  set_prior("normal(0, 10)", class = "Intercept"),
+  set_prior("student_t(3, 0, 1.5)", class = "Intercept"), # df, mean, sigma scale
   set_prior("normal(0, 5)", class = "b"),
   set_prior("exponential(2)", class = "sigma")
 )

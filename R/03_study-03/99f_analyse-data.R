@@ -3,6 +3,9 @@
 library(tidyverse) # for data processing/plotting
 library(here) # for file paths
 library(brms) # for fitting models
+library(bayestestR) # for calculating measures from models
+library(logspline) # needed for bayestestR
+library(see) # needed for bayestestR
 library(modelr) # for defining data for draws from posterior
 library(tidybayes) # for getting/analysing draws
 library(patchwork) # for binding plots
@@ -16,7 +19,7 @@ r_function_list <- list.files(
 purrr::walk(r_function_list, source)
 
 analysis_file_list <- list.files(
-  path = here::here("R", "06_analyse-models"), 
+  path = here::here("R", "03_study-03", "07_analyse-models"), 
   pattern = "R$",
   full.names = TRUE
 )

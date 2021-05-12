@@ -17,5 +17,5 @@ formulae$lockdown_diff <- bf(
 
 formulae$moderation <- bf(
   score_after ~ hours_diff * loneliness_after,
-  family = gaussian(link = "identity")
+  family = cumulative(link = "logit")
 )

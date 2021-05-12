@@ -9,8 +9,8 @@ for(i in seq_along(prepared_data)) {
       values_from = c(score, total_hours_played)
     ) %>% 
     mutate(
-      hours_diff = total_hours_played_before - total_hours_played_after,
-      score_diff = score_before - score_after
+      hours_diff = total_hours_played_after - total_hours_played_before,
+      score_diff = score_after - score_before
     )
 }
 names(prepared_diff_data) <- paste0(names(prepared_data), "_diff")

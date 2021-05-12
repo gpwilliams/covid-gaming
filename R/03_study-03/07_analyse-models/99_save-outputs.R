@@ -5,7 +5,7 @@ for(i in seq_along(plots)) {
   ggsave(
     filename = here(
       "03_plots", 
-      "01_study-01", 
+      "03_study-03", 
       paste0(names(plots)[[i]], ".png")),
     plot = plots[[i]],
     width = 12,
@@ -20,7 +20,7 @@ for(i in seq_along(bayes_factors)) {
     x = bayes_factors[[i]],
     path = here(
       "04_analysis", 
-      "01_study-01",
+      "03_study-03",
       "02_hypotheses",
       paste0(names(bayes_factors)[[i]], ".csv")
     )

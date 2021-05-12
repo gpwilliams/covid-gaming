@@ -35,4 +35,4 @@ for(i in seq_along(lockdown_diff_draws)) {
     median_qi(.value, .width = summary_options$summary_intervals) %>% 
     mutate_if(is.numeric, round, summary_options$rounding)
 }
-names(model_summaries_lockdown_diff) <- names(diff_l_draws)
+names(model_summaries_lockdown_diff) <- names(lockdown_diff_draws)

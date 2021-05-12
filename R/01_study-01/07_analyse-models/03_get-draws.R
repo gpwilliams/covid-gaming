@@ -71,7 +71,7 @@ for(i in seq_along(full_diff_model_subsets)) {
 }
 names(diff_draws) <- main_data_subsets
 
-# DAS diff data for lockdown hours played ----
+# diff data on lockdown hours played ----
 
 lockdown_diff_draws <- list()
 
@@ -99,3 +99,7 @@ for(i in seq_along(lockdown_diff_model_subsets)) {
     )
 }
 names(lockdown_diff_draws) <- main_data_subsets
+
+# moderation analysis data ----
+
+# not needed; plots are instead made with brms::conditional_effects()
