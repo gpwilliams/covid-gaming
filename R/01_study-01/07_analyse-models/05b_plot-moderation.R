@@ -2,8 +2,6 @@
 
 # make function ----
 
-round_any = function(x, accuracy, f=round){f(x/ accuracy) * accuracy}
-
 # get rounded min and max of the range of hours played in this study
 # note: it's the same across the different split data sets
 min_hours <- round_any(min(prepared_data$anxiety_diff$hours_diff), 10)

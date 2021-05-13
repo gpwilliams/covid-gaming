@@ -6,13 +6,14 @@ for(i in seq_along(models)) {
   mod <- summary(models[[i]])
   
   mod_fixed <- mod$fixed %>% 
+    as.data.frame() %>% 
     rownames_to_column(var = "coef") %>% 
     mutate(effect = "fixed") %>% 
-    rownames_to_column() %>% 
     select(effect, everything())
   
   if(!is.null(models$random)) {
     mod_random <- do.call(rbind.data.frame, mod$random) %>%
+      as.data.frame() %>% 
       rownames_to_column(var = "coef") %>% 
       mutate(effect = "random") %>% 
       select(effect, everything())
