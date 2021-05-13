@@ -42,14 +42,8 @@ for(i in seq_along(posterior_plots)) {
 
 # save model summaries
 
-for(i in seq_along(bayes_factors)) {
-  write_csv(
-    x = bayes_factors[[i]],
-    path = here(
-      "04_analysis", 
-      "02_study-02", 
-      "02_hypotheses",
-      paste0(names(bayes_factors)[[i]], ".csv")
-    )
-  )
-}
+# save model summaries
+save_list_to_file(
+  bayes_factors, 
+  c("04_analysis", "02_study-02", "02_hypotheses")
+)
