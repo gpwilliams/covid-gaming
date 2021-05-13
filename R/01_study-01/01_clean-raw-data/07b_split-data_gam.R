@@ -19,7 +19,7 @@ item_data$gam_long <- wide_data_complete %>%
   select(
     response_id,
     why_play_before_1:why_play_before_18,
-    why_play_after_1:why_play_after_18
+    why_play_during_1:why_play_during_18
   ) %>% 
   pivot_longer(
     cols = - response_id,

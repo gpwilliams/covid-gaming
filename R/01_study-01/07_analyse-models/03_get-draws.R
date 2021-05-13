@@ -1,5 +1,7 @@
 # get draws ----
 
+message("Getting draws from the posterior.")
+
 # main models ----
 
 # define models/prepared data names from lists on which to get draws
@@ -86,8 +88,8 @@ for(i in seq_along(lockdown_diff_model_subsets)) {
   lockdown_diff_draws[[i]] <- prepared_data[[diff_data_subsets[i]]] %>% 
     as.data.frame() %>% 
     modelr::data_grid(
-      total_hours_played_after = modelr::seq_range(
-        total_hours_played_after, 
+      total_hours_played_during = modelr::seq_range(
+        total_hours_played_during, 
         n = 41
       )
     ) %>% 

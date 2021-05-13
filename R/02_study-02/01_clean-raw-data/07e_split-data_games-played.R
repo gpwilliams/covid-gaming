@@ -7,16 +7,16 @@ item_data$games_played_long <- wide_data_complete %>%
   select(
     response_id,
     hours_before_1:hours_before_9,
-    hours_after_1:hours_after_9,
+    hours_during_1:hours_during_9,
     regularly_play_before,
     total_hours_before,
-    regularly_play_after,
-    total_hours_after
+    regularly_play_during,
+    total_hours_during
   ) %>% 
   pivot_longer(
     cols = c(
       hours_before_1:hours_before_9, 
-      hours_after_1:hours_after_9
+      hours_during_1:hours_during_9
     ),
     names_to = c("lockdown_period", "game"),
     names_sep = "_",
@@ -28,17 +28,17 @@ item_data$games_played_long <- wide_data_complete %>%
     game, 
     lockdown_period,
     regularly_play_before,
-    regularly_play_after,
+    regularly_play_during,
     hours
   ) %>% 
   mutate(
     regularly_play = case_when(
       lockdown_period == "before" & regularly_play_before == "yes" ~ "yes",
-      lockdown_period == "after" & regularly_play_after == "yes" ~ "yes",
+      lockdown_period == "during" & regularly_play_during == "yes" ~ "yes",
       TRUE ~ "no"
     )
   ) %>% 
-  select(-c(regularly_play_before, regularly_play_after))
+  select(-c(regularly_play_before, regularly_play_during))
 
 # longer/wider data: aggregated by subject ----
 
@@ -46,7 +46,7 @@ regularly_play_agg <- wide_data_complete %>%
   select(
     response_id,
     regularly_play_before,
-    regularly_play_after
+    regularly_play_during
   ) %>% 
   pivot_longer(
     -response_id,
@@ -59,7 +59,7 @@ games_played_agg <- wide_data_complete %>%
   select(
     response_id,
     total_hours_before,
-    total_hours_after
+    total_hours_during
   ) %>% 
   pivot_longer(
     -response_id,
@@ -87,8 +87,8 @@ agg_data$hours_interaction_wide <- wide_data_complete %>%
     hours_together_with_chat_before,
     hours_together_without_chat_before,
     hours_alone_before,
-    hours_together_with_chat_after,
-    hours_together_without_chat_after,
+    hours_together_with_chat_during,
+    hours_together_without_chat_during,
     hours_alone_before_duplicate
   )
 

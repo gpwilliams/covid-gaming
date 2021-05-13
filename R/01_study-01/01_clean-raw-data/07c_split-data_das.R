@@ -6,7 +6,7 @@ das_keys <- list(
   stress = c(1, 6, 8, 11, 12, 14, 18),
   anxiety = c(2, 4, 7, 9, 15, 19, 20),
   depression = c(3, 5, 10, 13, 16, 17, 21),
-  prefix = c("das_before_", "das_after_")
+  prefix = c("das_before_", "das_during_")
 )
 
 # long data: by item
@@ -15,7 +15,7 @@ item_data$das_long <- wide_data_complete %>%
   select(c(
     response_id, 
     das_before_1:das_before_21, 
-    das_after_1:das_after_21
+    das_during_1:das_during_21
   )) %>% 
   pivot_longer(
     -response_id,

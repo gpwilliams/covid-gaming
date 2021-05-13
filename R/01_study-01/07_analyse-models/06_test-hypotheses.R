@@ -1,5 +1,7 @@
 # test hypotheses ----
 
+message("Making Bayes factors.")
+
 # main models ----
 
 main_bf <- models[c("depression", "anxiety", "stress", "loneliness")] %>% 
@@ -21,7 +23,7 @@ diff_bf <- models[c(
   "stress_full_diff", 
   "loneliness_full_diff"
   )] %>% 
-  map(~bayesfactor_parameters(.x, parameters = "hours_diff"))
+  map(~bayesfactor_parameters(.x)) # all parameters (incl. intercept)
 
 # das difference from lockdown hours played ----
 
@@ -31,7 +33,7 @@ lockdown_diff_bf <- models[c(
   "stress_lockdown_diff", 
   "loneliness_lockdown_diff"
 )] %>% 
-  map(~bayesfactor_parameters(.x, parameters = "total_hours_played_after"))
+  map(~bayesfactor_parameters(.x)) # all parameters (incl. intercept)
 
 # moderation models ----
 
@@ -44,8 +46,8 @@ moderation_bf <- models[c(
     .x, 
     parameters = c(
       "hours_diff",
-      "loneliness_after",
-      "hours_diff:loneliness_after"
+      "loneliness_during",
+      "hours_diff:loneliness_during"
     )
   ))
 

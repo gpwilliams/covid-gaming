@@ -1,3 +1,4 @@
+# plot draws ----
 
 # full models ----
 
@@ -9,8 +10,8 @@ mh_main <- draws %>%
     ~.x %>% 
       mutate(lockdown_period = factor(
         lockdown_period, 
-        levels = c("before", "after"), 
-        labels = c("Before", "After"))
+        levels = c("before", "during"), 
+        labels = c("Before", "during"))
       ) %>%
       ggplot(aes(
         x = total_hours_played_s, 
@@ -74,7 +75,7 @@ names(lockdown_diff_draws) <- c("Depression", "Anxiety", "Stress", "Loneliness")
 mh_lockdown_diff_plots <- lockdown_diff_draws %>% 
   imap(
     ~.x %>% 
-      ggplot(aes(x = total_hours_played_after, y = .value)) +
+      ggplot(aes(x = total_hours_played_during, y = .value)) +
       stat_lineribbon(aes(y = .value)) +
       scale_colour_manual(values = c("grey80", "grey60", "grey30")) +
       scale_fill_manual(values = c("grey80", "grey60", "grey30")) +

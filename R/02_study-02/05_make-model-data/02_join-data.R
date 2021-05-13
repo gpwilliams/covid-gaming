@@ -1,4 +1,4 @@
-# das: subscale, hours played, time (before/after)
+# das: subscale, hours played, time (before/during)
 
 data$games_played_long <- data$games_played_long %>% 
   mutate(

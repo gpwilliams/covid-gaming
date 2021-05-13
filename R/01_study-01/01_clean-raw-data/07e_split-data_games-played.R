@@ -7,16 +7,16 @@ games_habits_long <- wide_data_complete %>%
   select(
     response_id,
     hours_before_1:hours_before_9,
-    hours_after_1:hours_after_9,
+    hours_during_1:hours_during_9,
     regularly_play_before,
     total_hours_before,
-    regularly_play_after,
-    total_hours_after
+    regularly_play_during,
+    total_hours_during
   ) %>% 
   pivot_longer(
     cols = c(
       hours_before_1:hours_before_9, 
-      hours_after_1:hours_after_9
+      hours_during_1:hours_during_9
     ),
     names_to = c("lockdown_period", "game"),
     names_sep = "_",
@@ -28,24 +28,24 @@ games_habits_long <- wide_data_complete %>%
     game, 
     lockdown_period,
     regularly_play_before,
-    regularly_play_after,
+    regularly_play_during,
     hours
   ) %>% 
   mutate(
     regularly_play = case_when(
       lockdown_period == "before" & regularly_play_before == "yes" ~ "yes",
-      lockdown_period == "after" & regularly_play_after == "yes" ~ "yes",
+      lockdown_period == "during" & regularly_play_during == "yes" ~ "yes",
       TRUE ~ "no"
     )
   ) %>% 
-  select(-c(regularly_play_before, regularly_play_after))
+  select(-c(regularly_play_before, regularly_play_during))
 
 # single and multiplayer
 single_multi <- wide_data_complete %>% 
   select(
     response_id, 
     games_single_muliplayer_before_1:games_single_muliplayer_before_9,
-    games_single_muliplayer_after_1: games_single_muliplayer_after_9
+    games_single_muliplayer_during_1: games_single_muliplayer_during_9
   ) %>% 
   pivot_longer(
     -response_id,
@@ -83,7 +83,7 @@ regularly_play_agg <- wide_data_complete %>%
   select(
     response_id,
     regularly_play_before,
-    regularly_play_after
+    regularly_play_during
   ) %>% 
   pivot_longer(
     -response_id,
@@ -96,7 +96,7 @@ games_played_agg <- wide_data_complete %>%
   select(
     response_id,
     total_hours_before,
-    total_hours_after
+    total_hours_during
   ) %>% 
   pivot_longer(
     -response_id,

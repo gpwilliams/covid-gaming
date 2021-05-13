@@ -13,7 +13,7 @@ wide_data_filtered <- wide_data_valid %>%
     !str_detect(current_education_employment, "78"), # remove unemployed + employed responses
     !str_detect(current_education_employment, "87"),
     !is.na(total_hours_before), # keep only people who reported hours played
-    !is.na(total_hours_after) 
+    !is.na(total_hours_during) 
   )
 
 # check missing data in essential columns for analysis
@@ -26,13 +26,13 @@ numeric_na <- wide_data_filtered %>%
   ) %>% 
   mutate(percent_na = (sum_na/total)*100)
 
-# get those with hours played before or after > 14 hours a day
+# get those with hours played before or during > 14 hours a day
 hours_outliers <- wide_data_filtered %>% 
-  filter(total_hours_before > 7*14 | total_hours_after > 7*14) %>% 
-  select(response_id, total_hours_before, total_hours_after)
+  filter(total_hours_before > 7*14 | total_hours_during > 7*14) %>% 
+  select(response_id, total_hours_before, total_hours_during)
 
 # filter data, keeping only those with < 20% missing data or 
-# or with hours played > 12 hours a day in before or after periods
+# or with hours played > 12 hours a day in before or during periods
 wide_data_complete <- wide_data_filtered %>% 
   filter(
     !response_id %in% pull(filter(numeric_na, percent_na > 20), response_id),
@@ -44,7 +44,7 @@ demo_data$exclusions <- data.frame(
   original_n = length(unique(pull(wide_data_corrected, response_id))),
   age_consent_n = length(unique(pull(wide_data_valid, response_id))),
   valid_n = length(unique(pull(wide_data_filtered, response_id))),
-  after_exclusions_n = length(unique(pull(wide_data_complete, response_id)))
+  during_exclusions_n = length(unique(pull(wide_data_complete, response_id)))
 )
 
 # get the number of incomplete items for participants 

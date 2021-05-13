@@ -5,8 +5,10 @@ model_summaries <- list()
 for(i in seq_along(models)) {
   mod <- summary(models[[i]])
   
-  mod_fixed <- mod$fixed %>% as_tibble() %>% 
+  mod_fixed <- mod$fixed %>% 
+    rownames_to_column(var = "coef") %>% 
     mutate(effect = "fixed") %>% 
+    rownames_to_column() %>% 
     select(effect, everything())
   
   if(!is.null(models$random)) {

@@ -1,4 +1,4 @@
-response_id,regularly_watch_before,hours_watching_before,hours_watching_before_duplicate,hours_watching_after,hours_interacting_watching_after,hours_interacting_watching_after_duplicate
+response_id,regularly_watch_before,hours_watching_before,hours_watching_before_duplicate,hours_watching_during,hours_interacting_watching_during,hours_interacting_watching_during_duplicate
 R_w7AV8G1eEuySSVr,no,NA,NA,2,NA,NA
 R_3g11OuFlZDreUWH,yes,44,21,1,13,23
 R_ZIyPy9Dq6G7mGIx,no,NA,NA,2,NA,NA

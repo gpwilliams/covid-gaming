@@ -1,0 +1,3 @@
+Parameter,BF,Effects,Component
+b_Intercept,7.511066391384649,fixed,conditional
+b_total_hours_played_during,0.011314043902480465,fixed,conditional

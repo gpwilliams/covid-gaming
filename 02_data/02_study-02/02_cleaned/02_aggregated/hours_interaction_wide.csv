@@ -1,4 +1,4 @@
-response_id,hours_together_with_chat_before,hours_together_without_chat_before,hours_alone_before,hours_together_with_chat_after,hours_together_without_chat_after,hours_alone_before_duplicate
+response_id,hours_together_with_chat_before,hours_together_without_chat_before,hours_alone_before,hours_together_with_chat_during,hours_together_without_chat_during,hours_alone_before_duplicate
 R_3L0dsQEmJBoz6CB,60,NA,NA,50,NA,NA
 R_55QtESMR1CmR1bb,10,5,10,15,10,10
 R_egrPbOmESOQ7LH3,NA,NA,15,NA,NA,15

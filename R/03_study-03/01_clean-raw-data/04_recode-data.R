@@ -27,8 +27,8 @@ wide_data_recoded <- wide_data %>%
       levels = c(9, 10),
       labels = c("yes", "no")
     ),
-    regularly_play_after = factor(
-      regularly_play_after,
+    regularly_play_during = factor(
+      regularly_play_during,
       levels = c(9, 10),
       labels = c("yes", "no")
     ),

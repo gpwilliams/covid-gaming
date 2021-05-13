@@ -8,7 +8,7 @@ all_data <- full_join(das, loneliness) %>%
   mutate(
     lockdown_period = str_to_title(lockdown_period),
     subscale = str_to_title(subscale),
-    lockdown_period = factor(lockdown_period, levels = c("Before", "After")),
+    lockdown_period = factor(lockdown_period, levels = c("Before", "During")),
     subscale = factor(
       subscale,
       levels = c(

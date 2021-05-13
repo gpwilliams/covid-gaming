@@ -6,8 +6,35 @@ for(i in seq_along(plots)) {
     filename = here(
       "03_plots", 
       "02_study-02", 
+      "01_main-plots",
       paste0(names(plots)[[i]], ".png")),
     plot = plots[[i]],
+    width = 12,
+    height = 8
+  )
+}
+
+for(i in seq_along(prior_plots)) {
+  ggsave(
+    filename = here(
+      "03_plots", 
+      "02_study-02", 
+      "02_prior-checks",
+      paste0(names(prior_plots)[[i]], ".png")),
+    plot = prior_plots[[i]],
+    width = 12,
+    height = 8
+  )
+}
+
+for(i in seq_along(posterior_plots)) {
+  ggsave(
+    filename = here(
+      "03_plots", 
+      "02_study-02", 
+      "03_posterior-checks",
+      paste0(names(posterior_plots)[[i]], ".png")),
+    plot = posterior_plots[[i]],
     width = 12,
     height = 8
   )
@@ -20,7 +47,7 @@ for(i in seq_along(bayes_factors)) {
     x = bayes_factors[[i]],
     path = here(
       "04_analysis", 
-      "02_study-02",
+      "02_study-02", 
       "02_hypotheses",
       paste0(names(bayes_factors)[[i]], ".csv")
     )

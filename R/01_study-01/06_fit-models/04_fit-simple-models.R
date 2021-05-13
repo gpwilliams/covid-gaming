@@ -147,7 +147,7 @@ models$loneliness_full_diff <- brm(
   backend = "cmdstanr"
 )
   
-# change in DAS scores for lockdown hours played ----
+# change in MH scores for lockdown hours played ----
 
 message("Fitting lockdown diff models")
 

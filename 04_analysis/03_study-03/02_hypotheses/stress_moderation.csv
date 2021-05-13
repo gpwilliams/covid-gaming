@@ -1,0 +1,4 @@
+Parameter,BF,Effects,Component
+b_hours_diff,0.06958247454131687,fixed,conditional
+b_hours_diff.loneliness_during,0.008169458192404323,fixed,conditional
+b_loneliness_during,5.429149725394974,fixed,conditional

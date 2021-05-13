@@ -11,11 +11,11 @@ formulae$full_diff <- bf(
 )
 
 formulae$lockdown_diff <- bf(
-  score_diff ~ total_hours_played_after,
+  score_diff ~ total_hours_played_during,
   family = gaussian(link = "identity")
 )
 
 formulae$moderation <- bf(
-  score_after ~ hours_diff * loneliness_after,
+  score_during_ord ~ hours_diff * loneliness_during,
   family = cumulative(link = "logit")
 )

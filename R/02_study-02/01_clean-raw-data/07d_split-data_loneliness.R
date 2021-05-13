@@ -4,7 +4,7 @@
 
 loneliness_keys <- list(
   items = c(1:3),
-  prefix = c("loneliness_before_", "loneliness_after_")
+  prefix = c("loneliness_before_", "loneliness_during_")
 )
 
 # long data: by item
@@ -13,7 +13,7 @@ item_data$loneliness_long <- wide_data_complete %>%
   select(c(
     response_id, 
     loneliness_before_1:loneliness_before_3, 
-    loneliness_after_1:loneliness_after_3
+    loneliness_during_1:loneliness_during_3
   )) %>% 
   pivot_longer(
     -response_id,
@@ -56,7 +56,7 @@ item_data$loneliness_extended_long <- wide_data_complete %>%
   select(c(
     response_id, 
     loneliness_extended_before_1:loneliness_extended_before_11, 
-    loneliness_extended_after_1:loneliness_extended_after_11
+    loneliness_extended_during_1:loneliness_extended_during_11
   )) %>% 
   pivot_longer(
     -response_id,

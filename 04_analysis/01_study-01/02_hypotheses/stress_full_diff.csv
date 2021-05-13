@@ -1,0 +1,3 @@
+Parameter,BF,Effects,Component
+b_Intercept,144.3775192362104,fixed,conditional
+b_hours_diff,0.06317002457407467,fixed,conditional

@@ -17,8 +17,8 @@ wide_data_recoded_adjusted <- wide_data_recoded %>%
       select(., starts_with("games_percent_before")), 
       na.rm = TRUE
     ),
-    percent_played_after = rowSums(
-      select(., starts_with("games_percent_after")), 
+    percent_played_during = rowSums(
+      select(., starts_with("games_percent_during")), 
       na.rm = TRUE
     )
   ) %>% # fix DAS scores to range from 0-3
@@ -30,14 +30,14 @@ hours_per_game <- wide_data_recoded_adjusted %>%
   select(
     response_id,
     games_percent_before_1:games_percent_before_9, 
-    games_percent_after_1:games_percent_after_9,
+    games_percent_during_1:games_percent_during_9,
     hours_played_before,
-    hours_played_after
+    hours_played_during
   ) %>% 
   pivot_longer(
     cols = c(
       games_percent_before_1:games_percent_before_9, 
-      games_percent_after_1:games_percent_after_9
+      games_percent_during_1:games_percent_during_9
     ),
     names_to = c("lockdown_period", "game"),
     names_sep = "_",
@@ -47,10 +47,10 @@ hours_per_game <- wide_data_recoded_adjusted %>%
   mutate(
     hours = case_when(
       lockdown_period == "before" ~ hours_played_before/100*percent,
-      lockdown_period == "after" ~ hours_played_after/100*percent
+      lockdown_period == "during" ~ hours_played_during/100*percent
     )
   ) %>% 
-  # select(-c(hours_played_before, hours_played_after)) %>% 
+  # select(-c(hours_played_before, hours_played_during)) %>% 
   pivot_wider(
     names_from = "game",
     values_from = c("percent", "hours")
@@ -66,7 +66,7 @@ corrected_hours_per_game <- hours_per_game %>%
   mutate( # check for those who reported percentages matching hours
     replaced = case_when(
       lockdown_period == "before" & hours_played_before == total_percent ~ 1,
-      lockdown_period == "after" & hours_played_after == total_percent ~ 1,
+      lockdown_period == "during" & hours_played_during == total_percent ~ 1,
       TRUE ~ 0
     )
   ) %>% 
@@ -82,12 +82,12 @@ corrected_hours_per_game <- hours_per_game %>%
     hours_9 = case_when(replaced == 1 ~ percent_9, TRUE ~ hours_9),
     total_hours = case_when(replaced == 1 ~ total_percent, TRUE ~ total_hours)
   ) %>% 
-  select(-c(hours_played_before, hours_played_after)) %>% 
+  select(-c(hours_played_before, hours_played_during)) %>% 
   pivot_wider(
     names_from = lockdown_period,
     values_from = percent_1:total_percent
   ) %>% 
-  drop_na(total_hours_after) # remove filled in rows prior to later binding
+  drop_na(total_hours_during) # remove filled in rows prior to later binding
 
 # get the participants who had hours adjusted
 adjusted_hours <- corrected_hours_per_game %>% 
@@ -109,7 +109,7 @@ corrected_hours_per_game <- clean_names(corrected_hours_per_game)
 corrected_hours_per_game <- dplyr::rename(
   corrected_hours_per_game, 
   hours_before_1 = hours_before, 
-  hours_after_1 = hours_after
+  hours_during_1 = hours_during
 )
 
 # bind together
@@ -122,7 +122,7 @@ wide_data_corrected <- full_join(
     start_date:regularly_play_before,
     contains("hours_before"),
     games_single_muliplayer_before_1:why_play_before_18,
-    das_after_1:regularly_play_after,
-    games_single_muliplayer_after_1:why_play_after_18,
-    contains("hours_after")
+    das_during_1:regularly_play_during,
+    games_single_muliplayer_during_1:why_play_during_18,
+    contains("hours_during")
   )

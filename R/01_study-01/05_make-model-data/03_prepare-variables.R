@@ -1,12 +1,12 @@
 # prepare variables ----
 
-# order lockdown period so before comes before after
+# order lockdown period so before comes before during
 
 prepared_data <- prepared_data %>% 
   map(~ mutate(., 
     lockdown_period = factor(
       lockdown_period, 
-      levels = c("before", "after")
+      levels = c("before", "during")
     ), # order lockdown period
     score_ord = factor( # make response an ordered factor
       score, 

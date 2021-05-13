@@ -2,6 +2,20 @@
 
 # make function ----
 
+round_any = function(x, accuracy, f=round){f(x/ accuracy) * accuracy}
+
+# get rounded min and max of the range of hours played in this study
+# note: it's the same across the different split data sets
+min_hours <- round_any(min(prepared_data$anxiety_diff$hours_diff), 10)
+max_hours <- round_any(max(prepared_data$anxiety_diff$hours_diff), 10)
+
+# get max mean on the y axis (largest value in any data set) and round it
+moderation_y_max <- round_any(max(c(
+  mean(prepared_data$depression_diff$score_during),
+  mean(prepared_data$anxiety_diff$score_during),
+  mean(prepared_data$stress_diff$score_during)
+)), 10)
+
 moderation_plot_theme <- function(plot) {
   plot +
     theme_bw() +
@@ -28,14 +42,20 @@ moderation_plot_theme <- function(plot) {
     ) +
     scale_fill_manual(values = c("#117733", "#44AA99", "#88CCEE")) +
     scale_color_manual(values = c("#117733", "#44AA99", "#88CCEE")) +
-    coord_cartesian(xlim = c(-75, 50), ylim = c(0, 35))
+    coord_cartesian(
+      ylim = c(0, moderation_y_max)
+    ) +
+    scale_x_continuous(
+      breaks = seq(min_hours, max_hours, 20), 
+      labels = seq(min_hours, max_hours, 20)
+    )
 }
 
 # make plots ----
 
 plots$depression_moderation_plot <- plot(conditional_effects(
   models$depression_moderation, 
-  effects = "hours_diff:loneliness_after",
+  effects = "hours_diff:loneliness_during",
   plot = FALSE
 ))[[1]] %>% 
   moderation_plot_theme() +
@@ -43,7 +63,7 @@ plots$depression_moderation_plot <- plot(conditional_effects(
 
 plots$anxiety_moderation_plot <- plot(conditional_effects(
   models$anxiety_moderation, 
-  effects = "hours_diff:loneliness_after",
+  effects = "hours_diff:loneliness_during",
   plot = FALSE
 ))[[1]] %>% 
   moderation_plot_theme()  +
@@ -51,7 +71,7 @@ plots$anxiety_moderation_plot <- plot(conditional_effects(
 
 plots$stress_moderation_plot <- plot(conditional_effects(
   models$stress_moderation, 
-  effects = "hours_diff:loneliness_after",
+  effects = "hours_diff:loneliness_during",
   plot = FALSE
 ))[[1]] %>% 
   moderation_plot_theme()  +
