@@ -1,8 +1,0 @@
-# fit model ----
-
-source(here(
-  "R",
-  "01_study-01",
-  "06_fit-models",
-  "04_fit-simple-models.R"
-))

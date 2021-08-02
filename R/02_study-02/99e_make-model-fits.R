@@ -17,4 +17,9 @@ r_file_list <- list.files(
   pattern = "R$",
   full.names = TRUE
 )
+
+# output location for saving models
+study_folder <- "02_study-02"
+
+message("Starting model fitting for Study 2.")
 purrr::walk(r_file_list, source)

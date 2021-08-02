@@ -1,4 +1,0 @@
-Parameter,BF,Effects,Component
-b_lockdown_period1,0.19821257695855163,fixed,conditional
-b_lockdown_period1.total_hours_played_s,0.32510565756241144,fixed,conditional
-b_total_hours_played_s,0.3665028865705677,fixed,conditional

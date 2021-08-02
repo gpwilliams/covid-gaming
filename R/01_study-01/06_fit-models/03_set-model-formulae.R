@@ -1,7 +1,9 @@
 # model formula ----
 
 formulae$main <- bf(
-  score_ord ~ lockdown_period * total_hours_played_s + (1 | id),
+  score_ord ~ 
+    lockdown_period * total_hours_played_s + 
+    (1 + lockdown_period | id),
   family = cumulative(link = "logit")
 )
 
