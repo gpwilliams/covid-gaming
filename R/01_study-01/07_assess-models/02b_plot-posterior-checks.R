@@ -6,7 +6,7 @@ posterior_plots <- list()
 
 # make posterior predictive checks for each model
 for(i in seq_along(models)){
-  message(paste("Sampling posterior of model", i, "of", length(models)))
+  message(paste("Sampling posterior from model", i, "of", length(models)))
   posterior_plots[[i]] <- pp_check(models[[i]], nsamples = 100) +
     ggtitle(paste0("Model = ", names(models[i]))) +
     theme(plot.title = element_text(size = 6))
