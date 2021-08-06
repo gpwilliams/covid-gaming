@@ -1,0 +1,88 @@
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/situation_combined}
+
+}
+
+\caption{Count of participants by self-reported (a) employment status, (b) lockdown work situation, and (c) living situation.}\label{fig:situations-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/mh_raincloud}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, stress, and loneliness along with total hours played before and during lockdown. Dots represent individual participants' (jittered) scores.}\label{fig:mh-raincloud-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/mh_main_predictions}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, stress, and loneliness measures as a function of total hours played before and during lockdown. Lines and ribbons indicate the posterior median ± 95\% credible intervals.}\label{fig:mh-main-predictions-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/mh_diff_l}
+
+}
+
+\caption{Change in mental health outcomes for the depression, anxiety, stress, and loneliness measures as a function of the total hours played during lockdown. Lines indicate the posterior median ± 50\%, 80\%, and 95\% credible intervals.}\label{fig:mh-diff-l-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/mh_diff}
+
+}
+
+\caption{Change in mental health outcomes for the depression, anxiety, stress, and loneliness measures as a function of the difference in hours played before and after lockdown. Lines indicate the posterior median ± 50\%, 80\%, and 95\% credible intervals.}\label{fig:mh-diff-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/gam_mean_se}
+
+}
+
+\caption{ }\label{fig:gaming-motivations-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/cluster_plots}
+
+}
+
+\caption{ }\label{fig:cluster-plots}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/amotivation_moderation_plot}
+
+}
+
+\caption{ }\label{fig:amotivation-moderation-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/intrinsic_moderation_plot}
+
+}
+
+\caption{ }\label{fig:intrinsic-moderation-plot}
+\end{figure*}
