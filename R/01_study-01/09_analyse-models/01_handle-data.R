@@ -14,6 +14,10 @@ data <- map_files_to_list(
 
 # read in models ----
 
+# main target = sd_1
+# full_diff and lockdown_diff = sd 0.5
+# moderation = sd 1
+
 # get file names 
 models <- map_files_to_list(
   here::here(
@@ -21,7 +25,7 @@ models <- map_files_to_list(
     study_folder, 
     "01a_models"
   ),
-  pattern = "*"
+  pattern = "main_sd_1.rds|diff_sd_0.5|moderation_sd_1"
 )
 
 # read in model data ----

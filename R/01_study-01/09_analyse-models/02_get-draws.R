@@ -8,7 +8,13 @@ message("Getting draws from the posterior.")
 # (depends on sharing names, e.g. das_d for depression etc.)
 
 draws <- list()
-main_data_subsets <- c("depression", "anxiety", "stress", "loneliness")
+main_data_subsets <- c(
+  "depression", 
+  "anxiety", 
+  "stress", 
+  "loneliness"
+)
+main_model_subsets <- paste0(main_data_subsets, "_main_sd_1")
 
 for(i in seq_along(main_data_subsets)) {
   draws[[i]] <- prepared_data[[main_data_subsets[i]]] %>% 
@@ -21,7 +27,7 @@ for(i in seq_along(main_data_subsets)) {
       lockdown_period
     ) %>%  
     add_fitted_draws(
-      models[[main_data_subsets[i]]], 
+      models[[main_model_subsets[i]]], 
       re_formula = NA,
       seed = analysis_options$rand_seed,
       n = NULL
@@ -49,10 +55,10 @@ diff_data_subsets <- c(
 )
 
 full_diff_model_subsets <- c(
-  "depression_full_diff", 
-  "anxiety_full_diff", 
-  "stress_full_diff", 
-  "loneliness_full_diff"
+  "depression_full_diff_sd_0.5", 
+  "anxiety_full_diff_sd_0.5", 
+  "stress_full_diff_sd_0.5", 
+  "loneliness_full_diff_sd_0.5"
 )
 
 for(i in seq_along(full_diff_model_subsets)) {
@@ -78,10 +84,10 @@ names(diff_draws) <- main_data_subsets
 lockdown_diff_draws <- list()
 
 lockdown_diff_model_subsets <- c(
-  "depression_lockdown_diff", 
-  "anxiety_lockdown_diff", 
-  "stress_lockdown_diff", 
-  "loneliness_lockdown_diff"
+  "depression_lockdown_diff_sd_0.5", 
+  "anxiety_lockdown_diff_sd_0.5", 
+  "stress_lockdown_diff_sd_0.5", 
+  "loneliness_lockdown_diff_sd_0.5"
 )
 
 for(i in seq_along(lockdown_diff_model_subsets)) {
