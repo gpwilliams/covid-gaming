@@ -18,8 +18,10 @@ r_function_list <- list.files(
 )
 purrr::walk(r_function_list, source)
 
+study_folder <- "01_study-01"
+
 analysis_file_list <- list.files(
-  path = here::here("R", "01_study-01", "07_analyse-models"), 
+  path = here::here("R", study_folder, "09_analyse-models"), 
   pattern = "R$",
   full.names = TRUE
 )
