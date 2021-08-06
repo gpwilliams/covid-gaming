@@ -1,0 +1,15 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+.Rapp.history
+
+# RStudio files
+.Rproj.user
+.Rproj.user/
+
+# ignore model folders (too large for GitHub)
+04_analysis/01_study-01/01a_models/*
+04_analysis/02_study-02/01a_models/*
+04_analysis/03_study-03/01a_models/*
