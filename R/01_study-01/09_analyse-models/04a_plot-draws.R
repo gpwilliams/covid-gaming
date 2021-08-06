@@ -1,8 +1,12 @@
 # plot draws ----
 
+# make data holder
+plots <- list()
+
 # full models ----
 
-# set names for titles
+# set names for titles;
+# A = Depression, B = Anxiety, C = Stress, D = Loneliness
 names(draws) <- c("Depression", "Anxiety", "Stress", "Loneliness")
 
 mh_main <- draws %>% 
@@ -11,7 +15,7 @@ mh_main <- draws %>%
       mutate(lockdown_period = factor(
         lockdown_period, 
         levels = c("before", "during"), 
-        labels = c("Before", "during"))
+        labels = c("Before", "During"))
       ) %>%
       ggplot(aes(
         x = total_hours_played_s, 

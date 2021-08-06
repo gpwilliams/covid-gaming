@@ -52,28 +52,28 @@ moderation_plot_theme <- function(plot) {
 # make plots ----
 
 plots$depression_moderation_plot <- plot(conditional_effects(
-  models$depression_moderation, 
+  models$depression_moderation_sd_1, 
   effects = "hours_diff:loneliness_during",
   plot = FALSE
 ))[[1]] %>% 
   moderation_plot_theme() +
-  labs(title = "A.")
+  labs(title = "Depression")
 
 plots$anxiety_moderation_plot <- plot(conditional_effects(
-  models$anxiety_moderation, 
+  models$anxiety_moderation_sd_1, 
   effects = "hours_diff:loneliness_during",
   plot = FALSE
 ))[[1]] %>% 
   moderation_plot_theme()  +
-  labs(title = "B.")
+  labs(title = "Anxiety")
 
 plots$stress_moderation_plot <- plot(conditional_effects(
-  models$stress_moderation, 
+  models$stress_moderation_sd_1, 
   effects = "hours_diff:loneliness_during",
   plot = FALSE
 ))[[1]] %>% 
   moderation_plot_theme()  +
-  labs(title = "C.")
+  labs(title = "Stress")
 
 # patchwork them
 plots$moderation_plots <-

@@ -31,10 +31,6 @@ main_hypotheses <- summarise_hypotheses(
 ) %>% 
   make_cutpoints()
 
-
-
-
-
 # full diff models
 full_diff_hypotheses <- summarise_hypotheses(
   models[grepl("full_diff", names(models))],

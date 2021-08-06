@@ -2,8 +2,13 @@
 
 # (invert logit link; plogis)
 natural_scale_models <- models[c(
-    "depression", "anxiety", "stress", "loneliness",
-    "depression_moderation", "anxiety_moderation", "stress_moderation"
+    "depression_main_sd_1", 
+    "anxiety_main_sd_1", 
+    "stress_main_sd_1", 
+    "loneliness_main_sd_1",
+    "depression_moderation_sd_1", 
+    "anxiety_moderation_sd_1", 
+    "stress_moderation_sd_1"
   )] %>% 
   map(
     ~posterior_samples(.x, pars = "b_") %>% 
