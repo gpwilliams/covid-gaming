@@ -16,7 +16,7 @@ purrr::walk(r_function_list, source)
 study_folder <- "01_study-01"
 
 r_file_list <- list.files(
-  path = here::here("R", "01_study-01", "06_fit-models"), 
+  path = here::here("R", study_folder, "06_fit-models"), 
   pattern = "R$",
   full.names = TRUE
 )

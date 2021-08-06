@@ -12,14 +12,14 @@ r_function_list <- list.files(
 )
 purrr::walk(r_function_list, source)
 
+# output location for saving models
+study_folder <- "03_study-03"
+
 r_file_list <- list.files(
-  path = here::here("R", "03_study-03", "06_fit-models"), 
+  path = here::here("R", study_folder, "06_fit-models"), 
   pattern = "R$",
   full.names = TRUE
 )
-
-# output location for saving models
-study_folder <- "03_study-03"
 
 message("Starting model fitting for Study 3.")
 purrr::walk(r_file_list, source)
