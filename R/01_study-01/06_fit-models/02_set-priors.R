@@ -2,7 +2,7 @@
 
 # defines the starting priors and replacement priors for sensitivity analysis
 
-# sensitivity sds
+# sensitivity sds (note all mu = 0)
 sensitivity_sds <- list(
   main = as.character(seq(0.2, 2, by = 0.2)), # target = 1
   full_diff = as.character(seq(0.1, 1, by = 0.1)), # target = 0.5
@@ -14,8 +14,7 @@ sensitivity_sds <- list(
 
 priors$das_main <- c(
   set_prior("student_t(3, 0, 2.5)", class = "Intercept"), # df, mean, sigma scale
-  set_prior("exponential(1)", class = "sd"),
-  set_prior("lkj_corr_cholesky(2)", class = "L")
+  set_prior("exponential(1)", class = "sd")
 )
 
 priors$loneliness_main <- c(
