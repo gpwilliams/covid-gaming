@@ -3,7 +3,7 @@
 formulae$main <- bf(
   score_ord ~ 
     lockdown_period * total_hours_played_s + 
-    (1 + lockdown_period | id),
+    (1 | id),
   family = cumulative(link = "logit")
 )
 
