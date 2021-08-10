@@ -44,7 +44,7 @@ demo_data$exclusions <- data.frame(
   original_n = length(unique(pull(wide_data_corrected, response_id))),
   age_consent_n = length(unique(pull(wide_data_valid, response_id))),
   valid_n = length(unique(pull(wide_data_filtered, response_id))),
-  during_exclusions_n = length(unique(pull(wide_data_complete, response_id)))
+  after_exclusions_n = length(unique(pull(wide_data_complete, response_id)))
 )
 
 # get the number of incomplete items for participants 
