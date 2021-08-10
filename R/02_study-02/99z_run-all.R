@@ -10,5 +10,8 @@ study_2_r_file_list <- list.files(
   path = here::here("R", "02_study-02"), 
   pattern = "R$",
   full.names = TRUE
-)[1:6]
+)
+
+# avoid calling this script
+study_2_r_file_list <- study_2_r_file_list[1:length(study_2_r_file_list)-1]
 purrr::walk(study_2_r_file_list, source)
