@@ -7,4 +7,4 @@ analysis_path <- list.files(
 )
 
 study_folder <- "02_study-02"
-map(analysis_path, source)
+purrr::map(analysis_path, source)

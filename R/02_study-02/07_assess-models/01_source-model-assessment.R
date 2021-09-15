@@ -7,4 +7,4 @@ model_assessment_path <- list.files(
 )
 
 study_folder <- "02_study-02"
-map(model_assessment_path, source)
+purrr::map(model_assessment_path, source)
