@@ -1,0 +1,8 @@
+---
+title: "Supplemental Material"
+author: "Glenn Williams"
+date: "2021/09/15 (last updated: `r format(Sys.time(), '%Y/%m/%d')`)"
+output: html_document
+---
+
+Full parameter estimates, prior and poster predictive checks, prior sensitivity checks are reported in the Supplemental Material.

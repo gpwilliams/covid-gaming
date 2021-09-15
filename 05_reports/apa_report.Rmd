@@ -1,0 +1,703 @@
+---
+title             : "Videogaming effects on mental health outcomes during three COVID-19 national lockdowns"
+shorttitle        : "Covid Gaming"
+
+author: 
+  - name          : "Sophie Hodgetts"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Postal address"
+    email         : "sophie.hodgetts@sunderland.ac.uk"
+    role:         # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
+      - Conceptualisation
+      - Investigation
+      - Data Curation
+      - Methodology
+      - Project Administration
+      - Resources
+      - Writing - Original Draft Preparation
+      - Writing - Review & Editing
+  - name          : "Glenn Patrick Williams"
+    affiliation   : "1"
+    role:
+      - Conceptualization
+      - Writing - Original Draft Preparation
+      - Writing - Review & Editing
+      - Data Curation
+      - Methodology
+      - Formal Analysis
+      - Visualization
+  - name          : "Joe Butler"
+    affiliation   : "1"
+    role:
+      - Conceptualization
+      - Investigation
+      - Methodology
+      - Project Administration
+      - Writing - Original Draft Preparation
+      - Writing - Review & Editing
+
+affiliation:
+  - id            : "1"
+    institution   : "University of Sunderland"
+
+authornote: |
+  School of Psychology, Faculty of Health Sciences and Wellbeing, University of Sunderland, Sunderland, SR1 3SD, England, UK. 
+  
+  Pre-registration, data and code, and pre-print are available at...
+
+  This preprint has not been peer reviewed.
+
+abstract: |
+  Abstract goes here.
+  
+keywords          : "keywords"
+wordcount         : "X"
+
+bibliography      : ["r-references.bib"]
+
+floatsintext      : yes
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : yes
+mask              : no
+draft             : no
+
+documentclass     : "apa6"
+classoption       : "man" # can be man, doc, or jou
+output            : papaja::apa6_pdf
+header-includes   : 
+  - \usepackage{tipa}
+  - \usepackage{float}
+  - \usepackage{hyperref}
+  - \usepackage{makecell}
+---
+
+```{r setup, message=FALSE, echo=FALSE, include = FALSE}
+# global options ---
+
+options(digits = 3)
+
+# load libraries ----
+
+library(here) # for filepaths
+
+# data cleaning
+library(tidyverse) # for general data cleaning
+library(lubridate) # for dates
+library(janitor) # for cleaning names
+
+# modelling
+library(brms) # for Bayesian modelling
+library(modelr) # for establishing model tables
+library(tidybayes) # for tidying and summarising model draws
+library(mclust) # for cluster analysis
+library(factoextra) # for visualising clusters
+
+# for presentation
+library(papaja) # for apa articles in rmarkdown
+library(english) # for converting numbers to text
+library(kableExtra) # for presenting tables
+library(patchwork) # for combining graphs
+
+# remaining libraries for citations
+library(BayesFactor)
+library(bayestestR)
+library(mice)
+
+# load functions ----
+
+r_function_list <- list.files(
+  path = here("R", "00_functions"), 
+  pattern = "R$",
+  full.names = TRUE
+)
+purrr::walk(r_function_list, source)
+
+# load and prepare data ----
+
+# get names of study folders
+studies <- c("01_study-01", "02_study-02", "03_study-03")
+
+# data summaries (including exclusions)
+data_summary <- list()
+
+for(i in seq_along(studies)) {
+  data_summary[[studies[i]]] <- map_files_to_list(
+    here::here(
+      "02_data", 
+      studies[i],
+      "03_summary"
+    ),
+    file_type = ".csv",
+    read_function = readr::read_csv
+  )
+}
+
+# model summaries
+model_summary <- list()
+
+for(i in seq_along(studies)) {
+  model_summary[[studies[i]]] <- map_files_to_list(
+    here::here(
+      "04_analysis", 
+      studies[i],
+      "01b_model-summaries"
+    ),
+    file_type = ".csv",
+    read_function = readr::read_csv
+  )
+}
+
+# hypotheses
+hypotheses <- list()
+
+for(i in seq_along(studies)) {
+  hypotheses[[studies[i]]] <- map_files_to_list(
+    here::here(
+      "04_analysis", 
+      studies[i],
+      "02_hypotheses"
+    ),
+    file_type = ".csv",
+    read_function = readr::read_csv
+  )
+}
+
+# demographics
+demographics <- list()
+
+for(i in seq_along(studies)) {
+  demographics[[studies[i]]] <- map_files_to_list(
+    here::here(
+      "04_analysis", 
+      studies[i],
+      "03_demographic-summary"
+    ),
+    file_type = ".csv",
+    read_function = readr::read_csv
+  )
+}
+
+# read in tests
+tests <- list()
+
+for(i in seq_along(studies)) {
+  tests[[studies[i]]] <- map_files_to_list(
+    here::here(
+      "04_analysis", 
+      studies[i],
+      "04_tests"
+    ),
+    file_type = ".csv",
+    read_function = readr::read_csv
+  )
+}
+
+# read in all plots ----
+plots_dir <- list()
+
+for(i in seq_along(studies)) {
+  plots_dir[[studies[i]]] <- list.files(
+    path = here::here("03_plots", studies[i]), 
+    pattern = "png$",
+    full.names = TRUE,
+    recursive = TRUE # look in all subdirectories too
+  )
+}
+
+# knitr options
+knitr::opts_chunk$set(echo = FALSE)
+
+# make refs
+r_refs("r-references.bib")
+```
+
+```{r additional-functions}
+round_pad <- function(x, digits = 2) {
+  # works like round() but always retains digits (i.e. in cases of trailing 0)
+  # WARNING: returns a character vector, so only use for presentation purposes
+  formatC(round(x, digits), format = "f", digits = digits)
+}
+
+tidy_bf <- function(model) {
+  model %>% 
+    mutate(
+      Evid.Ratio = case_when(
+        Evid.Ratio > 1000 ~ "> 1000",
+        Evid.Ratio < .001 ~ "< .001",
+        TRUE ~ round_pad(Evid.Ratio)
+      )
+    )
+}
+
+arrange_models <- function(model){
+   model %>% 
+    mutate(
+      Model = factor(
+        word(Model, 1, sep = "_"), 
+        levels = c("depression", "anxiety", "stress", "loneliness"),
+        labels = c("Depression", "Anxiety", "Stress", "Loneliness")
+    )) %>% 
+    arrange(Model)
+} 
+
+tidy_hypothesis_names <- function(model) {
+  model %>% 
+    rename(
+      "$Est.$" = Estimate, 
+      "$SE$" = Est.Error, 
+      "$BF_{01}$" = Evid.Ratio, 
+      "95\\% CI" = `95% CI`
+    ) %>%
+    select(Model, Hypothesis, `$Est.$`, `$SE$`, `95\\% CI`, `$BF_{01}$`)
+}
+
+tidy_hypothesis_tables <- function(model) {
+  model %>% 
+    tidy_bf() %>% 
+    arrange_models() %>%
+    merge_ci_limits(lower = "CI.Lower", upper = "CI.Upper") %>% 
+    tidy_hypothesis_names()
+}
+```
+
+```{r analysis-preferences}
+# Seed for random number generation
+set.seed(42)
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
+```
+
+# Introduction
+
+Intro here.
+
+# Study 1
+
+## Methods
+
+### Participants
+
+`r stringr::str_to_sentence(english(data_summary$"01_study-01"$demographics_exclusions$original_n))` participants were recruited to take part in this study online via Qualtrics. Of which `r data_summary$"01_study-01"$demographics_exclusions$age_consent_n` provided full informed consent. `r stringr::str_to_sentence(english(data_summary$"01_study-01"$demographics_exclusions$age_consent_n - data_summary$"01_study-01"$demographics_exclusions$valid_n))` participants were excluded from this sample due to having completed less than 90% of the questionnaire, providing invalid employment details (i.e. stating they were both employed and unemployed) or for reporting having played no games before or during lockdown. A further `r data_summary$"01_study-01"$demographics_exclusions$valid_n-  data_summary$"01_study-01"$demographics_exclusions$after_exclusions_n` participants were removed from the analysis due to having more than 20% of trials with missing data and/or having reported hours played more than 98 hours per week (i.e. an average of 14 hours a day). From the remaining sample, only `data_summary$`01_study-01`$missing_data_counts %>% group_by(is_missing) %>% summarise(n = sum(n)) %>% pivot_wider(names_from = is_missing, values_from = n) %>% mutate(percent = `TRUE`/`FALSE`) %>% pull(percent)`% of trials had missing data, which was handled using multiple imputation with the mice R-package [@R-mice].
+
+After all exclusions we analysed data from `r demographics$"01_study-01"$demographics$n` participants (age *M* = `r demographics$"01_study-01"$demographics$age_mean`, *SD* = `r demographics$"01_study-01"$demographics$age_sd`, Range = `r demographics$"01_study-01"$demographics$age_min` - `r demographics$"01_study-01"$demographics$age_max`). On average participants took `r demographics$"01_study-01"$demographics$duration_mean/60` minutes to complete the task (*SD* = `r demographics$"01_study-01"$demographics$duration_sd/60`).
+
+Figure \@ref(fig:study-one-situations-plot) shows the number of participants in a given employment situation during lockdown.
+
+```{r study-one-situations-plot, fig.cap="Count of participants by self-reported (a) employment status, (b) lockdown work situation, and (c) living situation.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(
+  plots_dir$`01_study-01`[str_detect(plots_dir$`01_study-01`, "situation_combined.png")]
+)
+```
+
+### Procedure and Materials
+
+#### Depression, Anxiety, Stress Scale -- 21 items (DASS-21, Antony et al., 1998; Lovibond & Lovibond, 1995)
+
+The DASS-21 was used to measure mental health outcomes. This 21-item scale is comprised of three sub-scales: depression, anxiety, and stress. The analysis considered all three subscales individually. For each item, participants are required to indicate how often the item applies to them via a 4-point Likert scale (1 = Did not apply to me at all, 4 = Applied to me very much or most of the time).
+
+#### UCLA Three-item Loneliness Scale (Hughes et al., 2004)
+
+The UCLA Three-item Loneliness Scale was used to measure of loneliness. The three items ask participants to indicate how often they felt that they lacked companionship, felt left out, and felt isolated from others, using a 3-point Likert scale (1 = Hardly ever, 3 = Often).
+
+#### Video gaming habits questionnaire (adapted from Waris et al., 2019)
+
+To assess video gaming habits, we adapted the video gaming habits questionnaire as reported by Waris et al. (2019). Participants were asked to indicate whether they played computer, console, or similar games, and to estimate how many hours they played on average per week. They were then asked to estimate, as percentages, how much time per week they spent playing the following game genres: card, mobile, action, first-person shooter, exercise/music/party, adventure/puzzle/role-playing, simulation, strategy, and brain training/education. For each genre, participants were also asked to indicate whether they played alone or with others.
+
+#### Procedure
+
+After consenting, all participants completed a series of demographic questions (e.g., age, sex/gender, education/employment status, living arrangement). They were also asked to provide information regarding the effect lockdown had on their employment (e.g., furloughed, worked from home, continued as normal). All participants were then presented with the DASS-21, the Three-item Loneliness Scale, and the video gaming habits questionnaires. All questionnaires were administered twice during one survey session. In the first instance, participants were asked to complete the questionnaires with respect to how they felt four weeks before lockdown (i.e., February 2020). This allowed for an approximate baseline measure of each questionnaire. In the second instance, participants were asked to report how they currently felt (i.e., during lockdown).
+
+### Data Analysis and Model Fitting
+
+We used `r cite_r("r-references.bib", pkgs = c("brms", "BayesFactor", "bayestestR", "modelr", "tidybayes", "here", "tidyverse", "mice", "papaja"), withhold = FALSE)` for all our analyses.
+
+Prior to modelling the effect of lockdown and hours playing video games on mental health outcomes, we assessed whether gaming hours increased from baseline during lockdown. To do so, we used the `BayesFactor` R-package to perform a Bayesian paired-samples *t*-test (with a default $Cauchy(0, 0.707)$ prior) calculating the Bayes factor in support of the alternative hypothesis (i.e. of a non-zero effect) in relation to the null hypothesis (i.e. of a point-null effect) in regards to an increase in hours played after lockdown. Estimates of the posterior mean and 95% credible intervals for the difference in hours played was obtained using Markov Chain Monte Carlo (MCMC) sampling with `r tests$"01_study-01"$ttest_summary %>% pull(draws)` posterior samples.
+
+Primary analyses aimed to estimate the effect of hours played in games before and after lockdown on mental health outcomes including depression, anxiety, and stress (as measured by the DAS21) and loneliness (as measured by the three-item loneliness scale). Given that all items are scored in each subscale of the DASS-21 and in the Three-item Loneliness Scale by summing responses to each item from a 1-7 Likert scale, the summed responses to these items are necessarily integers with a lower and upper bound and represent ordinal responses. To accommodate this, we analysed the data using ordinal models (Bürkner & Vuorre, 2019). These models are more appropriate than those that assume the response variable is metric (e.g. typical linear regression assuming data are drawn from a Gaussian distribution), which often result in poor effect size estimates (e.g. predictions outside the possible range of values).
+
+The models took the form of a cumulative linear model with a logit link function, assuming that the response variable is generated from categorisation of an unobserved continuous variable. These models were fitted using the `brm()` function from the brms R-package (Bürkner, 2018). These models contained a fixed effect of total hours played, lockdown period (i.e. before or during lockdown), and the interaction between them. The categorical fixed effect of lockdown period was sum-coded (before = -1, after = 1) while the continuous fixed effect of total hours played was z-transformed. Thus, the intercept represents the grand mean and parameter estimates represent the impact of lockdown on mental health outcomes across the average hours played (i.e. a main effect of lockdown period), the impact of hours played across the average of both time points (i.e. a main effect of hours played), and their interaction. All models contained random intercepts per participant. Details of the priors for all models are outlined in the Appendix.
+
+Parameter estimates and 95% credible intervals were again obtained using MCMC sampling with 8000 posterior samples. We used the `hypothesis()` function from the brms R-package to calculate Bayes factors using the Savage-Dickey density ratio to evaluate evidence in support of the null hypothesis for each parameter estimate (i.e. for a point-null effect of 0) in relation to the alternative hypothesis (i.e. of a non-zero effect). The Supplemental Material contains prior-predictive and posterior-predictive checks along with sensitivity checks evaluating how the prior scale affects parameter estimates and Bayes factors.
+
+Additional analyses were used to further delineate any effects of gaming habits on changes to mental health outcomes. Change scores for mental health outcomes were calculated subtracting scores during lockdown from before lockdown) and the effect of total hours played during lockdown was estimated on this outcome as a fixed effect. Here, simple Bayesian linear models were used to model change scores (i.e. assuming the data were drawn from a Gaussian distribution). Finally, models were fitted evaluating whether depression, anxiety, or stress during lockdown are affected by any difference in hours played before and during lockdown, and further whether this effect is moderated by loneliness during lockdown. These models contained fixed effects of difference scores for hours played before and during lockdown, loneliness during lockdown, and their interaction. Again, these models took the form of a cumulative linear model with a logit link function, with continuous fixed effects of the difference in hours played and loneliness during lockdown. Parameter estimates and hypothesis tests were carried out for these models using the same methods outlined above. Similarly, priors for these models are outlined in the Appendix and model checks are reported in the Supplemental Material.
+
+## Results
+
+The average mental health outcomes and total hours played before and during lockdown are depicted in Figure \@ref(fig:study-one-mh-raincloud-plot).
+
+```{r study-one-mh-raincloud-plot, fig.cap = "Mental health outcomes for the depression, anxiety, stress, and loneliness along with total hours played before and during lockdown. Dots represent individual participants' mean (jittered) scores.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(plots_dir$"01_study-01"[str_detect(plots_dir$"01_study-01", "mh_raincloud")])
+```
+
+We found evidence in support of the alternative model (i.e. of a difference in means) when compared to the point null hypothesis, $BF_{10}$ `r ifelse(tests$"01_study-01"$ttest_summary %>% pull(bf) > 1000000, "> 1,000,000", paste("=", tests$"01_study-01"$ttest_summary %>% pull(bf) %>% round_pad()))` (± `r tests$"01_study-01"$ttest_summary %>% pull(error)`%), with posterior summaries showing an average increase in total hours played of `r tests$"01_study-01"$ttest_summary %>% pull(mean)` (*SD* = `r tests$"01_study-01"$ttest_summary %>% pull(sd)`, 95% CI = [`r tests$"01_study-01"$ttest_summary %>% pull(lower_ci)`, `r tests$"01_study-01"$ttest_summary %>% pull(upper_ci)`]). Having confirmed a general increase in hours spent gaming after lockdown we next established the role of total hours spent gaming on mental health outcomes.
+
+Figure \@ref(fig:study-one-mh-main-predictions-plot) shows posterior estimates for mental health outcomes before and during lockdown as a function of the total hours played before or during lockdown.
+
+```{r study-one-mh-main-predictions-plot, fig.cap = "Mental health outcomes for the depression, anxiety, stress, and loneliness measures as a function of total hours played before and during lockdown. Lines and ribbons indicate the posterior median ± 95\\% credible intervals.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(plots_dir$`01_study-01`[str_detect(plots_dir$`01_study-01`, "mh_main_predictions")])
+```
+
+Table \@ref(tab:study-one-mh-bayes-pre-post) shows the population-level parameter estimates, their standard error, and 95% credible intervals on the log scale, along with Bayes factors in support of the null hypothesis relative to the alternative hypothesis for both main effects and their interaction for each model.
+
+```{r study-one-mh-bayes-pre-post}
+hypotheses$`01_study-01`$main_hypotheses %>%
+  tidy_hypothesis_tables() %>% 
+  select(-c(Model)) %>% 
+  rename(Parameter = Hypothesis) %>% 
+  mutate(Parameter = rep(c(
+    "Lockdown Period", 
+    "Total Hours", 
+    "Lockdown Period by Hours"
+  ), 4)) %>% 
+  apa_table(
+    caption = "Parameter estimates, 95\\% credible intervals, and Bayes factors evaluating evidence in support of the point null hypothesis that each parameter estimate is equal to zero for the effect of lockdown period, total hours played, and their interaction on mental health outcomes.",
+    note = "Higher Bayes factor values indicate support for the null hypothesis while lower numbers indicate support for the alternative hypothesis (i.e. of a non-null effect). Effects are reported on the log scale.",
+    escape = FALSE,
+    placement = "!htbp",
+    stub_indents = list(
+      "Depression" = c(1:3),
+      "Anxiety" = c(4:6),
+      "Stress" = c(7:9),
+      "Loneliness" = c(10:12)
+    )
+  )
+```
+
+Table \@ref(tab:study-one-mh-bayes-pre-post) shows evidence in support of the alternative hypothesis for the effect of lockdown period on depression, stress, and loneliness measures whereby parameter estimates show a reliable increase in these measures during lockdown. While a similar trend is shown for anxiety, the parameter estimate is small, with the credible intervals spanning 0, and with an inconclusive Bayes factor. There is reliable evidence in support of the null hypothesis that total hours played has no effect on loneliness or stress across both lockdown periods. However, while there is evidence that as hours played increases depression and anxiety also increase these effects span a range of negligible to rather large effects and similarly have inconclusive Bayes factors. For all mental health outcomes the lockdown period does not interact with any effect of total hours played.
+
+Table \@ref(tab:study-one-mh-bayes-l-diff) shows the population-level parameter estimates, their standard error, and 95% credible intervals for the effect of hours played during lockdown on changes to mental health outcomes.
+
+```{r study-one-mh-bayes-l-diff}
+hypotheses$`01_study-01`$lockdown_diff_hypotheses %>% 
+  tidy_hypothesis_tables() %>% 
+  select(-Hypothesis) %>% 
+  apa_table(
+    caption = "Parameter estimates, 95\\% credible intervals, and Bayes factors evaluating evidence in support of the point null hypothesis that hours played during lockdown has no impact on changes to mental health outcomes.",
+    note = "Higher Bayes factor values indicate support for the null hypothesis while lower numbers indicate support for the alternative hypothesis (i.e. of a non-null effect). Effects are reported on the log scale.",
+    placement = "!htbp",
+    escape = FALSE
+  ) 
+```
+
+Table \@ref(tab:study-one-mh-bayes-l-diff) shows evidence in support of the null hypothesis of no impact of hours played during lockdown on changes to all mental health outcomes.
+
+We next tested whether any effect of changes to hours played on mental health outcomes during lockdown is moderated by loneliness during lockdown. Figure \@ref(fig:study-one-moderation-predictions-plot) shows posterior predictions for mental health outcomes during lockdown as a function of difference in hours played with lines fitted to the average loneliness scores during lockdown ± 1 *SD* of the mean.
+
+```{r study-one-moderation-predictions-plot, fig.cap = "Mental health outcomes for the depression, anxiety, and stress measures as a function of the difference in hours played before and during lockdown and loneliness scores during lockdown. Lines and ribbons indicate the posterior mean ± 95\\% credible intervals, with each line representing the mean loneliness score ± 1 SD.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(plots_dir$`01_study-01`[str_detect(plots_dir$`01_study-01`, "moderation_plots.png")])
+```
+
+Table \@ref(tab:study-one-mh-moderation) shows the population-level parameter estimates, their standard error, and 95% credible intervals on the log scale, along with Bayes factors in support of the null hypothesis relative to the alternative hypothesis for both main effects and their interaction for each model.
+
+```{r study-one-mh-moderation}
+hypotheses$`01_study-01`$moderation %>% 
+  tidy_hypothesis_tables() %>% 
+  select(-c(Model)) %>% 
+  rename(Parameter = Hypothesis) %>% 
+  mutate(Parameter = rep(c(
+    "Difference in Hours Played", 
+    "Loneliness During Lockdown", 
+    "Hours by Loneliness"
+  ), 3)) %>%  
+  apa_table(
+    caption = "Parameter estimates, 95\\% credible intervals, and Bayes factors evaluating evidence in support of the point null hypothesis that each parameter estimate is equal to zero for the effect of difference in hours played, loneliness during lockdown, and their interaction on mental health outcomes.",
+    note = "Higher Bayes factor values indicate support for the null hypothesis while lower numbers indicate support for the alternative hypothesis (i.e. of a non-null effect). Effects are reported on the log scale.",
+    escape = FALSE,
+    placement = "!htbp",
+    stub_indents = list(
+      "Depression" = c(1:3),
+      "Anxiety" = c(4:6),
+      "Stress" = c(7:9)
+    )
+  )
+```
+
+Table \@ref(tab:study-one-mh-moderation) shows evidence in support of the null hypothesis for any effect of difference in hours played or any moderating effect of loneliness on hours played for all mental health outcomes. Here, all parameter estimates are very small, with credible intervals spanning zero and with Bayes factors in support of the null hypothesis. relative to the alternative hypothesis. However, there is substantial evidence in support of higher scores for loneliness during lockdown leading to poorer mental health outcomes during lockdown. Here, effects are positive and large, with Bayes factors in support of the alternative hypothesis relative to the null hypothesis.
+
+## Interim Summary
+
+Study 1 showed that while on average participants played video games for more hours during lockdown than before lockdown, the hours played or changes to hours played gaming largely have no effect on mental health outcomes. However, mental health outcomes were worse during lockdown when compared to before lockdown. There was no effect of the difference in hours playing games on mental health outcomes, nor any moderating effect of loneliness on the difference in hours playing games. Rather, we show that as loneliness during lockdown increases, stress, anxiety, and depression also increase.
+
+# Study 2
+
+The mediation analysis in Study 1 revealed that loneliness did not moderate the relationship between video gaming and DASS-21 scores. However, the Three-Item Loneliness Scale used in Study 1 was not necessarily the optimal measure for the required analysis. Specifically, this measure is designed to provide binary classifications of "lonely" and "not lonely", as opposed to an average loneliness score (Steptoe et al., 2013). Moreover, the scale measures loneliness as a unitary concept, rather than multidimensional constructure comprised of different forms of loneliness (Weiss, 1973). Therefore, to increase the validity and sensitivity of the loneliness measurement, Study 2 included the De Jong-Gierveld 11-Item Loneliness Scale (de Jong-Gierveld & Kamphuls, 1985). This scale provides measurements of both emotional and social loneliness and may therefore be more appropriate for assessing the specific forms of loneliness experienced during lockdown.
+
+## Methods
+
+### Participants
+
+`r stringr::str_to_sentence(english(data_summary$"02_study-02"$demographics_exclusions$original_n))` participants were recruited to take part in this study online via Qualtrics. Of which `r data_summary$"02_study-02"$demographics_exclusions$age_consent_n` provided full informed consent. `r stringr::str_to_sentence(english(data_summary$"02_study-02"$demographics_exclusions$age_consent_n - data_summary$"02_study-02"$demographics_exclusions$valid_n))` participants were excluded from this sample due to having completed less than 90% of the questionnaire, providing invalid employment details (i.e. stating they were both employed and unemployed) or for reporting having played no games before or during lockdown. A further `r data_summary$"02_study-02"$demographics_exclusions$valid_n - data_summary$"02_study-02"$demographics_exclusions$after_exclusions_n` participants were removed from the analysis due to having more than 20% of trials with missing data and/or having reported hours played more than 98 hours per week (i.e. an average of 14 hours a day). From the remaining sample, only no trials had missing data.
+
+After all exclusions we analysed data from `r demographics$"02_study-02"$demographics$n` participants (age *M* = `r demographics$"02_study-02"$demographics$age_mean`, *SD* = `r demographics$"02_study-02"$demographics$age_sd`, Range = `r demographics$"02_study-02"$demographics$age_min` - `r demographics$"02_study-02"$demographics$age_max`). On average participants took `r demographics$"02_study-02"$demographics$duration_mean/60` minutes to complete the task (*SD* = `r demographics$"02_study-02"$demographics$duration_sd/60`).
+
+Figure \@ref(fig:study-two-situations-plot) shows the number of participants in a given employment situation during lockdown.
+
+```{r study-two-situations-plot, fig.cap="Count of participants by self-reported (a) employment status, (b) lockdown work situation, and (c) living situation.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(
+  plots_dir$`02_study-02`[str_detect(plots_dir$`02_study-02`, "situation_combined.png")]
+)
+```
+
+### Procedure and Materials
+
+The DASS-21 and UCLA Three-Item Loneliness scales were presented identically to Study 1. The assessment of video gaming habits was presented using sliding scales as opposed to requiring participants to manually type in their responses.
+
+#### The De Jong-Gierveld 11-Item Loneliness Scale (de Jong-Gierveld & Kamphuls, 1985).
+
+This scale was used in addition to the UCLA scale to measure loneliness. The 11 items ask participants to respond "yes", "no", or "more or less" to a series of statements regarding either emotional (e.g., "I experience a general sense of emptiness.") or social (e.g., "There are enough people I feel close to.") loneliness.
+
+#### Procedure
+
+All questionnaire procedures were identical to Study 1, with wording updated to the lockdown under investigation (i.e. before/during November 2020).
+
+## Results
+
+The average mental health outcomes and total hours played before and during lockdown are depicted in Figure \@ref(fig:study-two-mh-raincloud-plot).
+
+```{r study-two-mh-raincloud-plot, fig.cap = "Mental health outcomes for the depression, anxiety, stress, and loneliness along with total hours played before and during lockdown. Dots represent individual participants' mean (jittered) scores.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(plots_dir$"02_study-02"[str_detect(plots_dir$"02_study-02", "mh_raincloud")])
+```
+
+We found support of the null model (i.e. the point null hypothesis) compared to the alternative model (i.e. of a difference in means), $BF_{01}$ `r ifelse(tests$"02_study-02"$ttest_summary %>% mutate(bf = 1/bf) %>% pull(bf) > 1000000, "> 1,000,000", paste("=", tests$"02_study-02"$ttest_summary %>% mutate(bf = 1/bf) %>% pull(bf) %>% round_pad()))` (± `r tests$"02_study-02"$ttest_summary %>% pull(error)`%), with posterior summaries showing an average increase in total hours played of `r tests$"02_study-02"$ttest_summary %>% pull(mean)` (*SD* = `r tests$"02_study-02"$ttest_summary %>% pull(sd)`, 95% CI = [`r tests$"02_study-02"$ttest_summary %>% pull(lower_ci)`, `r tests$"02_study-02"$ttest_summary %>% pull(upper_ci)`]). Despite showing no change in hours spent gaming, we applied the same models to the second lockdown as in Study 1.
+
+Figure \@ref(fig:study-two-mh-main-predictions-plot) shows posterior estimates for mental health outcomes before and during lockdown as a function of the total hours played before or during lockdown.
+
+```{r study-two-mh-main-predictions-plot, fig.cap = "Mental health outcomes for the depression, anxiety, stress, and loneliness measures as a function of total hours played before and during lockdown. Lines and ribbons indicate the posterior median ± 95\\% credible intervals.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(plots_dir$`02_study-02`[str_detect(plots_dir$`02_study-02`, "mh_main_predictions")])
+```
+
+Table \@ref(tab:study-two-mh-bayes-pre-post) shows the population-level parameter estimates, their standard error, and 95% credible intervals on the log scale, along with Bayes factors in support of the null hypothesis relative to the alternative hypothesis for both main effects and their interaction for each model.
+
+```{r study-two-mh-bayes-pre-post}
+hypotheses$`02_study-02`$main_hypotheses %>%
+  tidy_hypothesis_tables() %>% 
+  select(-c(Model)) %>% 
+  rename(Parameter = Hypothesis) %>% 
+  mutate(Parameter = rep(c(
+    "Lockdown Period", 
+    "Total Hours", 
+    "Lockdown Period by Hours"
+  ), 4)) %>% 
+  apa_table(
+    caption = "Parameter estimates, 95\\% credible intervals, and Bayes factors evaluating evidence in support of the point null hypothesis that each parameter estimate is equal to zero for the effect of lockdown period, total hours played, and their interaction on mental health outcomes.",
+    note = "Higher Bayes factor values indicate support for the null hypothesis while lower numbers indicate support for the alternative hypothesis (i.e. of a non-null effect). Effects are reported on the log scale.",
+    escape = FALSE,
+    placement = "!htbp",
+    stub_indents = list(
+      "Depression" = c(1:3),
+      "Anxiety" = c(4:6),
+      "Stress" = c(7:9),
+      "Loneliness" = c(10:12)
+    )
+  )
+```
+
+Table \@ref(tab:study-two-mh-bayes-pre-post) shows evidence in support of the null hypothesis relative to the alternative hypothesis for the effect of lockdown period on all mental health outcomes. However, there is evidence in support of the alternative hypothesis relative to the null hypothesis with regard to total hours played for depression, anxiety, and stress. Here, higher total hours played is associated with poorer mental health outcomes across both lockdown periods. For loneliness the effect of total hours played is small, with the credible interval spanning zero and with evidence in support of the null hypothesis relative to the alternative hypothesis. For all mental health outcomes the lockdown period does not interact with any effect of total hours played.
+
+Table \@ref(tab:study-two-mh-bayes-l-diff) shows the population-level parameter estimates, their standard error, and 95% credible intervals for the effect of hours played during lockdown on changes to mental health outcomes.
+
+```{r study-two-mh-bayes-l-diff}
+hypotheses$`02_study-02`$lockdown_diff_hypotheses %>% 
+  tidy_hypothesis_tables() %>% 
+  select(-Hypothesis) %>% 
+  apa_table(
+    caption = "Parameter estimates, 95\\% credible intervals, and Bayes factors evaluating evidence in support of the point null hypothesis that hours played during lockdown has no impact on changes to mental health outcomes.",
+    note = "Higher Bayes factor values indicate support for the null hypothesis while lower numbers indicate support for the alternative hypothesis (i.e. of a non-null effect). Effects are reported on the log scale.",
+    placement = "!htbp",
+    escape = FALSE
+  ) 
+```
+
+Table \@ref(tab:study-two-mh-bayes-l-diff) shows evidence in support of the null hypothesis of no impact of hours played during lockdown on changes to depression, anxiety, and loneliness. For changes to anxiety the parameter estimate is small, with the credible interval showing a range of values from nearly 0 to a small upper limit, and with an inconclusive Bayes factor.
+
+We next tested whether any effect of changes to hours played on mental health outcomes during lockdown is moderated by loneliness during lockdown. Figure \@ref(fig:study-two-moderation-predictions-plot) shows posterior predictions for mental health outcomes during lockdown as a function of difference in hours played with lines fitted to the average loneliness scores during lockdown ± 1 *SD* of the mean.
+
+```{r study-two-moderation-predictions-plot, fig.cap = "Mental health outcomes for the depression, anxiety, and stress measures as a function of the difference in hours played before and during lockdown and loneliness scores during lockdown. Lines and ribbons indicate the posterior mean ± 95\\% credible intervals, with each line representing the mean loneliness score ± 1 SD.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(plots_dir$`02_study-02`[str_detect(plots_dir$`02_study-02`, "moderation_plots.png")])
+```
+
+Table \@ref(tab:study-two-mh-moderation) shows the population-level parameter estimates, their standard error, and 95% credible intervals on the log scale, along with Bayes factors in support of the null hypothesis relative to the alternative hypothesis for both main effects and their interaction for each model.
+
+```{r study-two-mh-moderation}
+hypotheses$`02_study-02`$moderation %>% 
+  tidy_hypothesis_tables() %>% 
+  select(-c(Model)) %>% 
+  rename(Parameter = Hypothesis) %>% 
+  mutate(Parameter = rep(c(
+    "Difference in Hours Played", 
+    "Loneliness During Lockdown", 
+    "Hours by Loneliness"
+  ), 3)) %>%  
+  apa_table(
+    caption = "Parameter estimates, 95\\% credible intervals, and Bayes factors evaluating evidence in support of the point null hypothesis that each parameter estimate is equal to zero for the effect of difference in hours played, loneliness during lockdown, and their interaction on mental health outcomes.",
+    note = "Higher Bayes factor values indicate support for the null hypothesis while lower numbers indicate support for the alternative hypothesis (i.e. of a non-null effect). Effects are reported on the log scale.",
+    escape = FALSE,
+    placement = "!htbp",
+    stub_indents = list(
+      "Depression" = c(1:3),
+      "Anxiety" = c(4:6),
+      "Stress" = c(7:9)
+    )
+  )
+```
+
+Table \@ref(tab:study-two-mh-moderation) shows evidence in support of the null hypothesis for any effect of difference in hours played or any moderating effect of loneliness on hours played for all mental health outcomes. Here, all parameter estimates are very small, with credible intervals spanning zero and with Bayes factors in support of the null hypothesis relative to the alternative hypothesis. However, there is substantial evidence in support of higher scores for loneliness during lockdown leading to poorer mental health outcomes during lockdown. Here, effects are positive and large, with Bayes factors in support of the alternative hypothesis relative to the null hypothesis.
+
+## Interim Summary
+
+Unlike Study 1, Study 2 showed no average increase in hours spent gaming during lockdown when compared to before lockdown. In contrast to Study 1, there was no overall impact of lockdown period on mental health outcomes, but instead as hours spent gaming increased there were more negative outcomes for depression, anxiety, and stress, regardless of lockdown period. Additionally, while more hours spent gaming during lockdown was associated with a greater increase in anxiety, as in Study 1 hours spent gaming during lockdown had no effect on depression, anxiety, and stress. Replicating effects for Study 1, we found that higher scores for loneliness during lockdown led to poorer mental health outcomes during lockdown. Again, there was no effect of the the difference in hours playing games on mental health outcomes, nor any moderating effect of loneliness on the difference in hours playing games.
+
+# Study 3
+
+[justification needed here -- might be easier once we have the results plugged in above?]
+
+## Methods
+
+### Participants
+
+`r stringr::str_to_sentence(english(data_summary$"03_study-03"$demographics_exclusions$original_n))` participants were recruited to take part in this study online via Qualtrics. Of which `r data_summary$"03_study-03"$demographics_exclusions$age_consent_n` provided full informed consent. `r stringr::str_to_sentence(english(data_summary$"03_study-03"$demographics_exclusions$age_consent_n - data_summary$"03_study-03"$demographics_exclusions$valid_n))` participants were excluded from this sample due to having completed less than 90% of the questionnaire, providing invalid employment details (i.e. stating they were both employed and unemployed) or for reporting having played no games before or during lockdown. A further `r data_summary$"03_study-03"$demographics_exclusions$valid_n - data_summary$"03_study-03"$demographics_exclusions$after_exclusions_n` participants were removed from the analysis due to having more than 20% of trials with missing data and/or having reported hours played more than 98 hours per week (i.e. an average of 14 hours a day). From the remaining sample, no trials had missing data.
+
+After all exclusions we analysed data from `r demographics$"03_study-03"$demographics$n` participants (age *M* = `r demographics$"03_study-03"$demographics$age_mean`, *SD* = `r demographics$"03_study-03"$demographics$age_sd`, Range = `r demographics$"03_study-03"$demographics$age_min` - `r demographics$"03_study-03"$demographics$age_max`). On average participants took `r demographics$"03_study-03"$demographics$duration_mean/60` minutes to complete the task (*SD* = `r demographics$"03_study-03"$demographics$duration_sd/60`).
+
+Figure \@ref(fig:study-three-situations-plot) shows the number of participants in a given employment situation during lockdown.
+
+```{r study-three-situations-plot, fig.cap="Count of participants by self-reported (a) employment status, (b) lockdown work situation, and (c) living situation.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(
+  plots_dir$`03_study-03`[str_detect(plots_dir$`03_study-03`, "situation_combined.png")]
+)
+```
+
+### Procedure and Materials
+
+All questionnaire procedures were identical to Study 2, with wording updated to the lockdown under investigation (i.e., since the beginning of January 2021).
+
+## Results
+
+The average mental health outcomes and total hours played before and during lockdown are depicted in Figure \@ref(fig:study-three-mh-raincloud-plot).
+
+```{r study-three-mh-raincloud-plot, fig.cap = "Mental health outcomes for the depression, anxiety, stress, and loneliness along with total hours played before and during lockdown. Dots represent individual participants' mean (jittered) scores.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(plots_dir$"03_study-03"[str_detect(plots_dir$"03_study-03", "mh_raincloud")])
+```
+
+We show inconclusive evidence in support of the alternative model (i.e. of a difference in means) relative to the null model (i.e. the point null hypothesis), $BF_{10}$ `r ifelse(tests$"03_study-03"$ttest_summary %>% pull(bf) > 1000000, "> 1,000,000", paste("=", tests$"03_study-03"$ttest_summary %>% pull(bf) %>% round_pad()))` (± `r tests$"03_study-03"$ttest_summary %>% pull(error)`%), with posterior summaries showing an average increase in total hours played of `r tests$"03_study-03"$ttest_summary %>% pull(mean)` (*SD* = `r tests$"03_study-03"$ttest_summary %>% pull(sd)`, 95% CI = [`r tests$"03_study-03"$ttest_summary %>% pull(lower_ci)`, `r tests$"03_study-03"$ttest_summary %>% pull(upper_ci)`]). Regardless, we applied the same models to the second lockdown as in Study 1.
+
+Figure \@ref(fig:study-three-mh-main-predictions-plot) shows posterior estimates for mental health outcomes before and during lockdown as a function of the total hours played before or during lockdown.
+
+```{r study-three-mh-main-predictions-plot, fig.cap = "Mental health outcomes for the depression, anxiety, stress, and loneliness measures as a function of total hours played before and during lockdown. Lines and ribbons indicate the posterior median ± 95\\% credible intervals.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(plots_dir$`03_study-03`[str_detect(plots_dir$`03_study-03`, "mh_main_predictions")])
+```
+
+Table \@ref(tab:study-three-mh-bayes-pre-post) shows the population-level parameter estimates, their standard error, and 95% credible intervals on the log scale, along with Bayes factors in support of the null hypothesis relative to the alternative hypothesis for both main effects and their interaction for each model.
+
+```{r study-three-mh-bayes-pre-post}
+hypotheses$`03_study-03`$main_hypotheses %>%
+  tidy_hypothesis_tables() %>% 
+  select(-c(Model)) %>% 
+  rename(Parameter = Hypothesis) %>% 
+  mutate(Parameter = rep(c(
+    "Lockdown Period", 
+    "Total Hours", 
+    "Lockdown Period by Hours"
+  ), 4)) %>% 
+  apa_table(
+    caption = "Parameter estimates, 95\\% credible intervals, and Bayes factors evaluating evidence in support of the point null hypothesis that each parameter estimate is equal to zero for the effect of lockdown period, total hours played, and their interaction on mental health outcomes.",
+    note = "Higher Bayes factor values indicate support for the null hypothesis while lower numbers indicate support for the alternative hypothesis (i.e. of a non-null effect). Effects are reported on the log scale.",
+    escape = FALSE,
+    placement = "!htbp",
+    stub_indents = list(
+      "Depression" = c(1:3),
+      "Anxiety" = c(4:6),
+      "Stress" = c(7:9),
+      "Loneliness" = c(10:12)
+    )
+  )
+```
+
+Table \@ref(tab:study-three-mh-bayes-pre-post) shows evidence in support of the null hypothesis relative to the alternative hypothesis for all effects and for all mental health outcomes. In all cases however, given the Bayes factors in this instance provide rather weak evidence (i.e. with Bayes factors between 1-3; Lee & Wagenmakers, 2013) and an insensitvity to conclusively provide evidence in support of the null. This is likely due to a small sample size.
+
+Most notably, as shown in Figure \@ref(fig:study-three-mh-main-predictions-plot) depression, stress, and loneliness are all very high before and during lockdown and regardless of the hours spent gaming. This likely indicates that ceiling effects are present whereby if lockdown period or hours spent gaming were to influence mental health outcomes in this instance it is difficult to detect due to exceptionally high scores for these subscales.
+
+Table \@ref(tab:study-three-mh-bayes-l-diff) shows the population-level parameter estimates, their standard error, and 95% credible intervals for the effect of hours played during lockdown on changes to mental health outcomes.
+
+```{r study-three-mh-bayes-l-diff}
+hypotheses$`03_study-03`$lockdown_diff_hypotheses %>% 
+  tidy_hypothesis_tables() %>% 
+  select(-Hypothesis) %>%
+  apa_table(
+    caption = "Parameter estimates, 95\\% credible intervals, and Bayes factors evaluating evidence in support of the point null hypothesis that hours played during lockdown has no impact on changes to mental health outcomes.",
+    note = "Higher Bayes factor values indicate support for the null hypothesis while lower numbers indicate support for the alternative hypothesis (i.e. of a non-null effect). Effects are reported on the log scale.",
+    placement = "!htbp",
+    escape = FALSE
+  ) 
+```
+
+Table \@ref(tab:study-three-mh-bayes-l-diff) shows evidence in support of the null hypothesis of no impact of hours played during lockdown on changes to all mental health outcomes.
+
+We next tested whether any effect of changes to hours played on mental health outcomes during lockdown is moderated by loneliness during lockdown. Figure \@ref(fig:study-three-moderation-predictions-plot) shows posterior predictions for mental health outcomes during lockdown as a function of difference in hours played with lines fitted to the average loneliness scores during lockdown ± 1 *SD* of the mean.
+
+```{r study-three-moderation-predictions-plot, fig.cap = "Mental health outcomes for the depression, anxiety, and stress measures as a function of the difference in hours played before and during lockdown and loneliness scores during lockdown. Lines and ribbons indicate the posterior mean ± 95\\% credible intervals, with each line representing the mean loneliness score ± 1 SD.", out.width = "90%", fig.env = "figure*", fig.align = "center", fig.pos = "!htbp"}
+knitr::include_graphics(plots_dir$`03_study-03`[str_detect(plots_dir$`03_study-03`, "moderation_plots.png")])
+```
+
+Table \@ref(tab:study-three-mh-moderation) shows the population-level parameter estimates, their standard error, and 95% credible intervals on the log scale, along with Bayes factors in support of the null hypothesis relative to the alternative hypothesis for both main effects and their interaction for each model.
+
+```{r study-three-mh-moderation}
+hypotheses$`03_study-03`$moderation %>% 
+  tidy_hypothesis_tables() %>% 
+  select(-c(Model)) %>% 
+  rename(Parameter = Hypothesis) %>% 
+  mutate(Parameter = rep(c(
+    "Difference in Hours Played", 
+    "Loneliness During Lockdown", 
+    "Hours by Loneliness"
+  ), 3)) %>%  
+  apa_table(
+    caption = "Parameter estimates, 95\\% credible intervals, and Bayes factors evaluating evidence in support of the point null hypothesis that each parameter estimate is equal to zero for the effect of difference in hours played, loneliness during lockdown, and their interaction on mental health outcomes.",
+    note = "Higher Bayes factor values indicate support for the null hypothesis while lower numbers indicate support for the alternative hypothesis (i.e. of a non-null effect). Effects are reported on the log scale.",
+    escape = FALSE,
+    placement = "!htbp",
+    stub_indents = list(
+      "Depression" = c(1:3),
+      "Anxiety" = c(4:6),
+      "Stress" = c(7:9)
+    )
+  )
+```
+
+Table \@ref(tab:study-three-mh-moderation) shows evidence in support of the null hypothesis for any effect of difference in hours played or any moderating effect of loneliness on hours played for all mental health outcomes. Here, all parameter estimates are very small, with credible intervals spanning zero and with Bayes factors in support of the null hypothesis relative to the alternative hypothesis. However, there is substantial evidence in support of higher scores for loneliness during lockdown leading to poorer mental health outcomes during lockdown. Here, effects are positive and large, with Bayes factors in support of the alternative hypothesis relative to the null hypothesis.
+
+## Interim Summary
+
+Study 3 showed inconclusive findings for any increase in hours playing games during lockdown compared to before lockdown. Here, there was no impact of lockdown period, hours playing games, or their interaction on mental health outcomes. However, given the Bayes factors in this instance provide rather weak evidence (i.e. with Bayes factors between 1-3; Lee & Wagenmakers, 2013) this highlights potential insensitivity of the hypothesis test to answering this question, largely due to a small sample size. Furhter, inspection of plots shows potential ceiling effects -- at least for depression, stress, and loneliness -- whereby scores were very high both before and during lockdown.
+
+More strongly, there was convincing evidence for no impact of hours playing games during lockdown on changes to mental health outcomes. Replicating effects for Studies 1 and 2, we found that higher scores for loneliness during lockdown led to poorer mental health outcomes during lockdown. Again, there was no effect of the the difference in hours playing games on mental health outcomes, nor any moderating effect of loneliness on the difference in hours playing games.
+
+# General Discussion
+
+Potentially people with depression/subclinical depression may look on history with increased negative appraisal.
+
+\newpage
+
+# Appendix
+
+The main, cumulative models used a $Student-t(3, 0, 2.5)$ prior on the intercept, a $Normal(0, 1)$ prior on the slope terms, and an $Exponential(1)$ prior on the standard deviation term for the depression, anxiety, and stress outcomes. Given the outcome for the loneliness model has a more limited range, the models based on loneliness as an outcome had a $Student-t(3, 0, 1.5)$ prior on the intercept. The slope and standard deviation priors remained unchanged.
+
+The models assessing change to mental health outcomes during lockdown based on changes to hours played before and during lockdown used a $Normal(0, 2)$ prior on the intercept, a $Normal(0, 0.5)$ prior on the slope term, and an $Exponential(1)$ prior on the standard deviation term for the depression, anxiety, and stress outcomes. Again, due to the restricted range for the loneliness outcome the intercept prior was restricted to a $Normal(0, 1)$ prior. The slope and standard deviation priors remained unchanged.
+
+Finally, the models assessing whether loneliness moderates any effect of hours played on mental health outcomes used a $Student-t(3, 0, 3)$ prior on the intercept and a $Normal(0, 1)$ prior on the slope term.
+
+\newpage
+
+# References
+
+```{=tex}
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+```
+::: {#refs custom-style="Bibliography"}
+:::
+
+\endgroup

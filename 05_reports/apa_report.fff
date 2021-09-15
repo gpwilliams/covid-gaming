@@ -1,0 +1,118 @@
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/01_study-01/situation_combined}
+
+}
+
+\caption{Count of participants by self-reported (a) employment status, (b) lockdown work situation, and (c) living situation.}\label{fig:study-one-situations-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/01_study-01/mh_raincloud}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, stress, and loneliness along with total hours played before and during lockdown. Dots represent individual participants' mean (jittered) scores.}\label{fig:study-one-mh-raincloud-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/01_study-01/01_main-plots/mh_main_predictions}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, stress, and loneliness measures as a function of total hours played before and during lockdown. Lines and ribbons indicate the posterior median ± 95\% credible intervals.}\label{fig:study-one-mh-main-predictions-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/01_study-01/01_main-plots/moderation_plots}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, and stress measures as a function of the difference in hours played before and during lockdown and loneliness scores during lockdown. Lines and ribbons indicate the posterior mean ± 95\% credible intervals, with each line representing the mean loneliness score ± 1 SD.}\label{fig:study-one-moderation-predictions-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/02_study-02/situation_combined}
+
+}
+
+\caption{Count of participants by self-reported (a) employment status, (b) lockdown work situation, and (c) living situation.}\label{fig:study-two-situations-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/02_study-02/mh_raincloud}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, stress, and loneliness along with total hours played before and during lockdown. Dots represent individual participants' mean (jittered) scores.}\label{fig:study-two-mh-raincloud-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/02_study-02/01_main-plots/mh_main_predictions}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, stress, and loneliness measures as a function of total hours played before and during lockdown. Lines and ribbons indicate the posterior median ± 95\% credible intervals.}\label{fig:study-two-mh-main-predictions-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/02_study-02/01_main-plots/moderation_plots}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, and stress measures as a function of the difference in hours played before and during lockdown and loneliness scores during lockdown. Lines and ribbons indicate the posterior mean ± 95\% credible intervals, with each line representing the mean loneliness score ± 1 SD.}\label{fig:study-two-moderation-predictions-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/03_study-03/situation_combined}
+
+}
+
+\caption{Count of participants by self-reported (a) employment status, (b) lockdown work situation, and (c) living situation.}\label{fig:study-three-situations-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/03_study-03/mh_raincloud}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, stress, and loneliness along with total hours played before and during lockdown. Dots represent individual participants' mean (jittered) scores.}\label{fig:study-three-mh-raincloud-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/03_study-03/01_main-plots/mh_main_predictions}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, stress, and loneliness measures as a function of total hours played before and during lockdown. Lines and ribbons indicate the posterior median ± 95\% credible intervals.}\label{fig:study-three-mh-main-predictions-plot}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[!htbp]
+
+{\centering \includegraphics[width=0.9\linewidth]{/Users/glennwilliams/Dropbox/GitHub/covid-gaming/03_plots/03_study-03/01_main-plots/moderation_plots}
+
+}
+
+\caption{Mental health outcomes for the depression, anxiety, and stress measures as a function of the difference in hours played before and during lockdown and loneliness scores during lockdown. Lines and ribbons indicate the posterior mean ± 95\% credible intervals, with each line representing the mean loneliness score ± 1 SD.}\label{fig:study-three-moderation-predictions-plot}
+\end{figure*}
