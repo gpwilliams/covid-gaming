@@ -32,6 +32,18 @@ for(i in seq_along(item_data)) {
   )
 }
 
+# save missing data counts ----
+
+write_csv(
+  is_missing, 
+  here(
+    "02_data", 
+    "02_study-02",
+    "03_summary",
+    "missing_data_counts.csv"
+  )
+)
+
 # save by subjects data ----
 
 # as rds files

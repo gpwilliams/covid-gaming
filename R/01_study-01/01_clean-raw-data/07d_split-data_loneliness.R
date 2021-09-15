@@ -24,6 +24,14 @@ item_data$loneliness_long <- wide_data_complete %>%
   mutate(subscale = "loneliness") %>% 
   select(response_id, lockdown_period, subscale, item, score)
 
+# count missing
+is_missing <- bind_rows(
+  is_missing, 
+  item_data$loneliness_long %>% 
+    group_by(subscale) %>% 
+    count(is_missing = is.na(score))
+)
+
 # long data: aggregated by subject
 
 agg_data$loneliness_long <- mice(

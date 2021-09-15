@@ -32,6 +32,11 @@ item_data$das_long <- wide_data_complete %>%
   ) %>% 
   select(response_id, lockdown_period, subscale, item, score)
 
+# count missing
+is_missing <- item_data$das_long %>% 
+  group_by(subscale) %>% 
+  count(is_missing = is.na(score))
+
 # long data: aggregated by subject
 
 # impute means then score according to criteria

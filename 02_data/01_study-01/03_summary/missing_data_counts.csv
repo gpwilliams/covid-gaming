@@ -1,0 +1,9 @@
+subscale,is_missing,n
+anxiety,FALSE,3076
+anxiety,TRUE,4
+depression,FALSE,3071
+depression,TRUE,9
+stress,FALSE,3076
+stress,TRUE,4
+loneliness,FALSE,1317
+loneliness,TRUE,3

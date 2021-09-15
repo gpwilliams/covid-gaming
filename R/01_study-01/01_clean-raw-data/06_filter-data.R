@@ -32,7 +32,7 @@ hours_outliers <- wide_data_filtered %>%
   select(response_id, total_hours_before, total_hours_during)
 
 # filter data, keeping only those with < 20% missing data or 
-# or with hours played > 12 hours a day in before or during periods
+# or with hours played > 14 hours a day in before or during periods
 wide_data_complete <- wide_data_filtered %>% 
   filter(
     !response_id %in% pull(filter(numeric_na, percent_na > 20), response_id),
