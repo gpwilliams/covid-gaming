@@ -19,12 +19,16 @@ param_plots$main <- ggplot(
   ) +
   facet_grid(Model ~ Hypothesis) +
   labs(
-    title = "A",
+    title = "Prior Sensitivity Check for Parameter Estimates",
     x = "SD of Prior for Beta Parameters",
     y = "Parameter Estimate ± 95% Credible Interval"
   ) +
   theme_bw() +
-  theme(text = element_text(size = 7))
+  theme(
+    text = element_text(size = 10),
+    legend.key.size = unit(0.5, 'cm')
+  ) +
+  geom_vline(xintercept = 5, linetype = "longdash")
 
 # full diff models
 
@@ -43,12 +47,16 @@ param_plots$full_diff <- ggplot(
   ) +
   facet_grid(~Model) +
   labs(
-    title = "A",
+    title = "Prior Sensitivity Check for Parameter Estimates",
     x = "SD of Prior for Beta Parameters",
     y = "Parameter Estimate ± 95% Credible Interval"
   ) +
   theme_bw() +
-  theme(text = element_text(size = 7))
+  theme(
+    text = element_text(size = 10),
+    legend.key.size = unit(0.5, 'cm')
+  ) +
+  geom_vline(xintercept = 5, linetype = "longdash")
 
 # lockdown diff models
 

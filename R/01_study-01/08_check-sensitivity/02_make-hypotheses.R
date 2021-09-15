@@ -29,20 +29,41 @@ main_hypotheses <- summarise_hypotheses(
     "lockdown_period1:total_hours_played_s = 0"
   )
 ) %>% 
-  make_cutpoints()
+  make_cutpoints() %>% 
+  mutate(Model = str_to_title(str_replace_all(Model, "_main", ""))) %>% 
+  mutate(
+    Hypothesis = rep(c(
+      "Lockdown Period", 
+      "Total Hours", 
+      "Lockdown Period by Hours"
+    ), nrow(.)/3)
+  )
+  
 
 # full diff models
 full_diff_hypotheses <- summarise_hypotheses(
   models[grepl("full_diff", names(models))],
   "hours_diff = 0"
-) %>% make_cutpoints()
+) %>% make_cutpoints() %>% 
+  mutate(Model = str_to_title(str_replace_all(Model, "_full_diff", ""))) %>% 
+  mutate(
+    Hypothesis = rep(c(
+      "Difference in Hours Played"
+    ), nrow(.))
+  )
 
 # lockdown diff models
 
 lockdown_diff_hypotheses <- summarise_hypotheses(
   models[grepl("lockdown_diff", names(models))],
   "total_hours_played_during = 0"
-) %>% make_cutpoints()
+) %>% make_cutpoints() %>% 
+  mutate(Model = str_to_title(str_replace_all(Model, "_lockdown_diff", ""))) %>% 
+  mutate(
+    Hypothesis = rep(c(
+      "Hours Played During Lockdown"
+    ), nrow(.))
+  )
 
 # moderation models
 
@@ -52,4 +73,12 @@ moderation_hypotheses <- summarise_hypotheses(
     "loneliness_during = 0", 
     "hours_diff:loneliness_during = 0"
   )
-) %>% make_cutpoints()
+) %>% make_cutpoints() %>% 
+  mutate(Model = str_to_title(str_replace_all(Model, "_moderation", ""))) %>% 
+  mutate(
+    Hypothesis = rep(c(
+      "Difference in Hours Played", 
+      "Loneliness During Lockdown", 
+      "Hours by Loneliness"
+    ), nrow(.)/3)
+  )

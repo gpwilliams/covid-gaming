@@ -7,4 +7,4 @@ sensitivity_check_path <- list.files(
 )
 
 study_folder <- "03_study-03"
-map(sensitivity_check_path, source)
+purrr::map(sensitivity_check_path, source)

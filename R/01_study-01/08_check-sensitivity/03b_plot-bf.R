@@ -11,9 +11,10 @@ bf_plots$main <- ggplot(
   geom_line() +
   facet_grid(Model ~ Hypothesis) +
   labs(
-    title = "B",
+    title = "Prior Sensitivity Check for Bayes Factors",
     x = "SD of Prior for Beta Parameters",
-    y = expression(BF["01"])
+    y = expression(BF["01"]),
+    caption = "The dashed line represents the prior for the reported model"
   ) +
   scale_colour_manual(
     expression(BF["01"]),
@@ -24,8 +25,10 @@ bf_plots$main <- ggplot(
     legend.justification = c(1, 1), 
     legend.position = c(1, 1),
     legend.background = element_rect(fill=alpha("white", 0.4)),
-    text = element_text(size = 7)
-  )
+    text = element_text(size = 10),
+    legend.key.size = unit(0.5, 'cm')
+  ) +
+  geom_vline(xintercept = 5, linetype = "longdash")
 
 # full diff models
 bf_plots$full_diff <- ggplot(
@@ -36,9 +39,10 @@ bf_plots$full_diff <- ggplot(
   geom_line() +
   facet_grid(~Model) +
   labs(
-    title = "B",
+    title = "Prior Sensitivity Check for Bayes Factors",
     x = "SD of Prior for Beta Parameters",
-    y = expression(BF["01"])
+    y = expression(BF["01"]),
+    caption = "The dashed line represents the prior for the reported model"
   ) +
   scale_colour_manual(
     expression(BF["01"]),
@@ -49,8 +53,10 @@ bf_plots$full_diff <- ggplot(
     legend.justification = c(1, 1), 
     legend.position = c(1, 1),
     legend.background = element_rect(fill=alpha("white", 0.4)),
-    text = element_text(size = 7)
-  )
+    text = element_text(size = 10),
+    legend.key.size = unit(0.5, 'cm')
+  ) +
+  geom_vline(xintercept = 5, linetype = "longdash")
 
 # lockdown diff models
 bf_plots$lockdown_diff <- bf_plots$full_diff %+% lockdown_diff_hypotheses
