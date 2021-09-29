@@ -3,7 +3,7 @@
 library(tidyverse) # for data processing/plotting
 library(here) # for file paths
 library(brms) # for fitting models
-library(gridExtra) # for arranging plots in a grid for paginated pdfs
+library(patchwork) # for arranging plots
 
 # load functions
 r_function_list <- list.files(

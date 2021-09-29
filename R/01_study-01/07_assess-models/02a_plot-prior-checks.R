@@ -2,29 +2,41 @@
 
 message("Making prior predictive checks.")
 
-prior_plots <- list()
-
-# make prior predictive checks for each model
-for(i in seq_along(models)){
-  message(paste("Sampling priors from model", i, "of", length(models)))
-  prior_plots[[i]] <- pp_check(
-    bayestestR::unupdate(models[[i]], verbose = FALSE), 
-    nsamples = 100
-  ) + ggtitle(paste0("Model = ", names(models[i]))) +
-    theme(plot.title = element_text(size = 6))
-}
-names(prior_plots) <- paste0("prior_check_", names(models))
-
-# arrange in a multipage grid
-arranged_prior_plots <- marrangeGrob(prior_plots, ncol = 3, nrow = 4)
-
-# save it as a paginated pdf
-ggsave(
-  filename = here(
-    "03_plots", 
-    study_folder, 
-    "02_model-checks",
-    "model-priors.pdf"
-  ),
-  plot = arranged_prior_plots
+main_models_ppc <- plot_ppcs(
+  main_models, 
+  prior_only = TRUE, 
+  title = "Main Models"
 )
+
+diff_models_ppc <- plot_ppcs(
+  diff_models, 
+  prior_only = TRUE, 
+  title = "Difference Models"
+)
+  
+lockdown_diff_models_ppc <- plot_ppcs(
+  lockdown_diff_models, 
+  prior_only = TRUE, 
+  title = "Lockdown Difference Models"
+)
+  
+moderation_models_ppc <- plot_ppcs(
+  moderation_models, 
+  prior_only = TRUE, 
+  title = "Moderation Models"
+)
+
+# save plots
+for(i in seq_along(prior_plots)) {
+  ggsave(
+    filename = here(
+      "03_plots", 
+      study_folder, 
+      "02_model-checks",
+      "prior-predictive",
+      paste0(names(prior_plots)[[i]], ".png")),
+    plot = prior_plots[[i]],
+    width = 12,
+    height = 10
+  )
+}

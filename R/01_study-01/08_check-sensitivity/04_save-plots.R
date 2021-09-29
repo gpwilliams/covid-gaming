@@ -12,6 +12,7 @@ for(i in seq_along(sensitivity_plots)) {
       "03_plots", 
       study_folder, 
       "02_model-checks",
+      "prior-sensitivity",
       paste0(names(sensitivity_plots)[[i]], ".png")),
     plot = sensitivity_plots[[i]],
     width = 12,
