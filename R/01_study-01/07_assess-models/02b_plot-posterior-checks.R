@@ -2,27 +2,38 @@
 
 message("Making posterior predictive checks.")
 
-posterior_plots <- list()
-
-# subset to only reported models
-in_model_name <- paste(
-  "_full_diff_sd_0.5",
-  "_lockdown_diff_sd_0.5",
-  "_main_sd_1$",
-  "_moderation_sd_1$",
-  sep = "|"
+main_models_ppc <- plot_ppcs(
+  main_models, 
+  title = "Main Models"
 )
 
-models_reduced <- models[grep(in_model_name, names(models))] 
+diff_models_ppc <- plot_ppcs(
+  diff_models, 
+  title = "Difference Models"
+)
 
-# make posterior predictive checks for each model
-for(i in seq_along(models_reduced)){
-  message(paste("Sampling posterior from model", i, "of", length(models_reduced)))
-  posterior_plots[[i]] <- pp_check(models_reduced[[i]], nsamples = 100) +
-    ggtitle(paste0("Model = ", names(models_reduced[i]))) +
-    theme(plot.title = element_text(size = 6))
-}
-names(posterior_plots) <- paste0("posterior_check_", names(models_reduced))
+lockdown_diff_models_ppc <- plot_ppcs(
+  lockdown_diff_models, 
+  title = "Lockdown Difference Models"
+)
+
+moderation_models_ppc <- plot_ppcs(
+  moderation_models, 
+  title = "Moderation Models"
+)
+
+posterior_plots <- list(
+  main_models_ppc,
+  diff_models_ppc,
+  lockdown_diff_models_ppc,
+  moderation_models_ppc
+)
+names(posterior_plots) <- c(
+  "main",
+  "diff",
+  "lockdown_diff",
+  "moderation"
+)
 
 # save plots
 for(i in seq_along(posterior_plots)) {

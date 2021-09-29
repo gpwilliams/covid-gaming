@@ -26,6 +26,19 @@ moderation_models_ppc <- plot_ppcs(
   title = "Moderation Models"
 )
 
+prior_plots <- list(
+  main_models_ppc,
+  diff_models_ppc,
+  lockdown_diff_models_ppc,
+  moderation_models_ppc
+)
+names(prior_plots) <- c(
+  "main",
+  "diff",
+  "lockdown_diff",
+  "moderation"
+)
+
 # save plots
 for(i in seq_along(prior_plots)) {
   ggsave(
