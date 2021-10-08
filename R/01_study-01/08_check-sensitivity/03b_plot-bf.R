@@ -33,7 +33,7 @@ bf_plots$main <- ggplot(
 # full diff models
 bf_plots$full_diff <- ggplot(
   full_diff_hypotheses, 
-  aes(x = SD, y = Evid.Ratio, group = 1)
+  aes(x = SD, y = Evid.Ratio, group = 1, colour = bf_category)
   ) +
   geom_point() +
   geom_line() +
