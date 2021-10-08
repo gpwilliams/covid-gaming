@@ -2,7 +2,6 @@
 
 # testing if loneliness moderates the impact of hours played on mental health
 # outcomes in lockdown
-
 depression_moderation <- fit_models(
   prepared_data$depression_diff, 
   formulae$moderation, 
