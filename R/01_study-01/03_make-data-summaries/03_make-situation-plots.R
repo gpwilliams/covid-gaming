@@ -11,25 +11,7 @@ employment <- data$demo %>%
     ),
     names_to = "current_situation",
     values_to = "current_situation_yes"
-  ) 
-
-lockdown <- data$demo %>% 
-  pivot_longer(
-    cols = lockdown_worked_as_normal:lockdown_other,
-    names_to = "lockdown_situation",
-    values_to = "lockdown_situation_yes"
-  )
-
-living <- data$demo %>% 
-  pivot_longer(
-    cols = living_with_partner:living_other,
-    names_to = "living_situation",
-    values_to = "living_situation_yes"
-  )
-
-# employment ----
-
-plots$employment <- employment %>% 
+  ) %>% 
   group_by(current_situation) %>% 
   summarise(n = sum(current_situation_yes)) %>% 
   mutate(
@@ -46,21 +28,14 @@ plots$employment <- employment %>%
         current_situation == "unemployed_current" ~ "Unemployed"
       )
   ) %>% 
-  mutate(current_situation = fct_reorder(current_situation, n, .desc = TRUE)) %>% 
-  ggplot(aes(x = current_situation, y = n)) +
-  geom_bar(stat="identity") +
-  labs(x = NULL, y = NULL, title = "A.") +
-  scale_y_continuous(breaks = seq(0, 80, by = 10)) +
-  theme_bw() +
-  theme(
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.y = element_blank()
-  ) +
-  coord_flip()
+  mutate(current_situation = fct_reorder(current_situation, n, .desc = TRUE))
 
-# lockdown situation ----
-
-plots$lockdown <- lockdown %>% 
+lockdown <- data$demo %>% 
+  pivot_longer(
+    cols = lockdown_worked_as_normal:lockdown_other,
+    names_to = "lockdown_situation",
+    values_to = "lockdown_situation_yes"
+  ) %>% 
   group_by(lockdown_situation) %>% 
   summarise(n = sum(lockdown_situation_yes)) %>% 
   mutate(
@@ -76,22 +51,14 @@ plots$lockdown <- lockdown %>%
     str_replace_all(lockdown_situation, "As", "as"),
     "At",
     "at"
-    )
+  )) 
+
+living <- data$demo %>% 
+  pivot_longer(
+    cols = living_with_partner:living_other,
+    names_to = "living_situation",
+    values_to = "living_situation_yes"
   ) %>% 
-  ggplot(aes(x = fct_reorder(lockdown_situation, n, .desc = TRUE), y = n)) +
-  geom_bar(stat="identity") +
-  labs(x = NULL, y = NULL, title = "B.") +
-  scale_y_continuous(breaks = seq(0, 80, by = 10)) +
-  theme_bw() +
-  theme(
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.y = element_blank()
-  ) +
-  coord_flip()
-
-# living situation ----
-
-plots$living <- living %>% 
   group_by(living_situation) %>% 
   summarise(n = sum(living_situation_yes)) %>% 
   mutate(
@@ -103,11 +70,52 @@ plots$living <- living %>%
       )
     )
   ) %>% 
-  mutate(living_situation = str_replace_all(living_situation, "Parents", "Parents or")) %>% 
-  ggplot(aes(x = fct_reorder(living_situation, n, .desc = TRUE), y = n)) +
+  mutate(
+    living_situation = str_replace_all(
+      living_situation, 
+      "Parents", 
+      "Parents or")
+  )
+
+# employment ----
+
+plots$employment <- employment %>% 
+  ggplot(aes(x = current_situation, y = n)) +
+  geom_bar(stat="identity") +
+  labs(x = NULL, y = NULL, title = "A.") +
+  scale_y_continuous(breaks = seq(0, round(max(employment$n), digits = -1), by = 10)) +
+  theme_bw() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank()
+  ) +
+  coord_flip()
+
+# lockdown situation ----
+
+plots$lockdown <- ggplot(
+  lockdown, 
+  aes(x = fct_reorder(lockdown_situation, n, .desc = TRUE), y = n)
+  ) +
+  geom_bar(stat="identity") +
+  labs(x = NULL, y = NULL, title = "B.") +
+  scale_y_continuous(breaks = seq(0, round(max(lockdown$n), digits = -1), by = 10)) +
+  theme_bw() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank()
+  ) +
+  coord_flip()
+
+# living situation ----
+
+plots$living <- ggplot(
+  living, 
+  aes(x = fct_reorder(living_situation, n, .desc = TRUE), y = n)
+  ) +
   geom_bar(stat="identity") +
   labs(x = NULL, y = "Count of Participants", title = "C.") +
-  scale_y_continuous(breaks = seq(0, 90, by = 10)) +
+  scale_y_continuous(breaks = seq(0, round(max(living$n), digits = -1), by = 10)) +
   theme_bw() +
   theme(
     panel.grid.major.y = element_blank(),
