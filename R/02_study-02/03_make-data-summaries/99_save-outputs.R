@@ -18,7 +18,7 @@ for(i in seq_along(plots)) {
 for(i in seq_along(new_demographics)) {
   write_csv(
     x = new_demographics[[i]],
-    path = here::here(
+    file = here::here(
       "04_analysis", 
       "02_study-02", 
       "03_demographic-summary",
