@@ -5,7 +5,7 @@ This repository contains the data and analysis code necessary to reproduce the a
 
 The preprint based on this project can be found on the PsyArXiv. A reproducible document based on this report can be found in this repository at [05_reports/apa_report.pdf](https://github.com/gpwilliams/covid-gaming/blob/master/05_reports/apa_report.pdf).
 
-Supplemental material for the report can be found in this repository at [05_reports/supplemental-material.html](https://github.com/gpwilliams/covid-gaming/blob/master/05_reports/supplemental-material.html).
+Supplemental material for the report can be found in this repository at [05_reports/supplemental_material.html](https://github.com/gpwilliams/covid-gaming/blob/master/05_reports/supplemental_material.html).
 
 This work is licensed under [CC-By Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/legalcode).
 
