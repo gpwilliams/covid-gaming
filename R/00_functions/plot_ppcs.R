@@ -7,7 +7,7 @@
 
 plot_ppcs <- function(
   model_list, 
-  nsamples = 100, 
+  ndraws = 50, 
   prior_only = FALSE, 
   message = TRUE,
   title = ""
@@ -41,7 +41,7 @@ plot_ppcs <- function(
     # add plots to list
     pp_plots[[i]] <- brms::pp_check(
       mod_list[[i]], 
-      nsamples = nsamples
+      ndraws = ndraws
     ) + labs(title = names(mod_list[i])) +
       theme(
         plot.title = element_text(size = 14),

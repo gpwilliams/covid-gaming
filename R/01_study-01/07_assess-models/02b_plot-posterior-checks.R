@@ -45,7 +45,7 @@ for(i in seq_along(posterior_plots)) {
       "posterior-predictive",
       paste0(names(posterior_plots)[[i]], ".png")),
     plot = posterior_plots[[i]],
-    width = 12,
-    height = 10
+    width = 8,
+    height = 6.5
   )
 }
