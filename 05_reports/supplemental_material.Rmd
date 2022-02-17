@@ -2,10 +2,8 @@
 title: "Supplemental Material"
 author: "Glenn Williams"
 date: "2021/09/15 (last updated: `r format(Sys.time(), '%Y/%m/%d')`)"
-output: 
-  html_document:
-    toc: true
-    toc_float: true
+output: github_document
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
@@ -64,9 +62,9 @@ for(i in seq_along(studies)) {
 
 # Full Parameter Estimates
 
-Full fixed effect parameter estimates are included for all models below. Note that these are presented on the log scale for the main model and the moderation model. In the paper only the beta terms are included along with Bayes factors evaluating evidence in support of the point-null hypothesis relative to the alternative hypothesis (i.e. of a non-zero effect) using the Savage-Dickey density ratio, but not with intercepts or, for cumulative models, thresholds.
+Full fixed effect parameter estimates are included for all models below. Note that these are presented on the log scale. In the paper only the beta terms are included along with Bayes factors evaluating evidence in support of the point-null hypothesis relative to the alternative hypothesis (i.e. of a non-zero effect) using the Savage-Dickey density ratio, but not with intercepts or thresholds.
 
-Cumulative models assume that responses come from categoristion of a latent continuous variable. Thus, for the cumulative models there is not a single intercept but instead the model output reports several "intercepts" which are thresholds that partition the latent continuous variable into response categories. Holding all other parameters constant, these give the cumulative log-odds of responses being within a given threshold. (To transform these into probabilities, the inverse logit should be applied to any given threshold.) As with intercepts in typical regression modelling, these are often not the focus of the research question. Thus, intercepts and thresholds are omitted from the main text but are included in full here for completeness. 
+Cumulative models assume that responses come from categoristion of a latent continuous variable. Thus, for the cumulative models there is not a single intercept but instead the model output reports several "intercepts" which are thresholds that partition the latent continuous variable into response categories. Holding all other parameters constant, these give the cumulative log-odds of responses being within a given threshold. (To transform these into probabilities, the inverse logit should be applied to any given threshold.) As with intercepts in typical regression modelling, these are often not the focus of the research question. Thus, intercepts and thresholds are omitted from the main text but are included in full here for completeness.
 
 Crucially, the thresholds in the cumulative models reported here are dictated by the unique scores on the outcome. In the depression, anxiety, and stress models each "intercept" typically represents scores from 0 to 42 in increments of 2 as the scale requires individual scores to be summed and multiplied by 2. However, in the short loneliness scale used in study 1, the thresholds represent scores from 3 to 9 in increments of 1. For the longer loneliness scale used in studies 2 and 3, the thresholds represent scores from 0 to 11 in increments of 1. In cases where the thresholds do not match the number of unique increments on the scale this is due to some unique values not occurring in the data set.
 
@@ -98,31 +96,6 @@ bind_rows(
   pack_rows("Anxiety", 25, 45) %>% 
   pack_rows("Stress", 46, 69) %>% 
   pack_rows("Loneliness", 70, 78) %>% 
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-```
-
-### Lockdown Difference Score Model
-
-```{r study-01-lockdown-diff-model-results}
-bind_rows(
-  model_summary$`01_study-01`$depression_lockdown_diff_sd_0.5,
-  model_summary$`01_study-01`$anxiety_lockdown_diff_sd_0.5,
-  model_summary$`01_study-01`$stress_lockdown_diff_sd_0.5,
-  model_summary$`01_study-01`$loneliness_lockdown_diff_sd_0.5
-) %>% 
-  mutate(
-    term = case_when(
-      term == "total_hours_played_during" ~ 
-        "Hours During Lockdown Period",
-      TRUE ~ term
-    )
-  ) %>% 
-  select(-effect) %>% 
-  kable() %>% 
-  pack_rows("Depression", 1, 2) %>% 
-  pack_rows("Anxiety", 3, 4) %>% 
-  pack_rows("Stress", 5, 6) %>% 
-  pack_rows("Loneliness", 7, 8) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -180,31 +153,6 @@ bind_rows(
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-### Lockdown Difference Score Model
-
-```{r study-02-lockdown-diff-model-results}
-bind_rows(
-  model_summary$`02_study-02`$depression_lockdown_diff_sd_0.5,
-  model_summary$`02_study-02`$anxiety_lockdown_diff_sd_0.5,
-  model_summary$`02_study-02`$stress_lockdown_diff_sd_0.5,
-  model_summary$`02_study-02`$loneliness_lockdown_diff_sd_0.5
-)  %>% 
-  mutate(
-    term = case_when(
-      term == "total_hours_played_during" ~ 
-        "Hours During Lockdown Period",
-      TRUE ~ term
-    )
-  ) %>% 
-  select(-effect) %>% 
-  kable() %>% 
-  pack_rows("Depression", 1, 2) %>% 
-  pack_rows("Anxiety", 3, 4) %>% 
-  pack_rows("Stress", 5, 6) %>% 
-  pack_rows("Loneliness", 7, 8) %>% 
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-```
-
 ### Moderation Model
 
 ```{r study-02-moderation-model-results}
@@ -259,31 +207,6 @@ bind_rows(
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-### Lockdown Difference Score Model
-
-```{r study-03-lockdown-diff-model-results}
-bind_rows(
-  model_summary$`03_study-03`$depression_lockdown_diff_sd_0.5,
-  model_summary$`03_study-03`$anxiety_lockdown_diff_sd_0.5,
-  model_summary$`03_study-03`$stress_lockdown_diff_sd_0.5,
-  model_summary$`03_study-03`$loneliness_lockdown_diff_sd_0.5
-)  %>% 
-  mutate(
-    term = case_when(
-      term == "total_hours_played_during" ~ 
-        "Hours During Lockdown Period",
-      TRUE ~ term
-    )
-  ) %>%
-  select(-effect) %>% 
-  kable() %>% 
-  pack_rows("Depression", 1, 2) %>% 
-  pack_rows("Anxiety", 3, 4) %>% 
-  pack_rows("Stress", 5, 6) %>% 
-  pack_rows("Loneliness", 7, 8) %>% 
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-```
-
 ### Moderation Model
 
 ```{r study-03-moderation-model-results}
@@ -313,16 +236,19 @@ bind_rows(
 
 The below plots show how sensitive the parameter estimates and Bayes factors are to different specifications of priors. The models reported in text had the following priors:
 
-|           | DAS Main Models          | Loneliness Main Model    | DAS Lockdown Difference Models | Loneliness Lockdown Difference Model | Moderation Models      |
-|-----------|--------------------------|--------------------------|--------------------------------|--------------------------------------|------------------------|
-| Intercept | *Student*-*t*(3, 0, 2.5) | *Student*-*t*(3, 0, 1.5) | *Normal*(0, 2)                 | *Normal*(0, 1)                       | *Student*-*t*(3, 0, 3) |
-| Beta      | *Normal*(0, 1)           | *Normal*(0, 1)           | *Normal*(0, 0.5)               | *Normal*(0, 0.5)                     | *Normal*(0, 1)         |
-| SD        | *Exponential*(1)         | *Exponential*(1)         | ---                            | ---                                  | ---                    |
-| Sigma     | ---                      | ---                      | *Exponential*(1)               | *Exponential*(1)                     | ---                    |
++-----------+--------------------------+--------------------------+--------------------------------------------------------------------------+
+|           | DAS Main Models          | Loneliness Main Model    | Moderation Models                                                        |
++===========+==========================+==========================+==========================================================================+
+| Intercept | *Student*-*t*(3, 0, 2.5) | *Student*-*t*(3, 0, 1.5) | *Student*-*t*(3, 0, 3)                                                   |
++-----------+--------------------------+--------------------------+--------------------------------------------------------------------------+
+| Beta      | *Normal*(0, 1)           | *Normal*(0, 1)           | *Normal*(0, 1)                                                           |
++-----------+--------------------------+--------------------------+--------------------------------------------------------------------------+
+| SD        | *Exponential*(1)         | *Exponential*(1)         | ------------------------------------------------------------------------ |
++-----------+--------------------------+--------------------------+--------------------------------------------------------------------------+
 
 For each model we fitted 10 models in total (including the reported model) with different prior specifications for the Beta (slope) terms. For the main and moderation models these ranged from *Normal*(0, 0.2) to *Normal*(0, 2) in steps of 0.2, while for the difference models these ranges from *Normal*(0, 0.1) to *Normal*(0, 1) in steps of 0.1.
 
-In the plots below each model is reported showing the sensitivity of both the parameter estimates for each term in the model and for the Bayes factor in support of the point null (i.e. a parameter estimate of 0) relative to the alternative model (i.e. a parameter estimate of $\neq$ 0). In all cases, the standard deviation for the prior on the beta parameter for the models reported in text is indicated with a vertical dotted line. 
+In the plots below each model is reported showing the sensitivity of both the parameter estimates for each term in the model and for the Bayes factor in support of the point null (i.e. a parameter estimate of 0) relative to the alternative model (i.e. a parameter estimate of $\neq$ 0). In all cases, the standard deviation for the prior on the beta parameter for the models reported in text is indicated with a vertical dotted line.
 
 Generally, these plots show that the models are not overly sensitive to the prior specification, giving consistent results for the parameter estimates and Bayes factors regardless of whether the beta terms have larger or smaller standard deviations than the models reported.
 
@@ -339,18 +265,6 @@ knitr::include_graphics(
 ```
 
 There is general agreement between models regardless of the magnitude of the standard deviation for the beta prior for the parameter estimates. While the Bayes factor generally increases as the standard deviation for the beta prior increases, this trend is consistent and conclusions do not change across prior specifications.
-
-#### Lockdown Difference Score Model
-
-```{r study-01-prior-sensitivity-lockdown-diff}
-knitr::include_graphics(
-  plots_dir$`01_study-01`[
-    str_detect(plots_dir$`01_study-01`, "prior-sensitivity/lockdown_diff")
-  ]
-)
-```
-
-A similar interpretation can be made here with the caveat that Bayes factors are generally larger across the board.
 
 #### Moderation Model
 
@@ -372,18 +286,6 @@ As before, conclusions do not change depending upon the magnitude of the standar
 knitr::include_graphics(
   plots_dir$`02_study-02`[
     str_detect(plots_dir$`02_study-02`, "prior-sensitivity/main")
-  ]
-)
-```
-
-As before, conclusions do not change depending upon the magnitude of the standard deviation for the beta prior.
-
-#### Lockdown Difference Score Model
-
-```{r study-02-prior-sensitivity-lockdown-diff}
-knitr::include_graphics(
-  plots_dir$`02_study-02`[
-    str_detect(plots_dir$`02_study-02`, "prior-sensitivity/lockdown_diff")
   ]
 )
 ```
@@ -416,18 +318,6 @@ knitr::include_graphics(
 
 As before, conclusions do not change depending upon the magnitude of the standard deviation for the beta prior.
 
-#### Lockdown Difference Score Model
-
-```{r study-03-prior-sensitivity-lockdown-diff}
-knitr::include_graphics(
-  plots_dir$`03_study-03`[
-    str_detect(plots_dir$`03_study-03`, "prior-sensitivity/lockdown_diff")
-  ]
-)
-```
-
-As before, conclusions do not change depending upon the magnitude of the standard deviation for the beta prior.
-
 #### Moderation Model
 
 ```{r study-03-prior-sensitivity-moderation}
@@ -442,7 +332,7 @@ As before, conclusions do not change depending upon the magnitude of the standar
 
 # Prior Predictive Check
 
-All plots show the density of the observed data (dark lines) plotted against 100 random replications from the priors. In all cases relatively informative priors were used to allow for proper inferences to be draws using Bayes factors. Generally the priors allow for a wide range of effects that differ from the observed data, so are thus not too restrictive. For the main models the replications tend to be closer to the observed data than with the lockdown difference score models, which, while still often falling close to the observed data allow a larger range of results. Finally, the moderation models, show that while the observed data is plausible given the priors, the priors perhaps allow too much weight to large effects and too little weight to middling effects. That said, the reliability of the models is largely dependent on the posterior predictive checks, below.
+All plots show the density of the observed data (dark lines) plotted against 100 random replications from the priors. In all cases relatively informative priors were used to allow for proper inferences to be draws using Bayes factors. Generally the priors allow for a wide range of effects that differ from the observed data, so are thus not too restrictive. For the main models the replications are close to the observed data. The moderation models show that while the observed data is plausible given the priors, the priors perhaps allow too much weight to large effects and too little weight to middling effects. That said, the reliability of the models is largely dependent on the posterior predictive checks, below.
 
 ## Study 1
 
@@ -452,16 +342,6 @@ All plots show the density of the observed data (dark lines) plotted against 100
 knitr::include_graphics(
   plots_dir$`01_study-01`[
     str_detect(plots_dir$`01_study-01`, "prior-predictive/main")
-  ]
-)
-```
-
-### Lockdown Difference Score Model
-
-```{r study-01-prior-predictive-lockdown-diff}
-knitr::include_graphics(
-  plots_dir$`01_study-01`[
-    str_detect(plots_dir$`01_study-01`, "prior-predictive/lockdown_diff")
   ]
 )
 ```
@@ -488,16 +368,6 @@ knitr::include_graphics(
 )
 ```
 
-#### Lockdown Difference Score Model
-
-```{r study-02-prior-predictive-lockdown-diff}
-knitr::include_graphics(
-  plots_dir$`02_study-02`[
-    str_detect(plots_dir$`02_study-02`, "prior-predictive/lockdown_diff")
-  ]
-)
-```
-
 #### Moderation Model
 
 ```{r study-02-prior-predictive-moderation}
@@ -520,16 +390,6 @@ knitr::include_graphics(
 )
 ```
 
-### Lockdown Difference Score Model
-
-```{r study-03-prior-predictive-lockdown-diff}
-knitr::include_graphics(
-  plots_dir$`03_study-03`[
-    str_detect(plots_dir$`03_study-03`, "prior-predictive/lockdown_diff")
-  ]
-)
-```
-
 #### Moderation Model
 
 ```{r study-03-prior-predictive-moderation}
@@ -544,7 +404,7 @@ knitr::include_graphics(
 
 # Posterior Predictive Check
 
-All plots show the density of the observed data (dark lines) plotted against 100 random replications from the posterior. Generally, the posterior approximates the observed data best with the main and moderation models which are fitted using cumulative models. However even with the difference score models the data is well approximated by the posterior. Thus the model estimates are likely to be reliable in all instances.
+All plots show the density of the observed data (dark lines) plotted against 100 random replications from the posterior. Generally, the posterior approximates the observed data very well. Thus the model estimates are likely to be reliable in all instances.
 
 ## Study 1
 
@@ -554,16 +414,6 @@ All plots show the density of the observed data (dark lines) plotted against 100
 knitr::include_graphics(
   plots_dir$`01_study-01`[
     str_detect(plots_dir$`01_study-01`, "posterior-predictive/main")
-  ]
-)
-```
-
-### Lockdown Difference Score Model
-
-```{r study-01-posterior-predictive-lockdown-diff}
-knitr::include_graphics(
-  plots_dir$`01_study-01`[
-    str_detect(plots_dir$`01_study-01`, "posterior-predictive/lockdown_diff")
   ]
 )
 ```
@@ -590,16 +440,6 @@ knitr::include_graphics(
 )
 ```
 
-### Lockdown Difference Score Model
-
-```{r study-02-posterior-predictive-lockdown-diff}
-knitr::include_graphics(
-  plots_dir$`02_study-02`[
-    str_detect(plots_dir$`02_study-02`, "posterior-predictive/lockdown_diff")
-  ]
-)
-```
-
 ### Moderation Model
 
 ```{r study-02-posterior-predictive-moderation}
@@ -618,16 +458,6 @@ knitr::include_graphics(
 knitr::include_graphics(
   plots_dir$`03_study-03`[
     str_detect(plots_dir$`03_study-03`, "posterior-predictive/main")
-  ]
-)
-```
-
-### Lockdown Difference Score Model
-
-```{r study-03-posterior-predictive-lockdown-diff}
-knitr::include_graphics(
-  plots_dir$`03_study-03`[
-    str_detect(plots_dir$`03_study-03`, "posterior-predictive/lockdown_diff")
   ]
 )
 ```
