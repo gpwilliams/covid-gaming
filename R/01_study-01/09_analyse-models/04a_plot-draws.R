@@ -25,12 +25,17 @@ mh_main <- draws %>%
         linetype = lockdown_period
       )) +
       stat_lineribbon(.width = .95, alpha = 1/2) +
-      scale_colour_manual(values = c("#af8dc3", "#7fbf7b")) +
-      scale_fill_manual(values = c("#af8dc3", "#7fbf7b")) +
-      coord_cartesian(ylim = c(0, 25)) +
+      scale_colour_manual(values = c("grey80", "grey30")) +
+      scale_fill_manual(values = c("grey80", "grey30")) +
+      coord_cartesian(ylim = c(0, 30)) +
+      scale_y_continuous(breaks = seq(0, 30, by = 5)) +
       labs(x = "Total Hours Played (z-score)", y = "Score") +
       theme_bw() +
-      theme(legend.position = "none", legend.title = element_blank()) +
+      theme(
+        legend.position = "none", 
+        legend.title = element_blank(),
+        grid.panel.minor = element_blank()
+      ) +
       labs(title = .y)
   )
 
@@ -49,7 +54,8 @@ plots$mh_main_predictions <- (
   ) / (
     mh_main[[3]] | 
       mh_main[[4]] + 
-      coord_cartesian(ylim = c(0, 7))
+      coord_cartesian(ylim = c(0, 10)) +
+      scale_y_continuous(breaks = seq(0, 10, by = 2))
     ) 
 
 # diff models ----
@@ -66,7 +72,11 @@ mh_diff_plots <- diff_draws %>%
       coord_cartesian(ylim = c(-10, 10)) +
       labs(x = "Difference in Hours Played", y = "Difference in Score") +
       theme_bw() +
-      theme(legend.position = "none", legend.title = element_blank()) +
+      theme(
+        legend.position = "none", 
+        legend.title = element_blank(),
+        grid.panel.minor = element_blank()
+      ) +
       labs(title = .y)
   )
 plots$mh_diff <- (mh_diff_plots[[1]] + mh_diff_plots[[2]]) / 
@@ -86,7 +96,11 @@ mh_lockdown_diff_plots <- lockdown_diff_draws %>%
       coord_cartesian(ylim = c(-10, 10)) +
       labs(x = "Hours Played During Lockdown", y = "Difference in Score") +
       theme_bw() +
-      theme(legend.position = "none", legend.title = element_blank()) +
+      theme(
+        legend.position = "none", 
+        legend.title = element_blank(),
+        grid.panel.minor = element_blank()
+      ) +
       labs(title = .y)
   )
 plots$mh_lockdown_diff <- (

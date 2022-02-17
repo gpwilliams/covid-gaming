@@ -5,6 +5,10 @@ analysis_path <- list.files(
   pattern="*.R", 
   full.names=TRUE
 )
+analysis_path <- c(
+  here("R", study_folder, "06_fit-models", "00_set-analysis-options.R"),
+  analysis_path
+)
 
 study_folder <- "02_study-02"
 purrr::map(analysis_path, source)

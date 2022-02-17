@@ -25,7 +25,8 @@ moderation_plot_theme <- function(plot) {
       legend.box="horizontal",
       legend.box.just = c("top"), 
       legend.background = element_rect(fill=alpha("white", 0.4)),
-      legend.box.background = element_rect(colour = "black", fill = "transparent")
+      legend.box.background = element_rect(colour = "black", fill = "transparent"),
+      grid.panel.minor = element_blank()
     ) +
     labs(
       x = "Difference in Hours Played\n(Hours During Lockdown - Hours Before Lockdown)", 
@@ -38,8 +39,8 @@ moderation_plot_theme <- function(plot) {
         ". Higher scores indicate more hours played during lockdown"
         ))
     ) +
-    scale_fill_manual(values = c("#117733", "#44AA99", "#88CCEE")) +
-    scale_color_manual(values = c("#117733", "#44AA99", "#88CCEE")) +
+    scale_fill_manual(values = c("grey80", "grey50", "grey30")) +
+    scale_color_manual(values = c("grey80", "grey50", "grey30")) +
     coord_cartesian(
       ylim = c(0, moderation_y_max)
     ) +

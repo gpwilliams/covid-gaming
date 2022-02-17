@@ -25,4 +25,9 @@ analysis_file_list <- list.files(
   pattern = "R$",
   full.names = TRUE
 )
+analysis_file_list <- c(
+  here("R", study_folder, "06_fit-models", "00_set-analysis-options.R"),
+  analysis_file_list
+)
+
 purrr::walk(analysis_file_list, source)
