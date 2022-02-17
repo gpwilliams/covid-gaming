@@ -54,10 +54,9 @@ mh_raincloud <- ggplot(
     colour = NA
   ) +
   geom_point(
-    aes(x = dot_position-.15, y = score, colour = lockdown_period),
+    aes(x = dot_position-.15, y = score, colour = lockdown_period, shape = lockdown_period),
     position = position_jitter(width = .05, height = .08), 
     size = 2, 
-    shape = 21,
     alpha = .5
   ) +
   geom_boxplot(
@@ -67,8 +66,9 @@ mh_raincloud <- ggplot(
     width = .1, 
     colour = "black"
   ) +
-  scale_colour_manual(values = c("#af8dc3", "#7fbf7b")) +
-  scale_fill_manual(values = c("#af8dc3", "#7fbf7b")) +
+  scale_colour_manual(values = c("grey70", "grey10")) +
+  scale_fill_manual(values = c("grey70", "grey10")) +
+  scale_shape_manual(values = c(19, 4)) +
   theme_bw() +
   theme(
     legend.title = element_blank(),
@@ -91,4 +91,3 @@ mh_raincloud <- ggplot(
     y = "Score", 
     caption = "Dots are jittered for ease of viewing."
   )
-

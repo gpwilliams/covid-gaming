@@ -25,8 +25,8 @@ mh_main <- draws %>%
         linetype = lockdown_period
       )) +
       stat_lineribbon(.width = .95, alpha = 1/2) +
-      scale_colour_manual(values = c("grey80", "grey30")) +
-      scale_fill_manual(values = c("grey80", "grey30")) +
+      scale_colour_manual(values = c("grey70", "grey10")) +
+      scale_fill_manual(values = c("grey70", "grey10")) +
       coord_cartesian(ylim = c(0, 30)) +
       scale_y_continuous(breaks = seq(0, 30, by = 5)) +
       labs(x = "Total Hours Played (z-score)", y = "Score") +
@@ -34,7 +34,7 @@ mh_main <- draws %>%
       theme(
         legend.position = "none", 
         legend.title = element_blank(),
-        grid.panel.minor = element_blank()
+        panel.grid.minor = element_blank()
       ) +
       labs(title = .y)
   )
@@ -67,15 +67,15 @@ mh_diff_plots <- diff_draws %>%
     ~.x %>% 
       ggplot(aes(x = hours_diff, y = .value)) +
       stat_lineribbon(aes(y = .value)) +
-      scale_colour_manual(values = c("grey80", "grey60", "grey30")) +
-      scale_fill_manual(values = c("grey80", "grey60", "grey30")) +
+      scale_colour_manual(values = c("grey70", "grey40", "grey10")) +
+      scale_fill_manual(values = c("grey70", "grey40", "grey10")) +
       coord_cartesian(ylim = c(-10, 10)) +
       labs(x = "Difference in Hours Played", y = "Difference in Score") +
       theme_bw() +
       theme(
         legend.position = "none", 
         legend.title = element_blank(),
-        grid.panel.minor = element_blank()
+        panel.grid.minor = element_blank()
       ) +
       labs(title = .y)
   )
@@ -91,15 +91,15 @@ mh_lockdown_diff_plots <- lockdown_diff_draws %>%
     ~.x %>% 
       ggplot(aes(x = total_hours_played_during, y = .value)) +
       stat_lineribbon(aes(y = .value)) +
-      scale_colour_manual(values = c("grey80", "grey60", "grey30")) +
-      scale_fill_manual(values = c("grey80", "grey60", "grey30")) +
+      scale_colour_manual(values = c("grey70", "grey40", "grey10")) +
+      scale_fill_manual(values = c("grey70", "grey40", "grey10")) +
       coord_cartesian(ylim = c(-10, 10)) +
       labs(x = "Hours Played During Lockdown", y = "Difference in Score") +
       theme_bw() +
       theme(
         legend.position = "none", 
         legend.title = element_blank(),
-        grid.panel.minor = element_blank()
+        panel.grid.minor = element_blank()
       ) +
       labs(title = .y)
   )
