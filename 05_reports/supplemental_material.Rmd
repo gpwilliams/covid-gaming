@@ -2,8 +2,10 @@
 title: "Supplemental Material"
 author: "Glenn Williams"
 date: "2021/09/15 (last updated: `r format(Sys.time(), '%Y/%m/%d')`)"
-output: github_document
-always_allow_html: true
+output:   
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -338,7 +340,7 @@ All plots show the density of the observed data (dark lines) plotted against 100
 
 ### Main Model
 
-```{r study-01-prior-predictive-main, fig.show = "hold", fig.align = "center"}
+```{r study-01-prior-predictive-main}
 knitr::include_graphics(
   plots_dir$`01_study-01`[
     str_detect(plots_dir$`01_study-01`, "prior-predictive/main")
