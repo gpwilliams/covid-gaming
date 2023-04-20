@@ -62,6 +62,26 @@ for(i in seq_along(studies)) {
 }
 ```
 
+# Candidate Models
+
+While summed ordinal scales are often treated as though they are scale data, analysed using models with a Gaussian likelihood, this assumes that the data are continuous and unbounded, with equal distance between measurements. This can result in model-based predictions that are impossible under the scale in question. Instead, analysing the data using an ordinal model allows the restrictions of the ordinal scale to be taken into account. While this is often done with trial-level data, we modelled the sum scores of the ordinal scale using an ordinal model under the assumption that many of the restrictions for modelling ordinal data still apply while using sum scores to allow for easy interpretation of coefficients from each scale for diagnostic value. Below, we present posterior predictive checks for several potential candidate models to show that the ordinal model best captures the data generation process. This is carried out for the depression data only using the same predictors and outcomes as used in the main models reported in the paper. The considered models are:
+
+- The ordinal model (cumulative likelihood with a logit link): Data arise from categorisation of a continuous latent variable.
+- Beta binomial likelihood: Data are non-negative integers with a varying probability of success from n trials arising from a Beta distribution.
+- Negative binomial likelihood: Data are non-negative integers representing the number of failures from a sequence of i.i.d. Bernoulli trials. 
+- The traditional" Gaussian likelihood: Data are unbounded and continuous.
+- Poisson likelihood: Data are non-negative integers representing the number of events occurring in a fixed interval of time or space.
+
+Conceptually, the ordinal and Beta binomial models are most aligned with the data generation process. Below, dark lines represent the observed density of the data while light lines represent model-based predictions. A well behaving model should be able to generate the observed data such that the shape of the two line types should be similar.
+
+```{r candidate-models-pp-check}
+knitr::include_graphics(
+  here("03_plots", "01_study-01", "02_model-checks", "candidate-models", "pp-check.png")
+)
+```
+
+It is apparent that the ordinal model best captures the data generation process and thus is an appropriate model for analysing these data. Note that predictions for the ordinal model represent the thresholds for each ordinal category, which is roughly half of the actual sum score.
+
 # Full Parameter Estimates
 
 Full fixed effect parameter estimates are included for all models below. Note that these are presented on the log scale. In the paper only the beta terms are included along with Bayes factors evaluating evidence in support of the point-null hypothesis relative to the alternative hypothesis (i.e. of a non-zero effect) using the Savage-Dickey density ratio, but not with intercepts or thresholds.

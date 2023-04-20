@@ -10,13 +10,17 @@ new_demographics$demographics <- data$demo %>%
     age_sd = sd(age),
     age_min = min(age),
     age_max = max(age),
-    duration_mean = mean(duration),
-    duration_sd = sd(duration),
-    duration_min = min(duration),
-    duration_max = max(duration)
-  )
+    duration_mins_mean = mean(duration),
+    duration_mins_sd = sd(duration),
+    duration_mins_min = min(duration),
+    duration_mins_max = max(duration)
+  ) %>%
+  mutate(across(contains("duration"), dseconds)) %>%
+  mutate(across(contains("duration"), ~ as.numeric(., "minutes")))
 
 # make gender
 new_demographics$gender_breakdown <- data$demo %>% 
   group_by(sex) %>% 
   summarise(n = length(unique(response_id)))
+
+

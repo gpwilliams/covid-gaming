@@ -19,6 +19,3 @@ save_list_to_file(
   c("04_analysis", study_folder, "01a_models"),
   csv = FALSE
 )
-
-
-

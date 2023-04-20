@@ -13,3 +13,8 @@
 04_analysis/01_study-01/01a_models/*
 04_analysis/02_study-02/01a_models/*
 04_analysis/03_study-03/01a_models/*
+
+# ignore drafts of reports
+05_reports/drafts
+
+TODO.md
